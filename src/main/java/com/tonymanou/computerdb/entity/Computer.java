@@ -2,6 +2,11 @@ package com.tonymanou.computerdb.entity;
 
 import java.util.Date;
 
+/**
+ * Describe a computer.
+ *
+ * @author tonymanou
+ */
 public class Computer {
 
 	private Long id;

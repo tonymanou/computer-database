@@ -1,5 +1,10 @@
 package com.tonymanou.computerdb.entity;
 
+/**
+ * Describe a company.
+ *
+ * @author tonymanou
+ */
 public class Company {
 
 	private Long id;

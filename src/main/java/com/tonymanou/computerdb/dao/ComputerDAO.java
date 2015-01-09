@@ -11,8 +11,20 @@ import com.tonymanou.computerdb.entity.Company;
 import com.tonymanou.computerdb.entity.Computer;
 import com.tonymanou.computerdb.persistence.SQLUtil;
 
+/**
+ * Helper class to make actions on computers in the database.
+ *
+ * @author tonymanou
+ */
 public class ComputerDAO {
 
+	/**
+	 * Retrieve all the computers from the database.
+	 *
+	 * @return A list containing all the computers.
+	 * @throws SQLException
+	 *             if a database access error occurs
+	 */
 	public List<Computer> findAll() throws SQLException {
 		List<Computer> list = new ArrayList<Computer>();
 		Connection connection = null;
@@ -66,6 +78,14 @@ public class ComputerDAO {
 		return list;
 	}
 
+	/**
+	 * Create a new computer in the database.
+	 *
+	 * @param computer
+	 *            The computer to create.
+	 * @throws SQLException
+	 *             if a database access error occurs
+	 */
 	public void create(Computer computer) throws SQLException {
 		Connection connection = null;
 		Statement statement = null;
@@ -109,6 +129,14 @@ public class ComputerDAO {
 		}
 	}
 
+	/**
+	 * Update a computer in the database.
+	 *
+	 * @param computer
+	 *            The computer to update.
+	 * @throws SQLException
+	 *             if a database access error occurs
+	 */
 	public void update(Computer computer) throws SQLException {
 		Connection connection = null;
 		Statement statement = null;
@@ -152,6 +180,14 @@ public class ComputerDAO {
 		}
 	}
 
+	/**
+	 * Delete a computer from the database.
+	 *
+	 * @param computer
+	 *            The computer to delete.
+	 * @throws SQLException
+	 *             if a database access error occurs
+	 */
 	public void delete(Computer computer) throws SQLException {
 		Connection connection = null;
 		Statement statement = null;
