@@ -189,6 +189,18 @@ public class ComputerDAO {
 	 *             if a database access error occurs
 	 */
 	public void delete(Computer computer) throws SQLException {
+		delete(computer.getId());
+	}
+
+	/**
+	 * Delete a computer from the database.
+	 *
+	 * @param id
+	 *            Id of the computer to delete.
+	 * @throws SQLException
+	 *             if a database access error occurs
+	 */
+	public void delete(Long id) throws SQLException {
 		Connection connection = null;
 		Statement statement = null;
 
@@ -198,7 +210,7 @@ public class ComputerDAO {
 
 			StringBuilder query = new StringBuilder(
 					"DELETE FROM computer WHERE company_id=");
-			query.append(computer.getId());
+			query.append(id);
 			query.append(";");
 
 			statement.executeUpdate(query.toString());
