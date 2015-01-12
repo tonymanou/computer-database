@@ -147,19 +147,12 @@ public class CLIRoutine {
    * Let the CLI user remove a computer.
    */
   private void doRemoveComputer() {
-    String str;
-
-    System.out.print("Do you want to list all the computers first? [y|n]\n> ");
-
-    str = scanner.nextLine();
-    System.out.println();
-
-    if (str.startsWith("y")) {
+    if (isYesAnswer("[Remove computer] Do you want to list all the computers first?")) {
       doListComputers();
       System.out.println();
     }
 
-    Long id = getLongInput("Enter the id of the computer you want to delete.");
+    Long id = getLongInput("[Remove computer] Enter the id of the computer you want to delete.");
 
     if (id != null) {
       try {
@@ -209,6 +202,28 @@ public class CLIRoutine {
   }
 
   /* ========== Scanner helpers ========== */
+
+  /**
+   * Ask the user if he wants to do something.
+   *
+   * @param message
+   *          The message to display to the user.
+   * @return true if the user answered by yes, false otherwise.
+   */
+  private boolean isYesAnswer(String message) {
+    System.out.print(message + " [y|n]\n> ");
+
+    String input = scanner.nextLine();
+    System.out.println();
+
+    if (input == null) {
+      input = "";
+    } else {
+      input.trim().toLowerCase();
+    }
+
+    return input.startsWith("y");
+  }
 
   /**
    * Ask the user to input a (long) number.
