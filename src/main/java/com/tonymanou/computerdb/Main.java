@@ -73,8 +73,11 @@ public class Main {
 				}
 				break;
 			case "help":
-				System.out
-						.println("Actions: {computer [list|add|remove|update]} | {company [list]} | exit");
+				System.out.println("Usage:");
+				System.out.println("\tcomputer [list|add|remove|update]");
+				System.out.println("\tcompany [list]");
+				System.out.println("\thelp");
+				System.out.println("\texit");
 				break;
 			case "exit":
 				System.out.println("Exiting...");
@@ -97,8 +100,12 @@ public class Main {
 			ComputerDAO computerDAO = new ComputerDAO();
 			List<Computer> listComputer = computerDAO.findAll();
 
-			for (Object c : listComputer) {
-				System.out.println(c);
+			if (listComputer.size() == 0) {
+				System.out.println("There is no computer is the database.");
+			} else {
+				for (Computer c : listComputer) {
+					System.out.println(c);
+				}
 			}
 		} catch (SQLException e) {
 			e.printStackTrace(System.err);
@@ -139,10 +146,15 @@ public class Main {
 
 	private static void doListCompanies() {
 		try {
-			List<Company> listCompany = new CompanyDAO().findAll();
+			CompanyDAO companyDAO = new CompanyDAO();
+			List<Company> listCompany = companyDAO.findAll();
 
-			for (Object c : listCompany) {
-				System.out.println(c);
+			if (listCompany.size() == 0) {
+				System.out.println("There is no company is the database.");
+			} else {
+				for (Company c : listCompany) {
+					System.out.println(c);
+				}
 			}
 		} catch (SQLException e) {
 			e.printStackTrace(System.err);
