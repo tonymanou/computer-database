@@ -16,6 +16,7 @@ import com.tonymanou.computerdb.entity.Computer;
  */
 public class Main {
 
+	private static final String UNRECOGNIZED = "Unrecognized action.";
 	private Scanner scanner;
 
 	public static void main(String[] args) {
@@ -64,7 +65,7 @@ public class Main {
 						doUpdateComputer();
 						break;
 					default:
-						System.out.println("Unrecognized action");
+						System.out.println(UNRECOGNIZED);
 					}
 				} else {
 					doListComputers();
@@ -74,7 +75,7 @@ public class Main {
 				if (words.length > 1 && !"list".equals(words[1])) {
 					switch (words[1]) {
 					default:
-						System.out.println("Unrecognized action");
+						System.out.println(UNRECOGNIZED);
 					}
 				} else {
 					doListCompanies();
@@ -92,7 +93,7 @@ public class Main {
 				running = false;
 				break;
 			default:
-				System.out.println("Unrecognized action");
+				System.out.println(UNRECOGNIZED);
 			}
 
 			System.out.println();
@@ -102,6 +103,8 @@ public class Main {
 
 		System.out.println("========== End ==========");
 	}
+
+	/* ========== Computer actions ========== */
 
 	private void doListComputers() {
 		try {
@@ -151,6 +154,8 @@ public class Main {
 			e.printStackTrace(System.err);
 		}
 	}
+
+	/* ========== Company actions ========== */
 
 	private void doListCompanies() {
 		try {
