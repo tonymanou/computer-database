@@ -44,7 +44,7 @@ public class Main {
 
 			switch (words[0]) {
 			case "computer":
-				if (words.length > 1 && !words[1].equals("list")) {
+				if (words.length > 1 && !"list".equals(words[1])) {
 					switch (words[1]) {
 					case "add":
 						doAddComputer();
@@ -63,7 +63,7 @@ public class Main {
 				}
 				break;
 			case "company":
-				if (words.length > 1 && !words[1].equals("list")) {
+				if (words.length > 1 && !"list".equals(words[1])) {
 					switch (words[1]) {
 					default:
 						System.out.println("Unrecognized action");
