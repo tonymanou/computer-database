@@ -200,13 +200,64 @@ public class CLIRoutine {
    * Let the CLI user update a computer.
    */
   private void doUpdateComputer() {
-    try {
-      ComputerDAO computerDAO = new ComputerDAO();
-      Computer comp = null;
-      // TODO let the user choose what to edit
-      computerDAO.update(comp);
-    } catch (SQLException e) {
-      die(e);
+    if (isYesAnswer("[Update computer] Do you want to list all the computers first?")) {
+      doListComputers();
+      System.out.println();
+    }
+
+    Long id = getLongInput("[Update computer] Enter the id of the computer you want to update.",
+        true);
+
+    if (id != null) {
+      try {
+        ComputerDAO computerDAO = new ComputerDAO();
+        Computer computer = computerDAO.getFromId(id);
+
+        if (computer == null) {
+          System.out.println("Computer [id=" + id + "] not found!");
+        } else {
+          System.out.println("[Update computer] Current name is '" + computer.getName() + "'.");
+          String name = getStringInput("[Update computer] Enter the new name.");
+          if (name != null) {
+            computer.setName(name);
+          }
+
+          System.out.println("[Update computer] Current introduced date is "
+              + computer.getIntroduced() + ".");
+          Date introduced = getDateInput("[Update computer] Enter the new date.");
+          if (introduced != null) {
+            computer.setIntroduced(introduced);
+          }
+
+          System.out.println("[Update computer] Current introduced date is "
+              + computer.getDiscontinued() + ".");
+          Date discontinued = getDateInput("[Update computer] Enter the new date.");
+          if (discontinued != null) {
+            computer.setDiscontinued(discontinued);
+          }
+
+          System.out.println("[Update computer] Current company is " + computer.getCompany() + ".");
+          if (isYesAnswer("[Update computer] Do you want to list all the companies first?")) {
+            doListCompanies();
+            System.out.println();
+          }
+
+          Long companyId = getLongInput("[Update computer] Enter the new company company ID.",
+              false);
+          if (companyId != null) {
+            CompanyDAO companyDAO = new CompanyDAO();
+            Company company = companyDAO.getFromId(companyId);
+            computer.setCompany(company);
+          }
+
+          System.out.println(computer);
+          computerDAO.update(computer);
+
+          System.out.println("Computer [id=" + id + "] updated!");
+        }
+      } catch (SQLException e) {
+        die(e);
+      }
     }
   }
 

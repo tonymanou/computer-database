@@ -47,7 +47,9 @@ public class ComputerDAO {
         c.setDiscontinued(resultat.getDate(4));
 
         Long companyId = resultat.getLong(5);
-        c.setCompany(companyDAO.getFromId(companyId));
+        if (companyId != 0) {
+          c.setCompany(companyDAO.getFromId(companyId));
+        }
 
         list.add(c);
       }
@@ -232,5 +234,72 @@ public class ComputerDAO {
         }
       }
     }
+  }
+
+  /**
+   * Retrieve a computer from the database thanks to the given id.
+   *
+   * @param id
+   *          The id of the computer to retrieve.
+   * @return The {@link Computer}, or null if no matching company was found.
+   * @throws SQLException
+   *           if a database access error occurs
+   */
+  public Computer getFromId(Long id) throws SQLException {
+    Computer computer = null;
+    Connection connection = null;
+    Statement statement = null;
+    ResultSet resultat = null;
+    CompanyDAO companyDAO = new CompanyDAO();
+
+    try {
+      StringBuilder query = new StringBuilder(
+          "SELECT id, name, introduced, discontinued, company_id FROM computer WHERE id=");
+      query.append(id);
+      query.append(";");
+
+      connection = SQLUtil.getConnection();
+      statement = connection.createStatement();
+      resultat = statement.executeQuery(query.toString());
+
+      if (resultat.first()) {
+        computer = new Computer();
+        computer.setId(resultat.getLong(1));
+        computer.setName(resultat.getString(2));
+        computer.setIntroduced(resultat.getDate(3));
+        computer.setDiscontinued(resultat.getDate(4));
+
+        Long companyId = resultat.getLong(5);
+        if (companyId != 0) {
+          computer.setCompany(companyDAO.getFromId(companyId));
+        }
+      }
+    } catch (SQLException e) {
+      throw e;
+    } finally {
+      if (resultat != null) {
+        try {
+          resultat.close();
+        } catch (SQLException e) {
+          // Ignored
+        }
+      }
+      if (statement != null) {
+        try {
+          statement.close();
+        } catch (SQLException e) {
+          // Ignored
+        }
+      }
+      if (connection != null) {
+        try {
+          connection.close();
+        } catch (SQLException e) {
+          // Ignored
+        }
+      }
+    }
+
+    return computer;
   }
 }
