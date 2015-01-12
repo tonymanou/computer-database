@@ -153,13 +153,13 @@ public class CLIRoutine {
    * Let the CLI user add a new computer.
    */
   private void doAddComputer() {
-    String name = getStringInput("[Add computer] Enter the name of the computer.");
+    String name = getStringInput("[Add computer] Enter the name of the computer.", EmptyType.CANCEL);
     if (name == null) {
       return;
     }
 
-    Date introduced = getDateInput("[Add computer] Enter its introduced date.");
-    Date discontinued = getDateInput("[Add computer] Enter its discontinued date.");
+    Date introduced = getDateInput("[Add computer] Enter its introduced date.", EmptyType.EMPTY);
+    Date discontinued = getDateInput("[Add computer] Enter its discontinued date.", EmptyType.EMPTY);
 
     if (isYesAnswer("[Add computer] Do you want to list all the companies first?")) {
       doListCompanies();
@@ -231,25 +231,24 @@ public class CLIRoutine {
         if (computer == null) {
           System.out.println("Computer [id=" + id + "] not found!");
         } else {
-          System.out.println("[Update computer] Current name is '" + computer.getName() + "'.");
-          String name = getStringInput("[Update computer] Enter the new name.");
-          if (name != null) {
-            computer.setName(name);
-          }
+          String oldName = computer.getName();
+          System.out.println("[Update computer] Current name is '" + oldName + "'.");
+          String name = getStringInput("[Update computer] Enter the new name.", EmptyType.KEEP,
+              oldName);
+          computer.setName(name);
 
-          System.out.println("[Update computer] Current introduced date is "
-              + computer.getIntroduced() + ".");
-          Date introduced = getDateInput("[Update computer] Enter the new date.");
-          if (introduced != null) {
-            computer.setIntroduced(introduced);
-          }
+          Date oldIntroduced = computer.getIntroduced();
+          System.out.println("[Update computer] Current introduced date is " + oldIntroduced + ".");
+          Date introduced = getDateInput("[Update computer] Enter the new date.", EmptyType.KEEP,
+              oldIntroduced);
+          computer.setIntroduced(introduced);
 
-          System.out.println("[Update computer] Current introduced date is "
-              + computer.getDiscontinued() + ".");
-          Date discontinued = getDateInput("[Update computer] Enter the new date.");
-          if (discontinued != null) {
-            computer.setDiscontinued(discontinued);
-          }
+          Date oldDiscontinued = computer.getDiscontinued();
+          System.out.println("[Update computer] Current introduced date is " + oldDiscontinued
+              + ".");
+          Date discontinued = getDateInput("[Update computer] Enter the new date.", EmptyType.KEEP,
+              oldDiscontinued);
+          computer.setDiscontinued(discontinued);
 
           System.out.println("[Update computer] Current company is " + computer.getCompany() + ".");
           if (isYesAnswer("[Update computer] Do you want to list all the companies first?")) {
@@ -257,13 +256,17 @@ public class CLIRoutine {
             System.out.println();
           }
 
+          Company oldCompany = computer.getCompany();
+          Long oldCompanyId = oldCompany == null ? null : oldCompany.getId();
           Long companyId = getLongInput("[Update computer] Enter the new company company ID.",
-              EmptyType.KEEP);
+              EmptyType.KEEP, oldCompanyId);
+          Company company = null;
           if (companyId != null) {
             CompanyDAO companyDAO = new CompanyDAO();
-            Company company = companyDAO.getFromId(companyId);
-            computer.setCompany(company);
+            company = companyDAO.getFromId(companyId);
+            // TODO check if this company id exists
           }
+          computer.setCompany(company);
 
           System.out.println(computer);
           computerDAO.update(computer);
@@ -305,20 +308,52 @@ public class CLIRoutine {
    *
    * @param message
    *          The message to display at the beginning of the input.
+   * @param emptyType
+   *          What to do when the user leaves an empty value.
+   * @param original
+   *          Optional original value, only used when using emptyType KEEP.
    * @return a string, or null if the user canceled the input.
    */
-  private String getStringInput(String message) {
+  private String getStringInput(String message, EmptyType emptyType, String... original) {
     String string = null;
 
-    System.out.print(message + " (Enter nothing to cancel)\n> ");
+    System.out.print(message + " (Enter nothing to ");
+    switch (emptyType) {
+    case EMPTY:
+      System.out.print("leave empty");
+      break;
+    case CANCEL:
+      System.out.print("cancel");
+      break;
+    case KEEP:
+      System.out.print("keep current value, enter 0 to set no value");
+      break;
+    }
+    System.out.print(")\n> ");
 
     String input = scanner.nextLine();
+    String[] words = splitToWords(input);
 
-    if (!"".equals(splitToWords(input)[0])) {
+    if ("".equals(words[0])) {
+      switch (emptyType) {
+      case EMPTY:
+        System.out.println("Value set to null.");
+        break;
+      case CANCEL:
+        System.out.println(CANCELED);
+        break;
+      case KEEP:
+        System.out.println("Original value kept.");
+        if (original != null && original.length >= 1) {
+          string = original[0];
+        }
+        break;
+      }
+    } else if (emptyType == EmptyType.KEEP && "0".equals(words[0])) {
+      System.out.println("Value set to null.");
+    } else {
       string = input;
       System.out.println();
-    } else {
-      System.out.println(CANCELED);
     }
 
     return string;
@@ -351,15 +386,31 @@ public class CLIRoutine {
    *
    * @param message
    *          The message to display at the beginning of the input.
+   * @param emptyType
+   *          What to do when the user leaves an empty value.
+   * @param original
+   *          Optional original value, only used when using emptyType KEEP.
    * @return the date, or null if the the user left the input empty.
    */
-  private Date getDateInput(String message) {
+  private Date getDateInput(String message, EmptyType emptyType, Date... original) {
     DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
     boolean running = true;
     Date date = null;
     String string;
 
-    System.out.println(message + " (yyyy-MM-dd, enter nothing to leave empty)");
+    System.out.print(message + " (yyyy-MM-dd, enter nothing to ");
+    switch (emptyType) {
+    case EMPTY:
+      System.out.print("leave empty");
+      break;
+    case CANCEL:
+      System.out.print("cancel");
+      break;
+    case KEEP:
+      System.out.print("keep current value, enter 0 to set no value");
+      break;
+    }
+    System.out.println(")");
 
     // Loop until a valid date is entered or the input is canceled
     do {
@@ -369,6 +420,24 @@ public class CLIRoutine {
       String[] words = splitToWords(string);
 
       if ("".equals(words[0])) {
+        switch (emptyType) {
+        case EMPTY:
+          System.out.println("Value set to null.");
+          break;
+        case CANCEL:
+          System.out.println(CANCELED);
+          break;
+        case KEEP:
+          System.out.println("Original value kept.");
+          if (original != null && original.length >= 1) {
+            date = original[0];
+          }
+          break;
+        }
+        System.out.println();
+        running = false;
+      } else if (emptyType == EmptyType.KEEP && "0".equals(words[0])) {
+        System.out.println("Value set to null.");
         System.out.println();
         running = false;
       } else {
@@ -443,6 +512,10 @@ public class CLIRoutine {
           }
           break;
         }
+        System.out.println();
+        running = false;
+      } else if (emptyType == EmptyType.KEEP && "0".equals(words[0])) {
+        System.out.println("Value set to null.");
         System.out.println();
         running = false;
       } else {
