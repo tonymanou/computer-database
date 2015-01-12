@@ -1,6 +1,9 @@
 package com.tonymanou.computerdb;
 
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
@@ -17,6 +20,7 @@ import com.tonymanou.computerdb.entity.Computer;
 public class CLIRoutine {
 
   private static final String UNRECOGNIZED = "Unrecognized action.";
+  private static final String CANCELED = "Input canceled...";
   private Scanner scanner;
 
   public CLIRoutine() {
@@ -133,11 +137,36 @@ public class CLIRoutine {
    * Let the CLI user add a new computer.
    */
   private void doAddComputer() {
+    String name = getStringInput("[Add computer] Enter the name of the computer.");
+    if (name == null) {
+      return;
+    }
+
+    Date introduced = getDateInput("[Add computer] Enter its introduced date.");
+    Date discontinued = getDateInput("[Add computer] Enter its discontinued date.");
+
+    if (isYesAnswer("[Add computer] Do you want to list all the companies first?")) {
+      doListCompanies();
+      System.out.println();
+    }
+
+    Long companyId = getLongInput("[Add computer] Enter its company ID.");
+
     try {
+      Company company = null;
+
+      if (companyId != null) {
+        CompanyDAO companyDAO = new CompanyDAO();
+        company = companyDAO.getFromId(companyId);
+      }
+
       ComputerDAO computerDAO = new ComputerDAO();
-      Computer comp = new Computer();
-      // TODO let the user enter the data
-      computerDAO.create(comp);
+      Computer computer = new Computer();
+      computer.setName(name);
+      computer.setIntroduced(introduced);
+      computer.setDiscontinued(discontinued);
+      computer.setCompany(company);
+      computerDAO.create(computer);
     } catch (SQLException e) {
       e.printStackTrace(System.err);
     }
@@ -204,6 +233,30 @@ public class CLIRoutine {
   /* ========== Scanner helpers ========== */
 
   /**
+   * Ask the user to enter a string, or nothing to cancel.
+   *
+   * @param message
+   *          The message to display at the beginning of the input.
+   * @return a string, or null if the user canceled the input.
+   */
+  private String getStringInput(String message) {
+    String string = null;
+
+    System.out.print(message + " (Enter nothing to cancel)\n> ");
+
+    String input = scanner.nextLine();
+
+    if (!"".equals(splitToWords(input)[0])) {
+      string = input;
+      System.out.println();
+    } else {
+      System.out.println(CANCELED);
+    }
+
+    return string;
+  }
+
+  /**
    * Ask the user if he wants to do something.
    *
    * @param message
@@ -226,11 +279,56 @@ public class CLIRoutine {
   }
 
   /**
+   * Ask the user to enter a date, or nothing to leave empty.
+   *
+   * @param message
+   *          The message to display at the beginning of the input.
+   * @return the date, or null if the the user left the input empty.
+   */
+  private Date getDateInput(String message) {
+    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+    boolean running = true;
+    Date date = null;
+    String string;
+
+    System.out.println(message + " (yyyy-MM-dd, enter nothing to leave empty)");
+
+    // Loop until a valid date is entered or the input is canceled
+    do {
+      System.out.print("> ");
+
+      string = scanner.nextLine();
+      String[] words = splitToWords(string);
+
+      if ("".equals(words[0])) {
+        System.out.println();
+        running = false;
+      } else {
+        boolean bad = true;
+
+        // Try to parse the date
+        try {
+          date = format.parse(string);
+          bad = false;
+          System.out.println();
+        } catch (ParseException ex) {
+          // Ignored
+        }
+        if (bad) {
+          System.out.println("Please enter a valid date.");
+        }
+      }
+    } while (date == null && running);
+
+    return date;
+  }
+
+  /**
    * Ask the user to input a (long) number.
    *
    * @param message
    *          The message to display at the beginning of the input.
-   * @return the input number, or null if the input was cancelled.
+   * @return the input number, or null if the input was canceled.
    */
   private Long getLongInput(String message) {
     boolean running = true;
@@ -247,7 +345,7 @@ public class CLIRoutine {
       String[] words = splitToWords(string);
 
       if ("".equals(words[0])) {
-        System.out.println("Input canceled...");
+        System.out.println(CANCELED);
         running = false;
       } else {
         boolean bad = true;
