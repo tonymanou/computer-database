@@ -24,6 +24,21 @@ public class CLIRoutine {
   private static final String CANCELED = "Input canceled...";
   private Scanner scanner;
 
+  private static enum EmptyType {
+    /**
+     * Leave the field empty.
+     */
+    EMPTY,
+    /**
+     * Cancel the current input.
+     */
+    CANCEL,
+    /**
+     * Keep the original value.
+     */
+    KEEP
+  }
+
   public CLIRoutine() {
     scanner = new Scanner(System.in);
   }
@@ -151,7 +166,7 @@ public class CLIRoutine {
       System.out.println();
     }
 
-    Long companyId = getLongInput("[Add computer] Enter its company ID.", false);
+    Long companyId = getLongInput("[Add computer] Enter its company ID.", EmptyType.EMPTY);
 
     try {
       Company company = null;
@@ -183,7 +198,7 @@ public class CLIRoutine {
     }
 
     Long id = getLongInput("[Remove computer] Enter the id of the computer you want to delete.",
-        true);
+        EmptyType.CANCEL);
 
     if (id != null) {
       try {
@@ -206,7 +221,7 @@ public class CLIRoutine {
     }
 
     Long id = getLongInput("[Update computer] Enter the id of the computer you want to update.",
-        true);
+        EmptyType.CANCEL);
 
     if (id != null) {
       try {
@@ -243,7 +258,7 @@ public class CLIRoutine {
           }
 
           Long companyId = getLongInput("[Update computer] Enter the new company company ID.",
-              false);
+              EmptyType.KEEP);
           if (companyId != null) {
             CompanyDAO companyDAO = new CompanyDAO();
             Company company = companyDAO.getFromId(companyId);
@@ -381,15 +396,30 @@ public class CLIRoutine {
    *
    * @param message
    *          The message to display at the beginning of the input.
+   * @param emptyType
+   *          What to do when the user leaves an empty value.
+   * @param original
+   *          Optional original value, only used when using emptyType KEEP.
    * @return the input number, or null if the input was canceled.
    */
-  private Long getLongInput(String message, boolean emptyToCancel) {
+  private Long getLongInput(String message, EmptyType emptyType, Long... original) {
     boolean running = true;
     Long number = null;
     String string;
 
-    System.out.println(message + " (Positive number, enter nothing to "
-        + (emptyToCancel ? "cancel" : "leave empty") + ")");
+    System.out.print(message + " (Positive number, enter nothing to ");
+    switch (emptyType) {
+    case EMPTY:
+      System.out.print("leave empty");
+      break;
+    case CANCEL:
+      System.out.print("cancel");
+      break;
+    case KEEP:
+      System.out.print("keep current value, enter 0 to set no value");
+      break;
+    }
+    System.out.println(")");
 
     // Loop until a valid number is entered or the input is canceled
     do {
@@ -399,7 +429,21 @@ public class CLIRoutine {
       String[] words = splitToWords(string);
 
       if ("".equals(words[0])) {
-        System.out.println(emptyToCancel ? CANCELED : "");
+        switch (emptyType) {
+        case EMPTY:
+          System.out.println("Value set to null.");
+          break;
+        case CANCEL:
+          System.out.println(CANCELED);
+          break;
+        case KEEP:
+          System.out.println("Original value kept.");
+          if (original != null && original.length >= 1) {
+            number = original[0];
+          }
+          break;
+        }
+        System.out.println();
         running = false;
       } else {
         boolean bad = true;
