@@ -24,12 +24,15 @@ public class Main {
 		main.doMainMenu();
 	}
 
+	private Main() {
+		scanner = new Scanner(System.in);
+	}
+
 	private void doMainMenu() {
 		String action = null;
 		boolean running = true;
 
 		System.out.println("=== Computer database ===\n");
-		scanner = new Scanner(System.in);
 
 		// Main loop
 		while (running) {
@@ -100,6 +103,7 @@ public class Main {
 		}
 
 		scanner.close();
+		scanner = null;
 
 		System.out.println("========== End ==========");
 	}
