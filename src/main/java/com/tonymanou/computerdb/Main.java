@@ -25,11 +25,11 @@ public class Main {
 
 		// Main loop
 		while (running) {
-			printHelp();
+			System.out.println("[Home] Type 'help' if you don't know what to do.");
 			System.out.print("> ");
 
 			// Get user's input
-			action = sc.next();
+			action = sc.nextLine();
 
 			System.out.println();
 
@@ -55,16 +55,26 @@ public class Main {
 					case "update":
 						doUpdateComputer();
 						break;
+					default:
+						System.out.println("Unrecognized action");
 					}
 				} else {
 					doListComputers();
 				}
 				break;
 			case "company":
-				doListCompanies();
+				if (words.length > 1 && !words[1].equals("list")) {
+					switch (words[1]) {
+					default:
+						System.out.println("Unrecognized action");
+					}
+				} else {
+					doListCompanies();
+				}
 				break;
 			case "help":
-				printHelp();
+				System.out
+						.println("Actions: {computer [list|add|remove|update]} | {company [list]} | exit");
 				break;
 			case "exit":
 				System.out.println("Exiting...");
@@ -80,11 +90,6 @@ public class Main {
 		sc.close();
 
 		System.out.println("========== End ==========");
-	}
-
-	private static void printHelp() {
-		System.out
-				.println("[Home] Actions: {computer [list|add|remove|update]} | {company [list]} | exit");
 	}
 
 	private static void doListComputers() {
