@@ -16,20 +16,28 @@ import com.tonymanou.computerdb.entity.Computer;
  */
 public class Main {
 
+	private Scanner scanner;
+
 	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
+		Main main = new Main();
+		main.doMainMenu();
+	}
+
+	private void doMainMenu() {
 		String action = null;
 		boolean running = true;
 
 		System.out.println("=== Computer database ===\n");
+		scanner = new Scanner(System.in);
 
 		// Main loop
 		while (running) {
-			System.out.println("[Home] Type 'help' if you don't know what to do.");
+			System.out
+					.println("[Home] Type 'help' if you don't know what to do.");
 			System.out.print("> ");
 
 			// Get user's input
-			action = sc.nextLine();
+			action = scanner.nextLine();
 
 			System.out.println();
 
@@ -90,12 +98,12 @@ public class Main {
 			System.out.println();
 		}
 
-		sc.close();
+		scanner.close();
 
 		System.out.println("========== End ==========");
 	}
 
-	private static void doListComputers() {
+	private void doListComputers() {
 		try {
 			ComputerDAO computerDAO = new ComputerDAO();
 			List<Computer> listComputer = computerDAO.findAll();
@@ -112,7 +120,7 @@ public class Main {
 		}
 	}
 
-	private static void doAddComputer() {
+	private void doAddComputer() {
 		try {
 			ComputerDAO computerDAO = new ComputerDAO();
 			Computer comp = new Computer();
@@ -123,7 +131,7 @@ public class Main {
 		}
 	}
 
-	private static void doRemoveComputer() {
+	private void doRemoveComputer() {
 		try {
 			ComputerDAO computerDAO = new ComputerDAO();
 			computerDAO.delete(0L);
@@ -133,7 +141,7 @@ public class Main {
 		}
 	}
 
-	private static void doUpdateComputer() {
+	private void doUpdateComputer() {
 		try {
 			ComputerDAO computerDAO = new ComputerDAO();
 			Computer comp = null;
@@ -144,7 +152,7 @@ public class Main {
 		}
 	}
 
-	private static void doListCompanies() {
+	private void doListCompanies() {
 		try {
 			CompanyDAO companyDAO = new CompanyDAO();
 			List<Company> listCompany = companyDAO.findAll();
