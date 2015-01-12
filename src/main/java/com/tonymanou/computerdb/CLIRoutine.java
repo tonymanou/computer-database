@@ -130,7 +130,7 @@ public class CLIRoutine {
         }
       }
     } catch (SQLException e) {
-      e.printStackTrace(System.err);
+      die(e);
     }
   }
 
@@ -169,7 +169,7 @@ public class CLIRoutine {
       computer.setCompany(company);
       computerDAO.create(computer);
     } catch (SQLException e) {
-      e.printStackTrace(System.err);
+      die(e);
     }
   }
 
@@ -190,7 +190,7 @@ public class CLIRoutine {
         computerDAO.delete(id);
         System.out.println("Deleting computer [id=" + id + "].");
       } catch (SQLException e) {
-        e.printStackTrace(System.err);
+        die(e);
       }
     }
   }
@@ -205,7 +205,7 @@ public class CLIRoutine {
       // TODO let the user choose what to edit
       computerDAO.update(comp);
     } catch (SQLException e) {
-      e.printStackTrace(System.err);
+      die(e);
     }
   }
 
@@ -227,7 +227,7 @@ public class CLIRoutine {
         }
       }
     } catch (SQLException e) {
-      e.printStackTrace(System.err);
+      die(e);
     }
   }
 
@@ -388,5 +388,16 @@ public class CLIRoutine {
     }
 
     return words;
+  }
+
+  /**
+   * Kill the program and display the exception that caused the death.
+   *
+   * @param e
+   *          Exception thrown.
+   */
+  private void die(Exception e) {
+    e.printStackTrace(System.err);
+    System.exit(-1);
   }
 }
