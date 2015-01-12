@@ -10,7 +10,7 @@ import com.tonymanou.computerdb.entity.Company;
 import com.tonymanou.computerdb.entity.Computer;
 
 /**
- * Program's entry point.
+ * Command-line interface to manipulate the database.
  *
  * @author tonymanou
  */
@@ -23,6 +23,9 @@ public class CLIRoutine {
 		scanner = new Scanner(System.in);
 	}
 
+	/**
+	 * Routine for the main menu in command line interface.
+	 */
 	public void doMainMenu() {
 		String action = null;
 		boolean running = true;
@@ -105,6 +108,9 @@ public class CLIRoutine {
 
 	/* ========== Computer actions ========== */
 
+	/**
+	 * List all the computers from the database.
+	 */
 	private void doListComputers() {
 		try {
 			ComputerDAO computerDAO = new ComputerDAO();
@@ -122,6 +128,9 @@ public class CLIRoutine {
 		}
 	}
 
+	/**
+	 * Let the CLI user add a new computer.
+	 */
 	private void doAddComputer() {
 		try {
 			ComputerDAO computerDAO = new ComputerDAO();
@@ -133,6 +142,9 @@ public class CLIRoutine {
 		}
 	}
 
+	/**
+	 * Let the CLI user remove a computer.
+	 */
 	private void doRemoveComputer() {
 		try {
 			ComputerDAO computerDAO = new ComputerDAO();
@@ -143,6 +155,9 @@ public class CLIRoutine {
 		}
 	}
 
+	/**
+	 * Let the CLI user update a computer.
+	 */
 	private void doUpdateComputer() {
 		try {
 			ComputerDAO computerDAO = new ComputerDAO();
@@ -156,6 +171,9 @@ public class CLIRoutine {
 
 	/* ========== Company actions ========== */
 
+	/**
+	 * List all the companies in the database.
+	 */
 	private void doListCompanies() {
 		try {
 			CompanyDAO companyDAO = new CompanyDAO();
