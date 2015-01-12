@@ -71,4 +71,31 @@ public class Computer {
 		builder.append("]");
 		return builder.toString();
 	}
+
+	/**
+	 * A better {@code toString()} that ignore null members.
+	 *
+	 * @return a clever string representation of the object.
+	 */
+	public String toCleverString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Computer [id=");
+		builder.append(id);
+		builder.append(", name=");
+		builder.append(name);
+		if (introduced != null) {
+			builder.append(", introduced=");
+			builder.append(introduced);
+		}
+		if (discontinued != null) {
+			builder.append(", discontinued=");
+			builder.append(discontinued);
+		}
+		if (company != null) {
+			builder.append(", company=");
+			builder.append(company);
+		}
+		builder.append("]");
+		return builder.toString();
+	}
 }

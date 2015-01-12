@@ -104,7 +104,7 @@ public class Main {
 				System.out.println("There is no computer is the database.");
 			} else {
 				for (Computer c : listComputer) {
-					System.out.println(c);
+					System.out.println(c.toCleverString());
 				}
 			}
 		} catch (SQLException e) {
