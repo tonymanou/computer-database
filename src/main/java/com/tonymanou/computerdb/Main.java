@@ -7,8 +7,8 @@ package com.tonymanou.computerdb;
  */
 public class Main {
 
-	public static void main(String[] args) {
-		CLIRoutine routine = new CLIRoutine();
-		routine.doMainMenu();
-	}
+  public static void main(String[] args) {
+    CLIRoutine routine = new CLIRoutine();
+    routine.doMainMenu();
+  }
 }
