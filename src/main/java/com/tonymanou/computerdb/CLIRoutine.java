@@ -151,7 +151,7 @@ public class CLIRoutine {
       System.out.println();
     }
 
-    Long companyId = getLongInput("[Add computer] Enter its company ID.");
+    Long companyId = getLongInput("[Add computer] Enter its company ID.", false);
 
     try {
       Company company = null;
@@ -182,7 +182,8 @@ public class CLIRoutine {
       System.out.println();
     }
 
-    Long id = getLongInput("[Remove computer] Enter the id of the computer you want to delete.");
+    Long id = getLongInput("[Remove computer] Enter the id of the computer you want to delete.",
+        true);
 
     if (id != null) {
       try {
@@ -331,12 +332,13 @@ public class CLIRoutine {
    *          The message to display at the beginning of the input.
    * @return the input number, or null if the input was canceled.
    */
-  private Long getLongInput(String message) {
+  private Long getLongInput(String message, boolean emptyToCancel) {
     boolean running = true;
     Long number = null;
     String string;
 
-    System.out.println(message + " (Positive number, enter nothing to cancel)");
+    System.out.println(message + " (Positive number, enter nothing to "
+        + (emptyToCancel ? "cancel" : "leave empty") + ")");
 
     // Loop until a valid number is entered or the input is canceled
     do {
@@ -346,7 +348,7 @@ public class CLIRoutine {
       String[] words = splitToWords(string);
 
       if ("".equals(words[0])) {
-        System.out.println(CANCELED);
+        System.out.println(emptyToCancel ? CANCELED : "");
         running = false;
       } else {
         boolean bad = true;
