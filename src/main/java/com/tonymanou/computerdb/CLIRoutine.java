@@ -29,6 +29,7 @@ public class CLIRoutine {
   public void doMainMenu() {
     String action = null;
     boolean running = true;
+    boolean skip = false;
 
     System.out.println("=== Computer database ===\n");
 
@@ -92,11 +93,18 @@ public class CLIRoutine {
         System.out.println("Exiting...");
         running = false;
         break;
+      case "":
+        skip = true;
+        break;
       default:
         System.out.println(UNRECOGNIZED);
       }
 
-      System.out.println();
+      if (skip == false) {
+        System.out.println();
+      } else {
+        skip = false;
+      }
     }
 
     scanner.close();
