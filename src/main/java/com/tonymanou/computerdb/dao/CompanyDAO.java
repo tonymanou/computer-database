@@ -80,7 +80,7 @@ public class CompanyDAO {
    * @throws SQLException
    *           if a database access error occurs
    */
-  public static Company getFromId(Long id) throws SQLException {
+  public Company getFromId(Long id) throws SQLException {
     Company company = null;
     Connection connection = null;
     Statement statement = null;

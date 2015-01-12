@@ -37,6 +37,8 @@ public class ComputerDAO {
       resultat = statement
           .executeQuery("SELECT id, name, introduced, discontinued, company_id FROM computer;");
 
+      CompanyDAO companyDAO = new CompanyDAO();
+
       while (resultat.next()) {
         Computer c = new Computer();
         c.setId(resultat.getLong(1));
@@ -45,7 +47,7 @@ public class ComputerDAO {
         c.setDiscontinued(resultat.getDate(4));
 
         Long companyId = resultat.getLong(5);
-        c.setCompany(CompanyDAO.getFromId(companyId));
+        c.setCompany(companyDAO.getFromId(companyId));
 
         list.add(c);
       }
