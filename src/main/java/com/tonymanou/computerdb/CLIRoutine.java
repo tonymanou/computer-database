@@ -44,13 +44,7 @@ public class CLIRoutine {
       System.out.println();
 
       // Split action string into words
-      String[] words;
-      if (action != null) {
-        words = action.trim().toLowerCase().split(" ");
-      } else {
-        words = new String[1];
-        words[0] = "";
-      }
+      String[] words = splitToWords(action);
 
       switch (words[0]) {
       case "computer":
@@ -196,5 +190,27 @@ public class CLIRoutine {
     } catch (SQLException e) {
       e.printStackTrace(System.err);
     }
+  }
+
+  /* ========== Scanner helpers ========== */
+
+  /**
+   * Split a string into words.
+   *
+   * @param string
+   *          The string to split.
+   * @return a non-empty array with all the substrings.
+   */
+  private String[] splitToWords(String string) {
+    String[] words;
+
+    if (string != null) {
+      words = string.trim().toLowerCase().split(" ");
+    } else {
+      words = new String[1];
+      words[0] = "";
+    }
+
+    return words;
   }
 }
