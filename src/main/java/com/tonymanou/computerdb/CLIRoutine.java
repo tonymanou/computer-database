@@ -1,8 +1,9 @@
 package com.tonymanou.computerdb;
 
 import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
@@ -286,7 +287,7 @@ public class CLIRoutine {
    * @return the date, or null if the the user left the input empty.
    */
   private Date getDateInput(String message) {
-    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+    DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
     boolean running = true;
     Date date = null;
     String string;
@@ -306,12 +307,12 @@ public class CLIRoutine {
       } else {
         boolean bad = true;
 
-        // Try to parse the date
         try {
-          date = format.parse(string);
+          LocalDate localDate = LocalDate.parse(string, formatter);
+          date = java.sql.Date.valueOf(localDate);
           bad = false;
           System.out.println();
-        } catch (ParseException ex) {
+        } catch (DateTimeParseException e) {
           // Ignored
         }
         if (bad) {
