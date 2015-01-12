@@ -147,12 +147,28 @@ public class CLIRoutine {
    * Let the CLI user remove a computer.
    */
   private void doRemoveComputer() {
-    try {
-      ComputerDAO computerDAO = new ComputerDAO();
-      computerDAO.delete(0L);
-      // TODO let the user choose the id
-    } catch (SQLException e) {
-      e.printStackTrace(System.err);
+    String str;
+
+    System.out.print("Do you want to list all the computers first? [y|n]\n> ");
+
+    str = scanner.nextLine();
+    System.out.println();
+
+    if (str.startsWith("y")) {
+      doListComputers();
+      System.out.println();
+    }
+
+    Long id = getLongInput("Enter the id of the computer you want to delete.");
+
+    if (id != null) {
+      try {
+        ComputerDAO computerDAO = new ComputerDAO();
+        computerDAO.delete(id);
+        System.out.println("Deleting computer [id=" + id + "].");
+      } catch (SQLException e) {
+        e.printStackTrace(System.err);
+      }
     }
   }
 
@@ -193,6 +209,52 @@ public class CLIRoutine {
   }
 
   /* ========== Scanner helpers ========== */
+
+  /**
+   * Ask the user to input a (long) number.
+   *
+   * @param message
+   *          The message to display at the beginning of the input.
+   * @return the input number, or null if the input was cancelled.
+   */
+  private Long getLongInput(String message) {
+    boolean running = true;
+    Long number = null;
+    String string;
+
+    System.out.println(message + " (Positive number, enter nothing to cancel)");
+
+    // Loop until a valid number is entered or the input is canceled
+    do {
+      System.out.print("> ");
+
+      string = scanner.nextLine();
+      String[] words = splitToWords(string);
+
+      if ("".equals(words[0])) {
+        System.out.println("Input canceled...");
+        running = false;
+      } else {
+        boolean bad = true;
+
+        // Try to parse the number
+        if (words[0].matches("[+]?[0-9]+")) {
+          try {
+            number = Long.parseLong(words[0]);
+            bad = false;
+            System.out.println();
+          } catch (NumberFormatException ex) {
+            // Ignored
+          }
+        }
+        if (bad) {
+          System.out.println("Please enter a positive number.");
+        }
+      }
+    } while (number == null && running);
+
+    return number;
+  }
 
   /**
    * Split a string into words.
