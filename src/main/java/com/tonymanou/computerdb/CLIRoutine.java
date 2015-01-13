@@ -7,11 +7,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
-import com.tonymanou.computerdb.dao.ICompanyDAO;
-import com.tonymanou.computerdb.dao.IComputerDAO;
-import com.tonymanou.computerdb.dao.Util;
 import com.tonymanou.computerdb.entity.Company;
 import com.tonymanou.computerdb.entity.Computer;
+import com.tonymanou.computerdb.service.ICompanyService;
+import com.tonymanou.computerdb.service.IComputerService;
+import com.tonymanou.computerdb.service.ServiceManager;
 
 /**
  * Command-line interface to manipulate the database.
@@ -23,8 +23,8 @@ public class CLIRoutine {
   private static final String UNRECOGNIZED = "Unrecognized action.";
   private static final String CANCELED = "Input canceled...";
   private Scanner scanner;
-  private IComputerDAO computerDAO;
-  private ICompanyDAO companyDAO;
+  private IComputerService computerService;
+  private ICompanyService companyService;
 
   private static enum EmptyType {
     /**
@@ -43,8 +43,8 @@ public class CLIRoutine {
 
   public CLIRoutine() {
     scanner = new Scanner(System.in);
-    computerDAO = Util.INSTANCE.getComputerDAO();
-    companyDAO = Util.INSTANCE.getCompanyDAO();
+    computerService = ServiceManager.INSTANCE.getComputerService();
+    companyService = ServiceManager.INSTANCE.getCompanyService();
   }
 
   /**
@@ -137,7 +137,7 @@ public class CLIRoutine {
    * List all the computers from the database.
    */
   private void doListComputers() {
-    List<Computer> listComputer = computerDAO.findAll();
+    List<Computer> listComputer = computerService.findAll();
 
     if (listComputer.size() == 0) {
       System.out.println("There is no computer is the database.");
@@ -170,7 +170,7 @@ public class CLIRoutine {
     Company company = null;
 
     if (companyId != null) {
-      company = companyDAO.getFromId(companyId);
+      company = companyService.getFromId(companyId);
     }
 
     Computer computer = new Computer();
@@ -178,7 +178,7 @@ public class CLIRoutine {
     computer.setIntroduced(introduced);
     computer.setDiscontinued(discontinued);
     computer.setCompany(company);
-    computerDAO.create(computer);
+    computerService.create(computer);
   }
 
   /**
@@ -194,7 +194,7 @@ public class CLIRoutine {
         EmptyType.CANCEL);
 
     if (id != null) {
-      computerDAO.delete(id);
+      computerService.delete(id);
       System.out.println("Deleting computer [id=" + id + "].");
     }
   }
@@ -212,7 +212,7 @@ public class CLIRoutine {
         EmptyType.CANCEL);
 
     if (id != null) {
-      Computer computer = computerDAO.getFromId(id);
+      Computer computer = computerService.getFromId(id);
 
       if (computer == null) {
         System.out.println("Computer [id=" + id + "] not found!");
@@ -247,13 +247,13 @@ public class CLIRoutine {
             EmptyType.KEEP, oldCompanyId);
         Company company = null;
         if (companyId != null) {
-          company = companyDAO.getFromId(companyId);
+          company = companyService.getFromId(companyId);
           // TODO check if this company id exists
         }
         computer.setCompany(company);
 
         System.out.println(computer);
-        computerDAO.update(computer);
+        computerService.update(computer);
 
         System.out.println("Computer [id=" + id + "] updated!");
       }
@@ -266,7 +266,7 @@ public class CLIRoutine {
    * List all the companies in the database.
    */
   private void doListCompanies() {
-    List<Company> listCompany = companyDAO.findAll();
+    List<Company> listCompany = companyService.findAll();
 
     if (listCompany.size() == 0) {
       System.out.println("There is no company is the database.");
