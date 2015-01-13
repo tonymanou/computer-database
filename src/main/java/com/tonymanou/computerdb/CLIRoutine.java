@@ -1,6 +1,5 @@
 package com.tonymanou.computerdb;
 
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -138,18 +137,14 @@ public class CLIRoutine {
    * List all the computers from the database.
    */
   private void doListComputers() {
-    try {
-      List<Computer> listComputer = computerDAO.findAll();
+    List<Computer> listComputer = computerDAO.findAll();
 
-      if (listComputer.size() == 0) {
-        System.out.println("There is no computer is the database.");
-      } else {
-        for (Computer c : listComputer) {
-          System.out.println(c);
-        }
+    if (listComputer.size() == 0) {
+      System.out.println("There is no computer is the database.");
+    } else {
+      for (Computer c : listComputer) {
+        System.out.println(c);
       }
-    } catch (SQLException e) {
-      die(e);
     }
   }
 
@@ -172,22 +167,18 @@ public class CLIRoutine {
 
     Long companyId = getLongInput("[Add computer] Enter its company ID.", EmptyType.EMPTY);
 
-    try {
-      Company company = null;
+    Company company = null;
 
-      if (companyId != null) {
-        company = companyDAO.getFromId(companyId);
-      }
-
-      Computer computer = new Computer();
-      computer.setName(name);
-      computer.setIntroduced(introduced);
-      computer.setDiscontinued(discontinued);
-      computer.setCompany(company);
-      computerDAO.create(computer);
-    } catch (SQLException e) {
-      die(e);
+    if (companyId != null) {
+      company = companyDAO.getFromId(companyId);
     }
+
+    Computer computer = new Computer();
+    computer.setName(name);
+    computer.setIntroduced(introduced);
+    computer.setDiscontinued(discontinued);
+    computer.setCompany(company);
+    computerDAO.create(computer);
   }
 
   /**
@@ -203,12 +194,8 @@ public class CLIRoutine {
         EmptyType.CANCEL);
 
     if (id != null) {
-      try {
-        computerDAO.delete(id);
-        System.out.println("Deleting computer [id=" + id + "].");
-      } catch (SQLException e) {
-        die(e);
-      }
+      computerDAO.delete(id);
+      System.out.println("Deleting computer [id=" + id + "].");
     }
   }
 
@@ -225,55 +212,50 @@ public class CLIRoutine {
         EmptyType.CANCEL);
 
     if (id != null) {
-      try {
-        Computer computer = computerDAO.getFromId(id);
+      Computer computer = computerDAO.getFromId(id);
 
-        if (computer == null) {
-          System.out.println("Computer [id=" + id + "] not found!");
-        } else {
-          String oldName = computer.getName();
-          System.out.println("[Update computer] Current name is '" + oldName + "'.");
-          String name = getStringInput("[Update computer] Enter the new name.", EmptyType.KEEP,
-              oldName);
-          computer.setName(name);
+      if (computer == null) {
+        System.out.println("Computer [id=" + id + "] not found!");
+      } else {
+        String oldName = computer.getName();
+        System.out.println("[Update computer] Current name is '" + oldName + "'.");
+        String name = getStringInput("[Update computer] Enter the new name.", EmptyType.KEEP,
+            oldName);
+        computer.setName(name);
 
-          Date oldIntroduced = computer.getIntroduced();
-          System.out.println("[Update computer] Current introduced date is " + oldIntroduced + ".");
-          Date introduced = getDateInput("[Update computer] Enter the new date.", EmptyType.KEEP,
-              oldIntroduced);
-          computer.setIntroduced(introduced);
+        Date oldIntroduced = computer.getIntroduced();
+        System.out.println("[Update computer] Current introduced date is " + oldIntroduced + ".");
+        Date introduced = getDateInput("[Update computer] Enter the new date.", EmptyType.KEEP,
+            oldIntroduced);
+        computer.setIntroduced(introduced);
 
-          Date oldDiscontinued = computer.getDiscontinued();
-          System.out.println("[Update computer] Current introduced date is " + oldDiscontinued
-              + ".");
-          Date discontinued = getDateInput("[Update computer] Enter the new date.", EmptyType.KEEP,
-              oldDiscontinued);
-          computer.setDiscontinued(discontinued);
+        Date oldDiscontinued = computer.getDiscontinued();
+        System.out.println("[Update computer] Current introduced date is " + oldDiscontinued + ".");
+        Date discontinued = getDateInput("[Update computer] Enter the new date.", EmptyType.KEEP,
+            oldDiscontinued);
+        computer.setDiscontinued(discontinued);
 
-          System.out.println("[Update computer] Current company is " + computer.getCompany() + ".");
-          if (isYesAnswer("[Update computer] Do you want to list all the companies first?")) {
-            doListCompanies();
-            System.out.println();
-          }
-
-          Company oldCompany = computer.getCompany();
-          Long oldCompanyId = oldCompany == null ? null : oldCompany.getId();
-          Long companyId = getLongInput("[Update computer] Enter the new company company ID.",
-              EmptyType.KEEP, oldCompanyId);
-          Company company = null;
-          if (companyId != null) {
-            company = companyDAO.getFromId(companyId);
-            // TODO check if this company id exists
-          }
-          computer.setCompany(company);
-
-          System.out.println(computer);
-          computerDAO.update(computer);
-
-          System.out.println("Computer [id=" + id + "] updated!");
+        System.out.println("[Update computer] Current company is " + computer.getCompany() + ".");
+        if (isYesAnswer("[Update computer] Do you want to list all the companies first?")) {
+          doListCompanies();
+          System.out.println();
         }
-      } catch (SQLException e) {
-        die(e);
+
+        Company oldCompany = computer.getCompany();
+        Long oldCompanyId = oldCompany == null ? null : oldCompany.getId();
+        Long companyId = getLongInput("[Update computer] Enter the new company company ID.",
+            EmptyType.KEEP, oldCompanyId);
+        Company company = null;
+        if (companyId != null) {
+          company = companyDAO.getFromId(companyId);
+          // TODO check if this company id exists
+        }
+        computer.setCompany(company);
+
+        System.out.println(computer);
+        computerDAO.update(computer);
+
+        System.out.println("Computer [id=" + id + "] updated!");
       }
     }
   }
@@ -284,18 +266,14 @@ public class CLIRoutine {
    * List all the companies in the database.
    */
   private void doListCompanies() {
-    try {
-      List<Company> listCompany = companyDAO.findAll();
+    List<Company> listCompany = companyDAO.findAll();
 
-      if (listCompany.size() == 0) {
-        System.out.println("There is no company is the database.");
-      } else {
-        for (Company c : listCompany) {
-          System.out.println(c);
-        }
+    if (listCompany.size() == 0) {
+      System.out.println("There is no company is the database.");
+    } else {
+      for (Company c : listCompany) {
+        System.out.println(c);
       }
-    } catch (SQLException e) {
-      die(e);
     }
   }
 
@@ -556,16 +534,5 @@ public class CLIRoutine {
     }
 
     return words;
-  }
-
-  /**
-   * Kill the program and display the exception that caused the death.
-   *
-   * @param e
-   *          Exception thrown.
-   */
-  private void die(Exception e) {
-    e.printStackTrace(System.err);
-    System.exit(-1);
   }
 }

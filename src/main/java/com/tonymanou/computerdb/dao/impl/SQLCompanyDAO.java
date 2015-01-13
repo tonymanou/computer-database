@@ -11,6 +11,7 @@ import java.util.List;
 import com.tonymanou.computerdb.dao.ICompanyDAO;
 import com.tonymanou.computerdb.dao.Util;
 import com.tonymanou.computerdb.entity.Company;
+import com.tonymanou.computerdb.exception.PersistenceException;
 
 /**
  * Helper class to make actions on companies in the database.
@@ -23,7 +24,7 @@ public class SQLCompanyDAO implements ICompanyDAO {
    * {@inheritDoc}
    */
   @Override
-  public List<Company> findAll() throws SQLException {
+  public List<Company> findAll() {
     List<Company> list = new ArrayList<Company>();
     Connection connection = null;
     Statement statement = null;
@@ -42,7 +43,7 @@ public class SQLCompanyDAO implements ICompanyDAO {
         list.add(c);
       }
     } catch (SQLException e) {
-      throw e;
+      throw new PersistenceException(e);
     } finally {
       Util.close(resultat, statement, connection);
     }
@@ -54,7 +55,7 @@ public class SQLCompanyDAO implements ICompanyDAO {
    * {@inheritDoc}
    */
   @Override
-  public Company getFromId(Long id) throws SQLException {
+  public Company getFromId(Long id) {
     Company company = null;
     Connection connection = null;
     PreparedStatement statement = null;
@@ -72,7 +73,7 @@ public class SQLCompanyDAO implements ICompanyDAO {
         company.setName(resultat.getString(2));
       }
     } catch (SQLException e) {
-      throw e;
+      throw new PersistenceException(e);
     } finally {
       Util.close(resultat, statement, connection);
     }

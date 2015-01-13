@@ -13,6 +13,7 @@ import com.tonymanou.computerdb.dao.IComputerDAO;
 import com.tonymanou.computerdb.dao.Util;
 import com.tonymanou.computerdb.entity.Company;
 import com.tonymanou.computerdb.entity.Computer;
+import com.tonymanou.computerdb.exception.PersistenceException;
 
 /**
  * Helper class to make actions on computers in the database.
@@ -25,7 +26,7 @@ public class SQLComputerDAO implements IComputerDAO {
    * {@inheritDoc}
    */
   @Override
-  public List<Computer> findAll() throws SQLException {
+  public List<Computer> findAll() {
     List<Computer> list = new ArrayList<Computer>();
     Connection connection = null;
     Statement statement = null;
@@ -54,7 +55,7 @@ public class SQLComputerDAO implements IComputerDAO {
         list.add(c);
       }
     } catch (SQLException e) {
-      throw e;
+      throw new PersistenceException(e);
     } finally {
       Util.close(resultat, statement, connection);
     }
@@ -66,7 +67,7 @@ public class SQLComputerDAO implements IComputerDAO {
    * {@inheritDoc}
    */
   @Override
-  public void create(Computer computer) throws SQLException {
+  public void create(Computer computer) {
     Connection connection = null;
     PreparedStatement statement = null;
 
@@ -86,7 +87,7 @@ public class SQLComputerDAO implements IComputerDAO {
       }
       statement.executeUpdate();
     } catch (SQLException e) {
-      throw e;
+      throw new PersistenceException(e);
     } finally {
       Util.close(statement, connection);
     }
@@ -96,7 +97,7 @@ public class SQLComputerDAO implements IComputerDAO {
    * {@inheritDoc}
    */
   @Override
-  public void update(Computer computer) throws SQLException {
+  public void update(Computer computer) {
     Connection connection = null;
     PreparedStatement statement = null;
 
@@ -116,7 +117,7 @@ public class SQLComputerDAO implements IComputerDAO {
       statement.setLong(5, computer.getId());
       statement.executeUpdate();
     } catch (SQLException e) {
-      throw e;
+      throw new PersistenceException(e);
     } finally {
       Util.close(statement, connection);
     }
@@ -126,7 +127,7 @@ public class SQLComputerDAO implements IComputerDAO {
    * {@inheritDoc}
    */
   @Override
-  public void delete(Long id) throws SQLException {
+  public void delete(Long id) {
     Connection connection = null;
     PreparedStatement statement = null;
 
@@ -136,7 +137,7 @@ public class SQLComputerDAO implements IComputerDAO {
       statement.setLong(1, id);
       statement.executeUpdate();
     } catch (SQLException e) {
-      throw e;
+      throw new PersistenceException(e);
     } finally {
       Util.close(statement, connection);
     }
@@ -146,7 +147,7 @@ public class SQLComputerDAO implements IComputerDAO {
    * {@inheritDoc}
    */
   @Override
-  public Computer getFromId(Long id) throws SQLException {
+  public Computer getFromId(Long id) {
     Computer computer = null;
     Connection connection = null;
     PreparedStatement statement = null;
@@ -173,7 +174,7 @@ public class SQLComputerDAO implements IComputerDAO {
         }
       }
     } catch (SQLException e) {
-      throw e;
+      throw new PersistenceException(e);
     } finally {
       Util.close(resultat, statement, connection);
     }

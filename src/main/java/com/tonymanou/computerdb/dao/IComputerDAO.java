@@ -1,6 +1,5 @@
 package com.tonymanou.computerdb.dao;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import com.tonymanou.computerdb.entity.Computer;
@@ -16,40 +15,32 @@ public interface IComputerDAO {
    * Retrieve all the computers from the database.
    *
    * @return A list containing all the computers.
-   * @throws SQLException
-   *           if a database access error occurs
    */
-  List<Computer> findAll() throws SQLException;
+  List<Computer> findAll();
 
   /**
    * Create a new computer in the database.
    *
    * @param computer
    *          The computer to create.
-   * @throws SQLException
-   *           if a database access error occurs
    */
-  void create(Computer computer) throws SQLException;
+  void create(Computer computer);
 
   /**
    * Update a computer in the database.
    *
    * @param computer
    *          The computer to update.
-   * @throws SQLException
-   *           if a database access error occurs
    */
-  void update(Computer computer) throws SQLException;
+  void update(Computer computer);
 
   /**
    * Delete a computer from the database.
    *
    * @param id
    *          Id of the computer to delete.
-   * @throws SQLException
-   *           if a database access error occurs
    */
-  void delete(Long id) throws SQLException;
+  void delete(Long id);
 
   /**
    * Retrieve a computer from the database thanks to the given id.
@@ -57,8 +48,6 @@ public interface IComputerDAO {
    * @param id
    *          The id of the computer to retrieve.
    * @return The {@link Computer}, or null if no matching company was found.
-   * @throws SQLException
-   *           if a database access error occurs
    */
-  Computer getFromId(Long id) throws SQLException;
+  Computer getFromId(Long id);
 }
