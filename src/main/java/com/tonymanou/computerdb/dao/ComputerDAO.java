@@ -55,27 +55,7 @@ public class ComputerDAO {
     } catch (SQLException e) {
       throw e;
     } finally {
-      if (resultat != null) {
-        try {
-          resultat.close();
-        } catch (SQLException e) {
-          // Ignored
-        }
-      }
-      if (statement != null) {
-        try {
-          statement.close();
-        } catch (SQLException e) {
-          // Ignored
-        }
-      }
-      if (connection != null) {
-        try {
-          connection.close();
-        } catch (SQLException e) {
-          // Ignored
-        }
-      }
+      Util.close(resultat, statement, connection);
     }
 
     return list;
@@ -115,20 +95,7 @@ public class ComputerDAO {
     } catch (SQLException e) {
       throw e;
     } finally {
-      if (statement != null) {
-        try {
-          statement.close();
-        } catch (SQLException e) {
-          // Ignored
-        }
-      }
-      if (connection != null) {
-        try {
-          connection.close();
-        } catch (SQLException e) {
-          // Ignored
-        }
-      }
+      Util.close(statement, connection);
     }
   }
 
@@ -165,33 +132,8 @@ public class ComputerDAO {
     } catch (SQLException e) {
       throw e;
     } finally {
-      if (statement != null) {
-        try {
-          statement.close();
-        } catch (SQLException e) {
-          // Ignored
-        }
-      }
-      if (connection != null) {
-        try {
-          connection.close();
-        } catch (SQLException e) {
-          // Ignored
-        }
-      }
+      Util.close(statement, connection);
     }
-  }
-
-  /**
-   * Delete a computer from the database.
-   *
-   * @param computer
-   *          The computer to delete.
-   * @throws SQLException
-   *           if a database access error occurs
-   */
-  public void delete(Computer computer) throws SQLException {
-    delete(computer.getId());
   }
 
   /**
@@ -218,20 +160,7 @@ public class ComputerDAO {
     } catch (SQLException e) {
       throw e;
     } finally {
-      if (statement != null) {
-        try {
-          statement.close();
-        } catch (SQLException e) {
-          // Ignored
-        }
-      }
-      if (connection != null) {
-        try {
-          connection.close();
-        } catch (SQLException e) {
-          // Ignored
-        }
-      }
+      Util.close(statement, connection);
     }
   }
 
@@ -276,27 +205,7 @@ public class ComputerDAO {
     } catch (SQLException e) {
       throw e;
     } finally {
-      if (resultat != null) {
-        try {
-          resultat.close();
-        } catch (SQLException e) {
-          // Ignored
-        }
-      }
-      if (statement != null) {
-        try {
-          statement.close();
-        } catch (SQLException e) {
-          // Ignored
-        }
-      }
-      if (connection != null) {
-        try {
-          connection.close();
-        } catch (SQLException e) {
-          // Ignored
-        }
-      }
+      Util.close(resultat, statement, connection);
     }
 
     return computer;

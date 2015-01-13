@@ -2,7 +2,9 @@ package com.tonymanou.computerdb.dao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.Date;
 
@@ -46,6 +48,47 @@ public class Util {
    */
   public static Connection getConnection() throws SQLException {
     return DriverManager.getConnection(DB_URL, DB_USR, DB_PW);
+  }
+
+  /**
+   * Close elements if they are not null.
+   *
+   * @param resultat
+   * @param statement
+   * @param connection
+   */
+  public static void close(ResultSet resultat, Statement statement, Connection connection) {
+    if (resultat != null) {
+      try {
+        resultat.close();
+      } catch (SQLException e) {
+        // Ignored
+      }
+    }
+    close(statement, connection);
+  }
+
+  /**
+   * Close elements if they are not null.
+   *
+   * @param statement
+   * @param connection
+   */
+  public static void close(Statement statement, Connection connection) {
+    if (statement != null) {
+      try {
+        statement.close();
+      } catch (SQLException e) {
+        // Ignored
+      }
+    }
+    if (connection != null) {
+      try {
+        connection.close();
+      } catch (SQLException e) {
+        // Ignored
+      }
+    }
   }
 
   // ========== Utility ==========
