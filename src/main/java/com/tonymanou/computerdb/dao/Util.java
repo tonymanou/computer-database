@@ -3,6 +3,8 @@ package com.tonymanou.computerdb.dao;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Date;
 
 /**
  * Helper class to create database connections.
@@ -10,6 +12,8 @@ import java.sql.SQLException;
  * @author tonymanou
  */
 public class Util {
+
+  // ========== Database ==========
 
   /**
    * URL to the database server.
@@ -42,5 +46,18 @@ public class Util {
    */
   public static Connection getConnection() throws SQLException {
     return DriverManager.getConnection(DB_URL, DB_USR, DB_PW);
+  }
+
+  // ========== Utility ==========
+
+  /**
+   * Convert a {@link Date} to a {@link Timestamp}
+   *
+   * @param date
+   *          The date.
+   * @return a timestamp.
+   */
+  public static Timestamp getTimestamp(Date date) {
+    return new Timestamp(date.getTime());
   }
 }

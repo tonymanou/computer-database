@@ -4,9 +4,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import com.tonymanou.computerdb.entity.Company;
@@ -105,9 +103,9 @@ public class ComputerDAO {
       query.append(",'");
       query.append(computer.getName());
       query.append("','");
-      query.append(getTimestamp(computer.getIntroduced()));
+      query.append(Util.getTimestamp(computer.getIntroduced()));
       query.append("','");
-      query.append(getTimestamp(computer.getDiscontinued()));
+      query.append(Util.getTimestamp(computer.getDiscontinued()));
       query.append("',");
       Company company = computer.getCompany();
       query.append(company == null ? null : company.getId());
@@ -153,9 +151,9 @@ public class ComputerDAO {
       StringBuilder query = new StringBuilder("UPDATE computer SET name='");
       query.append(computer.getName());
       query.append("', introduced='");
-      query.append(getTimestamp(computer.getIntroduced()));
+      query.append(Util.getTimestamp(computer.getIntroduced()));
       query.append("', discontinued='");
-      query.append(getTimestamp(computer.getDiscontinued()));
+      query.append(Util.getTimestamp(computer.getDiscontinued()));
       query.append("', company_id=");
       Company company = computer.getCompany();
       query.append(company == null ? null : company.getId());
@@ -302,16 +300,5 @@ public class ComputerDAO {
     }
 
     return computer;
-  }
-
-  /**
-   * Convert a {@link Date} to a {@link Timestamp}
-   *
-   * @param date
-   *          The date.
-   * @return a timestamp.
-   */
-  private Timestamp getTimestamp(Date date) {
-    return new Timestamp(date.getTime());
   }
 }
