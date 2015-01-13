@@ -1,4 +1,4 @@
-package com.tonymanou.computerdb.dao;
+package com.tonymanou.computerdb.dao.impl;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,6 +9,8 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.tonymanou.computerdb.dao.IComputerDAO;
+import com.tonymanou.computerdb.dao.Util;
 import com.tonymanou.computerdb.entity.Company;
 import com.tonymanou.computerdb.entity.Computer;
 
@@ -17,15 +19,12 @@ import com.tonymanou.computerdb.entity.Computer;
  *
  * @author tonymanou
  */
-public class ComputerDAO {
+public class SQLComputerDAO implements IComputerDAO {
 
   /**
-   * Retrieve all the computers from the database.
-   *
-   * @return A list containing all the computers.
-   * @throws SQLException
-   *           if a database access error occurs
+   * {@inheritDoc}
    */
+  @Override
   public List<Computer> findAll() throws SQLException {
     List<Computer> list = new ArrayList<Computer>();
     Connection connection = null;
@@ -38,7 +37,7 @@ public class ComputerDAO {
       resultat = statement
           .executeQuery("SELECT id, name, introduced, discontinued, company_id FROM computer;");
 
-      CompanyDAO companyDAO = new CompanyDAO();
+      SQLCompanyDAO companyDAO = new SQLCompanyDAO();
 
       while (resultat.next()) {
         Computer c = new Computer();
@@ -64,13 +63,9 @@ public class ComputerDAO {
   }
 
   /**
-   * Create a new computer in the database.
-   *
-   * @param computer
-   *          The computer to create.
-   * @throws SQLException
-   *           if a database access error occurs
+   * {@inheritDoc}
    */
+  @Override
   public void create(Computer computer) throws SQLException {
     Connection connection = null;
     PreparedStatement statement = null;
@@ -98,13 +93,9 @@ public class ComputerDAO {
   }
 
   /**
-   * Update a computer in the database.
-   *
-   * @param computer
-   *          The computer to update.
-   * @throws SQLException
-   *           if a database access error occurs
+   * {@inheritDoc}
    */
+  @Override
   public void update(Computer computer) throws SQLException {
     Connection connection = null;
     PreparedStatement statement = null;
@@ -132,13 +123,9 @@ public class ComputerDAO {
   }
 
   /**
-   * Delete a computer from the database.
-   *
-   * @param id
-   *          Id of the computer to delete.
-   * @throws SQLException
-   *           if a database access error occurs
+   * {@inheritDoc}
    */
+  @Override
   public void delete(Long id) throws SQLException {
     Connection connection = null;
     PreparedStatement statement = null;
@@ -156,20 +143,15 @@ public class ComputerDAO {
   }
 
   /**
-   * Retrieve a computer from the database thanks to the given id.
-   *
-   * @param id
-   *          The id of the computer to retrieve.
-   * @return The {@link Computer}, or null if no matching company was found.
-   * @throws SQLException
-   *           if a database access error occurs
+   * {@inheritDoc}
    */
+  @Override
   public Computer getFromId(Long id) throws SQLException {
     Computer computer = null;
     Connection connection = null;
     PreparedStatement statement = null;
     ResultSet resultat = null;
-    CompanyDAO companyDAO = new CompanyDAO();
+    SQLCompanyDAO companyDAO = new SQLCompanyDAO();
 
     try {
       connection = Util.getConnection();

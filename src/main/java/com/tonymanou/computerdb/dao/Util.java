@@ -8,12 +8,17 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.Date;
 
+import com.tonymanou.computerdb.dao.impl.SQLCompanyDAO;
+import com.tonymanou.computerdb.dao.impl.SQLComputerDAO;
+
 /**
  * Helper class to create database connections.
  *
  * @author tonymanou
  */
-public class Util {
+public enum Util {
+
+  INSTANCE;
 
   // ========== Database ==========
 
@@ -30,13 +35,27 @@ public class Util {
    */
   private static final String DB_PW = "qwerty1234";
 
-  static {
+  private IComputerDAO computerDAO;
+  private ICompanyDAO companyDAO;
+
+  private Util() {
     try {
       // Load the driver for mysql database
       Class.forName("com.mysql.jdbc.Driver");
     } catch (ClassNotFoundException e) {
       e.printStackTrace(System.err);
     }
+
+    computerDAO = new SQLComputerDAO();
+    companyDAO = new SQLCompanyDAO();
+  }
+
+  public IComputerDAO getComputerDAO() {
+    return computerDAO;
+  }
+
+  public ICompanyDAO getCompanyDAO() {
+    return companyDAO;
   }
 
   /**
@@ -49,6 +68,8 @@ public class Util {
   public static Connection getConnection() throws SQLException {
     return DriverManager.getConnection(DB_URL, DB_USR, DB_PW);
   }
+
+  // ========== Utility ==========
 
   /**
    * Close elements if they are not null.
@@ -90,8 +111,6 @@ public class Util {
       }
     }
   }
-
-  // ========== Utility ==========
 
   /**
    * Convert a {@link Date} to a {@link Timestamp}

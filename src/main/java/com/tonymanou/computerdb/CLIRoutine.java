@@ -8,8 +8,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
-import com.tonymanou.computerdb.dao.CompanyDAO;
-import com.tonymanou.computerdb.dao.ComputerDAO;
+import com.tonymanou.computerdb.dao.ICompanyDAO;
+import com.tonymanou.computerdb.dao.IComputerDAO;
+import com.tonymanou.computerdb.dao.Util;
 import com.tonymanou.computerdb.entity.Company;
 import com.tonymanou.computerdb.entity.Computer;
 
@@ -23,6 +24,8 @@ public class CLIRoutine {
   private static final String UNRECOGNIZED = "Unrecognized action.";
   private static final String CANCELED = "Input canceled...";
   private Scanner scanner;
+  private IComputerDAO computerDAO;
+  private ICompanyDAO companyDAO;
 
   private static enum EmptyType {
     /**
@@ -41,6 +44,8 @@ public class CLIRoutine {
 
   public CLIRoutine() {
     scanner = new Scanner(System.in);
+    computerDAO = Util.INSTANCE.getComputerDAO();
+    companyDAO = Util.INSTANCE.getCompanyDAO();
   }
 
   /**
@@ -134,7 +139,6 @@ public class CLIRoutine {
    */
   private void doListComputers() {
     try {
-      ComputerDAO computerDAO = new ComputerDAO();
       List<Computer> listComputer = computerDAO.findAll();
 
       if (listComputer.size() == 0) {
@@ -172,11 +176,9 @@ public class CLIRoutine {
       Company company = null;
 
       if (companyId != null) {
-        CompanyDAO companyDAO = new CompanyDAO();
         company = companyDAO.getFromId(companyId);
       }
 
-      ComputerDAO computerDAO = new ComputerDAO();
       Computer computer = new Computer();
       computer.setName(name);
       computer.setIntroduced(introduced);
@@ -202,7 +204,6 @@ public class CLIRoutine {
 
     if (id != null) {
       try {
-        ComputerDAO computerDAO = new ComputerDAO();
         computerDAO.delete(id);
         System.out.println("Deleting computer [id=" + id + "].");
       } catch (SQLException e) {
@@ -225,7 +226,6 @@ public class CLIRoutine {
 
     if (id != null) {
       try {
-        ComputerDAO computerDAO = new ComputerDAO();
         Computer computer = computerDAO.getFromId(id);
 
         if (computer == null) {
@@ -262,7 +262,6 @@ public class CLIRoutine {
               EmptyType.KEEP, oldCompanyId);
           Company company = null;
           if (companyId != null) {
-            CompanyDAO companyDAO = new CompanyDAO();
             company = companyDAO.getFromId(companyId);
             // TODO check if this company id exists
           }
@@ -286,7 +285,6 @@ public class CLIRoutine {
    */
   private void doListCompanies() {
     try {
-      CompanyDAO companyDAO = new CompanyDAO();
       List<Company> listCompany = companyDAO.findAll();
 
       if (listCompany.size() == 0) {
