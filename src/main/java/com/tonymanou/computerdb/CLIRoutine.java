@@ -141,7 +141,7 @@ public class CLIRoutine {
         System.out.println("There is no computer is the database.");
       } else {
         for (Computer c : listComputer) {
-          System.out.println(c.toCleverString());
+          System.out.println(c);
         }
       }
     } catch (SQLException e) {
