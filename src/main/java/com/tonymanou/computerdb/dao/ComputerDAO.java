@@ -1,9 +1,11 @@
 package com.tonymanou.computerdb.dao;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,27 +73,23 @@ public class ComputerDAO {
    */
   public void create(Computer computer) throws SQLException {
     Connection connection = null;
-    Statement statement = null;
+    PreparedStatement statement = null;
 
     try {
       connection = Util.getConnection();
-      statement = connection.createStatement();
-
-      StringBuilder query = new StringBuilder(
-          "INSERT INTO computer (id, name, introduced, discontinued, company_id) VALUES (");
-      query.append(computer.getId());
-      query.append(",'");
-      query.append(computer.getName());
-      query.append("','");
-      query.append(Util.getTimestamp(computer.getIntroduced()));
-      query.append("','");
-      query.append(Util.getTimestamp(computer.getDiscontinued()));
-      query.append("',");
+      statement = connection
+          .prepareStatement("INSERT INTO computer (id, name, introduced, discontinued, company_id) VALUES (?, ?, ?, ?, ?)");
+      statement.setLong(1, computer.getId());
+      statement.setString(2, computer.getName());
+      statement.setTimestamp(3, Util.getTimestamp(computer.getIntroduced()));
+      statement.setTimestamp(4, Util.getTimestamp(computer.getDiscontinued()));
       Company company = computer.getCompany();
-      query.append(company == null ? null : company.getId());
-      query.append(");");
-
-      statement.executeUpdate(query.toString());
+      if (company == null) {
+        statement.setNull(5, Types.BIGINT);
+      } else {
+        statement.setLong(5, company.getId());
+      }
+      statement.executeUpdate();
     } catch (SQLException e) {
       throw e;
     } finally {
@@ -109,26 +107,23 @@ public class ComputerDAO {
    */
   public void update(Computer computer) throws SQLException {
     Connection connection = null;
-    Statement statement = null;
+    PreparedStatement statement = null;
 
     try {
       connection = Util.getConnection();
-      statement = connection.createStatement();
-
-      StringBuilder query = new StringBuilder("UPDATE computer SET name='");
-      query.append(computer.getName());
-      query.append("', introduced='");
-      query.append(Util.getTimestamp(computer.getIntroduced()));
-      query.append("', discontinued='");
-      query.append(Util.getTimestamp(computer.getDiscontinued()));
-      query.append("', company_id=");
+      statement = connection
+          .prepareStatement("UPDATE computer SET name=?, introduced=?, discontinued=?, company_id=? WHERE id=?");
+      statement.setString(1, computer.getName());
+      statement.setTimestamp(2, Util.getTimestamp(computer.getIntroduced()));
+      statement.setTimestamp(3, Util.getTimestamp(computer.getDiscontinued()));
       Company company = computer.getCompany();
-      query.append(company == null ? null : company.getId());
-      query.append(" WHERE id=");
-      query.append(computer.getId());
-      query.append(";");
-
-      statement.executeUpdate(query.toString());
+      if (company == null) {
+        statement.setNull(4, Types.BIGINT);
+      } else {
+        statement.setLong(4, company.getId());
+      }
+      statement.setLong(5, computer.getId());
+      statement.executeUpdate();
     } catch (SQLException e) {
       throw e;
     } finally {
@@ -146,17 +141,13 @@ public class ComputerDAO {
    */
   public void delete(Long id) throws SQLException {
     Connection connection = null;
-    Statement statement = null;
+    PreparedStatement statement = null;
 
     try {
       connection = Util.getConnection();
-      statement = connection.createStatement();
-
-      StringBuilder query = new StringBuilder("DELETE FROM computer WHERE company_id=");
-      query.append(id);
-      query.append(";");
-
-      statement.executeUpdate(query.toString());
+      statement = connection.prepareStatement("DELETE FROM computer WHERE company_id=?");
+      statement.setLong(1, id);
+      statement.executeUpdate();
     } catch (SQLException e) {
       throw e;
     } finally {
@@ -176,19 +167,16 @@ public class ComputerDAO {
   public Computer getFromId(Long id) throws SQLException {
     Computer computer = null;
     Connection connection = null;
-    Statement statement = null;
+    PreparedStatement statement = null;
     ResultSet resultat = null;
     CompanyDAO companyDAO = new CompanyDAO();
 
     try {
-      StringBuilder query = new StringBuilder(
-          "SELECT id, name, introduced, discontinued, company_id FROM computer WHERE id=");
-      query.append(id);
-      query.append(";");
-
       connection = Util.getConnection();
-      statement = connection.createStatement();
-      resultat = statement.executeQuery(query.toString());
+      statement = connection
+          .prepareStatement("SELECT id, name, introduced, discontinued, company_id FROM computer WHERE id=?");
+      statement.setLong(1, id);
+      resultat = statement.executeQuery();
 
       if (resultat.first()) {
         computer = new Computer();

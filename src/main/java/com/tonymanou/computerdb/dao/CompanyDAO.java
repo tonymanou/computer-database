@@ -1,6 +1,7 @@
 package com.tonymanou.computerdb.dao;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -62,17 +63,14 @@ public class CompanyDAO {
   public Company getFromId(Long id) throws SQLException {
     Company company = null;
     Connection connection = null;
-    Statement statement = null;
+    PreparedStatement statement = null;
     ResultSet resultat = null;
 
     try {
-      StringBuilder query = new StringBuilder("SELECT id, name FROM company WHERE id=");
-      query.append(id);
-      query.append(";");
-
       connection = Util.getConnection();
-      statement = connection.createStatement();
-      resultat = statement.executeQuery(query.toString());
+      statement = connection.prepareStatement("SELECT id, name FROM company WHERE id=?");
+      statement.setLong(1, id);
+      resultat = statement.executeQuery();
 
       if (resultat.first()) {
         company = new Company();
