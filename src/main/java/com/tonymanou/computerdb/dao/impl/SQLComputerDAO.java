@@ -21,9 +21,6 @@ import com.tonymanou.computerdb.exception.PersistenceException;
  */
 public class SQLComputerDAO implements IComputerDAO {
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public List<Computer> findAll() {
     List<Computer> list = new ArrayList<Computer>();
@@ -62,9 +59,6 @@ public class SQLComputerDAO implements IComputerDAO {
     return list;
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public void create(Computer computer) {
     Connection connection = null;
@@ -92,9 +86,6 @@ public class SQLComputerDAO implements IComputerDAO {
     }
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public void update(Computer computer) {
     Connection connection = null;
@@ -122,9 +113,6 @@ public class SQLComputerDAO implements IComputerDAO {
     }
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public void delete(Long id) {
     Connection connection = null;
@@ -142,9 +130,6 @@ public class SQLComputerDAO implements IComputerDAO {
     }
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public Computer getFromId(Long id) {
     Computer computer = null;

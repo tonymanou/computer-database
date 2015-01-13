@@ -19,9 +19,6 @@ import com.tonymanou.computerdb.exception.PersistenceException;
  */
 public class SQLCompanyDAO implements ICompanyDAO {
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public List<Company> findAll() {
     List<Company> list = new ArrayList<Company>();
@@ -50,9 +47,6 @@ public class SQLCompanyDAO implements ICompanyDAO {
     return list;
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public Company getFromId(Long id) {
     Company company = null;
