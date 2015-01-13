@@ -1,4 +1,4 @@
-package com.tonymanou.computerdb.persistence;
+package com.tonymanou.computerdb.dao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -9,7 +9,7 @@ import java.sql.SQLException;
  *
  * @author tonymanou
  */
-public class SQLUtil {
+public class Util {
 
   /**
    * URL to the database server.

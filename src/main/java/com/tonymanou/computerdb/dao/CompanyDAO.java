@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.tonymanou.computerdb.entity.Company;
-import com.tonymanou.computerdb.persistence.SQLUtil;
 
 /**
  * Helper class to make actions on companies in the database.
@@ -31,7 +30,7 @@ public class CompanyDAO {
     ResultSet resultat = null;
 
     try {
-      connection = SQLUtil.getConnection();
+      connection = Util.getConnection();
       statement = connection.createStatement();
       resultat = statement.executeQuery("SELECT id, name FROM company;");
 
@@ -91,7 +90,7 @@ public class CompanyDAO {
       query.append(id);
       query.append(";");
 
-      connection = SQLUtil.getConnection();
+      connection = Util.getConnection();
       statement = connection.createStatement();
       resultat = statement.executeQuery(query.toString());
 

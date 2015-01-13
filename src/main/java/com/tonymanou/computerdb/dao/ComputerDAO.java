@@ -11,7 +11,6 @@ import java.util.List;
 
 import com.tonymanou.computerdb.entity.Company;
 import com.tonymanou.computerdb.entity.Computer;
-import com.tonymanou.computerdb.persistence.SQLUtil;
 
 /**
  * Helper class to make actions on computers in the database.
@@ -34,7 +33,7 @@ public class ComputerDAO {
     ResultSet resultat = null;
 
     try {
-      connection = SQLUtil.getConnection();
+      connection = Util.getConnection();
       statement = connection.createStatement();
       resultat = statement
           .executeQuery("SELECT id, name, introduced, discontinued, company_id FROM computer;");
@@ -97,7 +96,7 @@ public class ComputerDAO {
     Statement statement = null;
 
     try {
-      connection = SQLUtil.getConnection();
+      connection = Util.getConnection();
       statement = connection.createStatement();
 
       StringBuilder query = new StringBuilder(
@@ -148,7 +147,7 @@ public class ComputerDAO {
     Statement statement = null;
 
     try {
-      connection = SQLUtil.getConnection();
+      connection = Util.getConnection();
       statement = connection.createStatement();
 
       StringBuilder query = new StringBuilder("UPDATE computer SET name='");
@@ -210,7 +209,7 @@ public class ComputerDAO {
     Statement statement = null;
 
     try {
-      connection = SQLUtil.getConnection();
+      connection = Util.getConnection();
       statement = connection.createStatement();
 
       StringBuilder query = new StringBuilder("DELETE FROM computer WHERE company_id=");
@@ -260,7 +259,7 @@ public class ComputerDAO {
       query.append(id);
       query.append(";");
 
-      connection = SQLUtil.getConnection();
+      connection = Util.getConnection();
       statement = connection.createStatement();
       resultat = statement.executeQuery(query.toString());
 
