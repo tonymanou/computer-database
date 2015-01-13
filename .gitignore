@@ -3,6 +3,7 @@
 *.war
 *.ear
 
+.settings/
 target/
 build/
 bin/
