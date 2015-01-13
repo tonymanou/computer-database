@@ -5,7 +5,7 @@ import java.util.List;
 import com.tonymanou.computerdb.entity.Computer;
 
 /**
- * Helper class to make actions on computers in the database.
+ * Interface implemented by DAOs to manage computers.
  *
  * @author tonymanou
  */

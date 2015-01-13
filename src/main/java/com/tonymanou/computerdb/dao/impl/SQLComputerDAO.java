@@ -10,13 +10,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.tonymanou.computerdb.dao.IComputerDAO;
-import com.tonymanou.computerdb.dao.Util;
 import com.tonymanou.computerdb.entity.Company;
 import com.tonymanou.computerdb.entity.Computer;
 import com.tonymanou.computerdb.exception.PersistenceException;
 
 /**
- * Helper class to make actions on computers in the database.
+ * DAO implementation to manage computers in a SQL database.
  *
  * @author tonymanou
  */
@@ -33,7 +32,7 @@ public class SQLComputerDAO implements IComputerDAO {
     ResultSet resultat = null;
 
     try {
-      connection = Util.getConnection();
+      connection = SQLUtil.getConnection();
       statement = connection.createStatement();
       resultat = statement
           .executeQuery("SELECT id, name, introduced, discontinued, company_id FROM computer;");
@@ -57,7 +56,7 @@ public class SQLComputerDAO implements IComputerDAO {
     } catch (SQLException e) {
       throw new PersistenceException(e);
     } finally {
-      Util.close(resultat, statement, connection);
+      SQLUtil.close(resultat, statement, connection);
     }
 
     return list;
@@ -72,13 +71,13 @@ public class SQLComputerDAO implements IComputerDAO {
     PreparedStatement statement = null;
 
     try {
-      connection = Util.getConnection();
+      connection = SQLUtil.getConnection();
       statement = connection
           .prepareStatement("INSERT INTO computer (id, name, introduced, discontinued, company_id) VALUES (?, ?, ?, ?, ?)");
       statement.setLong(1, computer.getId());
       statement.setString(2, computer.getName());
-      statement.setTimestamp(3, Util.getTimestamp(computer.getIntroduced()));
-      statement.setTimestamp(4, Util.getTimestamp(computer.getDiscontinued()));
+      statement.setTimestamp(3, SQLUtil.getTimestamp(computer.getIntroduced()));
+      statement.setTimestamp(4, SQLUtil.getTimestamp(computer.getDiscontinued()));
       Company company = computer.getCompany();
       if (company == null) {
         statement.setNull(5, Types.BIGINT);
@@ -89,7 +88,7 @@ public class SQLComputerDAO implements IComputerDAO {
     } catch (SQLException e) {
       throw new PersistenceException(e);
     } finally {
-      Util.close(statement, connection);
+      SQLUtil.close(statement, connection);
     }
   }
 
@@ -102,12 +101,12 @@ public class SQLComputerDAO implements IComputerDAO {
     PreparedStatement statement = null;
 
     try {
-      connection = Util.getConnection();
+      connection = SQLUtil.getConnection();
       statement = connection
           .prepareStatement("UPDATE computer SET name=?, introduced=?, discontinued=?, company_id=? WHERE id=?");
       statement.setString(1, computer.getName());
-      statement.setTimestamp(2, Util.getTimestamp(computer.getIntroduced()));
-      statement.setTimestamp(3, Util.getTimestamp(computer.getDiscontinued()));
+      statement.setTimestamp(2, SQLUtil.getTimestamp(computer.getIntroduced()));
+      statement.setTimestamp(3, SQLUtil.getTimestamp(computer.getDiscontinued()));
       Company company = computer.getCompany();
       if (company == null) {
         statement.setNull(4, Types.BIGINT);
@@ -119,7 +118,7 @@ public class SQLComputerDAO implements IComputerDAO {
     } catch (SQLException e) {
       throw new PersistenceException(e);
     } finally {
-      Util.close(statement, connection);
+      SQLUtil.close(statement, connection);
     }
   }
 
@@ -132,14 +131,14 @@ public class SQLComputerDAO implements IComputerDAO {
     PreparedStatement statement = null;
 
     try {
-      connection = Util.getConnection();
+      connection = SQLUtil.getConnection();
       statement = connection.prepareStatement("DELETE FROM computer WHERE company_id=?");
       statement.setLong(1, id);
       statement.executeUpdate();
     } catch (SQLException e) {
       throw new PersistenceException(e);
     } finally {
-      Util.close(statement, connection);
+      SQLUtil.close(statement, connection);
     }
   }
 
@@ -155,7 +154,7 @@ public class SQLComputerDAO implements IComputerDAO {
     SQLCompanyDAO companyDAO = new SQLCompanyDAO();
 
     try {
-      connection = Util.getConnection();
+      connection = SQLUtil.getConnection();
       statement = connection
           .prepareStatement("SELECT id, name, introduced, discontinued, company_id FROM computer WHERE id=?");
       statement.setLong(1, id);
@@ -176,7 +175,7 @@ public class SQLComputerDAO implements IComputerDAO {
     } catch (SQLException e) {
       throw new PersistenceException(e);
     } finally {
-      Util.close(resultat, statement, connection);
+      SQLUtil.close(resultat, statement, connection);
     }
 
     return computer;

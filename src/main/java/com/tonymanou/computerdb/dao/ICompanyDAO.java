@@ -5,7 +5,7 @@ import java.util.List;
 import com.tonymanou.computerdb.entity.Company;
 
 /**
- * Helper class to make actions on companies in the database.
+ * Interface implemented by DAOs to manage companies.
  *
  * @author tonymanou
  */

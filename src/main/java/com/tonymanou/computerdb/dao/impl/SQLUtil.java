@@ -1,4 +1,4 @@
-package com.tonymanou.computerdb.dao;
+package com.tonymanou.computerdb.dao.impl;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -8,17 +8,12 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.Date;
 
-import com.tonymanou.computerdb.dao.impl.SQLCompanyDAO;
-import com.tonymanou.computerdb.dao.impl.SQLComputerDAO;
-
 /**
  * Helper class to create database connections.
  *
  * @author tonymanou
  */
-public enum Util {
-
-  INSTANCE;
+public class SQLUtil {
 
   // ========== Database ==========
 
@@ -35,27 +30,13 @@ public enum Util {
    */
   private static final String DB_PW = "qwerty1234";
 
-  private IComputerDAO computerDAO;
-  private ICompanyDAO companyDAO;
-
-  private Util() {
+  static {
     try {
       // Load the driver for mysql database
       Class.forName("com.mysql.jdbc.Driver");
     } catch (ClassNotFoundException e) {
       throw new RuntimeException(e);
     }
-
-    computerDAO = new SQLComputerDAO();
-    companyDAO = new SQLCompanyDAO();
-  }
-
-  public IComputerDAO getComputerDAO() {
-    return computerDAO;
-  }
-
-  public ICompanyDAO getCompanyDAO() {
-    return companyDAO;
   }
 
   /**

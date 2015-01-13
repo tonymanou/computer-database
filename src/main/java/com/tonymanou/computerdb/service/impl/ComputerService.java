@@ -3,7 +3,7 @@ package com.tonymanou.computerdb.service.impl;
 import java.util.List;
 
 import com.tonymanou.computerdb.dao.IComputerDAO;
-import com.tonymanou.computerdb.dao.Util;
+import com.tonymanou.computerdb.dao.DAOManager;
 import com.tonymanou.computerdb.entity.Computer;
 import com.tonymanou.computerdb.service.IComputerService;
 
@@ -17,7 +17,7 @@ public class ComputerService implements IComputerService {
   private IComputerDAO computerDAO;
 
   public ComputerService() {
-    computerDAO = Util.INSTANCE.getComputerDAO();
+    computerDAO = DAOManager.INSTANCE.getComputerDAO();
   }
 
   @Override

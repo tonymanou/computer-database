@@ -9,12 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.tonymanou.computerdb.dao.ICompanyDAO;
-import com.tonymanou.computerdb.dao.Util;
 import com.tonymanou.computerdb.entity.Company;
 import com.tonymanou.computerdb.exception.PersistenceException;
 
 /**
- * Helper class to make actions on companies in the database.
+ * DAO implementation to manage companies in a SQL database.
  *
  * @author tonymanou
  */
@@ -31,7 +30,7 @@ public class SQLCompanyDAO implements ICompanyDAO {
     ResultSet resultat = null;
 
     try {
-      connection = Util.getConnection();
+      connection = SQLUtil.getConnection();
       statement = connection.createStatement();
       resultat = statement.executeQuery("SELECT id, name FROM company;");
 
@@ -45,7 +44,7 @@ public class SQLCompanyDAO implements ICompanyDAO {
     } catch (SQLException e) {
       throw new PersistenceException(e);
     } finally {
-      Util.close(resultat, statement, connection);
+      SQLUtil.close(resultat, statement, connection);
     }
 
     return list;
@@ -62,7 +61,7 @@ public class SQLCompanyDAO implements ICompanyDAO {
     ResultSet resultat = null;
 
     try {
-      connection = Util.getConnection();
+      connection = SQLUtil.getConnection();
       statement = connection.prepareStatement("SELECT id, name FROM company WHERE id=?");
       statement.setLong(1, id);
       resultat = statement.executeQuery();
@@ -75,7 +74,7 @@ public class SQLCompanyDAO implements ICompanyDAO {
     } catch (SQLException e) {
       throw new PersistenceException(e);
     } finally {
-      Util.close(resultat, statement, connection);
+      SQLUtil.close(resultat, statement, connection);
     }
 
     return company;
