@@ -67,7 +67,7 @@ public class SQLComputerDAO implements IComputerDAO {
     try {
       connection = SQLUtil.getConnection();
       statement = connection
-          .prepareStatement("INSERT INTO computer (id, name, introduced, discontinued, company_id) VALUES (?, ?, ?, ?, ?)");
+          .prepareStatement("INSERT INTO computer (id, name, introduced, discontinued, company_id) VALUES (?, ?, ?, ?, ?);");
       statement.setLong(1, computer.getId());
       statement.setString(2, computer.getName());
       statement.setTimestamp(3, SQLUtil.getTimestamp(computer.getIntroduced()));
@@ -94,7 +94,7 @@ public class SQLComputerDAO implements IComputerDAO {
     try {
       connection = SQLUtil.getConnection();
       statement = connection
-          .prepareStatement("UPDATE computer SET name=?, introduced=?, discontinued=?, company_id=? WHERE id=?");
+          .prepareStatement("UPDATE computer SET name=?, introduced=?, discontinued=?, company_id=? WHERE id=?;");
       statement.setString(1, computer.getName());
       statement.setTimestamp(2, SQLUtil.getTimestamp(computer.getIntroduced()));
       statement.setTimestamp(3, SQLUtil.getTimestamp(computer.getDiscontinued()));
@@ -120,7 +120,7 @@ public class SQLComputerDAO implements IComputerDAO {
 
     try {
       connection = SQLUtil.getConnection();
-      statement = connection.prepareStatement("DELETE FROM computer WHERE company_id=?");
+      statement = connection.prepareStatement("DELETE FROM computer WHERE company_id=?;");
       statement.setLong(1, id);
       statement.executeUpdate();
     } catch (SQLException e) {
@@ -141,7 +141,7 @@ public class SQLComputerDAO implements IComputerDAO {
     try {
       connection = SQLUtil.getConnection();
       statement = connection
-          .prepareStatement("SELECT id, name, introduced, discontinued, company_id FROM computer WHERE id=?");
+          .prepareStatement("SELECT id, name, introduced, discontinued, company_id FROM computer WHERE id=?;");
       statement.setLong(1, id);
       resultat = statement.executeQuery();
 

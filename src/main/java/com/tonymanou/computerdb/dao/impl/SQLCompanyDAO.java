@@ -56,7 +56,7 @@ public class SQLCompanyDAO implements ICompanyDAO {
 
     try {
       connection = SQLUtil.getConnection();
-      statement = connection.prepareStatement("SELECT id, name FROM company WHERE id=?");
+      statement = connection.prepareStatement("SELECT id, name FROM company WHERE id=?;");
       statement.setLong(1, id);
       resultat = statement.executeQuery();
 
