@@ -20,6 +20,10 @@ public class CompanyService implements ICompanyService {
     companyDAO = DAOManager.INSTANCE.getCompanyDAO();
   }
 
+  public CompanyService(ICompanyDAO dao) {
+    companyDAO = dao;
+  }
+
   @Override
   public List<Company> findAll() {
     return companyDAO.findAll();

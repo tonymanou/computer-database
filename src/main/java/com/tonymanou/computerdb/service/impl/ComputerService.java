@@ -20,6 +20,10 @@ public class ComputerService implements IComputerService {
     computerDAO = DAOManager.INSTANCE.getComputerDAO();
   }
 
+  public ComputerService(IComputerDAO dao) {
+    computerDAO = dao;
+  }
+
   @Override
   public List<Computer> findAll() {
     return computerDAO.findAll();
