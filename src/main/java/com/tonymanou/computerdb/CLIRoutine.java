@@ -159,11 +159,12 @@ public class CLIRoutine {
     if (name == null) {
       return;
     }
+    Computer.Builder builder = Computer.getBuilder(name);
 
-    LocalDateTime introduced = getDateInput("[Add computer] Enter its introduced date.",
-        EmptyType.EMPTY);
-    LocalDateTime discontinued = getDateInput("[Add computer] Enter its discontinued date.",
-        EmptyType.EMPTY);
+    builder
+        .setIntroduced(getDateInput("[Add computer] Enter its introduced date.", EmptyType.EMPTY));
+    builder.setDiscontinued(getDateInput("[Add computer] Enter its discontinued date.",
+        EmptyType.EMPTY));
 
     if (isYesAnswer("[Add computer] Do you want to list all the companies first?")) {
       doListCompanies();
@@ -171,19 +172,11 @@ public class CLIRoutine {
     }
 
     Long companyId = getLongInput("[Add computer] Enter its company ID.", EmptyType.EMPTY);
-
-    Company company = null;
-
     if (companyId != null) {
-      company = companyService.getFromId(companyId);
+      builder.setCompany(companyService.getFromId(companyId));
     }
 
-    Computer computer = new Computer();
-    computer.setName(name);
-    computer.setIntroduced(introduced);
-    computer.setDiscontinued(discontinued);
-    computer.setCompany(company);
-    computerService.create(computer);
+    computerService.create(builder.build());
   }
 
   /**

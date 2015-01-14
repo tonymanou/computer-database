@@ -35,20 +35,22 @@ public class SQLComputerDAO implements IComputerDAO {
           .executeQuery("SELECT id, name, introduced, discontinued, company_id FROM computer;");
 
       SQLCompanyDAO companyDAO = new SQLCompanyDAO();
+      Computer.Builder builder = Computer.getBuilder(null);
 
       while (resultat.next()) {
-        Computer c = new Computer();
-        c.setId(resultat.getLong(1));
-        c.setName(resultat.getString(2));
-        c.setIntroduced(SQLUtil.getLocalDateTime(resultat.getTimestamp(3)));
-        c.setDiscontinued(SQLUtil.getLocalDateTime(resultat.getTimestamp(4)));
+        builder.setId(resultat.getLong(1));
+        builder.setName(resultat.getString(2));
+        builder.setIntroduced(SQLUtil.getLocalDateTime(resultat.getTimestamp(3)));
+        builder.setDiscontinued(SQLUtil.getLocalDateTime(resultat.getTimestamp(4)));
 
         Long companyId = resultat.getLong(5);
+        Company company = null;
         if (companyId != 0) {
-          c.setCompany(companyDAO.getFromId(companyId));
+          company = companyDAO.getFromId(companyId);
         }
+        builder.setCompany(company);
 
-        list.add(c);
+        list.add(builder.build());
       }
     } catch (SQLException e) {
       throw new PersistenceException(e);
@@ -145,16 +147,17 @@ public class SQLComputerDAO implements IComputerDAO {
       resultat = statement.executeQuery();
 
       if (resultat.first()) {
-        computer = new Computer();
-        computer.setId(resultat.getLong(1));
-        computer.setName(resultat.getString(2));
-        computer.setIntroduced(SQLUtil.getLocalDateTime(resultat.getTimestamp(3)));
-        computer.setDiscontinued(SQLUtil.getLocalDateTime(resultat.getTimestamp(4)));
+        Computer.Builder builder = Computer.getBuilder(resultat.getString(2));
+        builder.setId(resultat.getLong(1));
+        builder.setIntroduced(SQLUtil.getLocalDateTime(resultat.getTimestamp(3)));
+        builder.setDiscontinued(SQLUtil.getLocalDateTime(resultat.getTimestamp(4)));
 
         Long companyId = resultat.getLong(5);
         if (companyId != 0) {
-          computer.setCompany(companyDAO.getFromId(companyId));
+          builder.setCompany(companyDAO.getFromId(companyId));
         }
+
+        computer = builder.build();
       }
     } catch (SQLException e) {
       throw new PersistenceException(e);

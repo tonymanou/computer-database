@@ -15,6 +15,9 @@ public class Computer {
   private LocalDateTime discontinued;
   private Company company;
 
+  private Computer() {
+  }
+
   public Long getId() {
     return id;
   }
@@ -138,5 +141,51 @@ public class Computer {
     }
     builder.append("]");
     return builder.toString();
+  }
+
+  public static Builder getBuilder(String computerName) {
+    return new Builder(computerName);
+  }
+
+  public static class Builder {
+    private Long id;
+    private String name;
+    private LocalDateTime introduced;
+    private LocalDateTime discontinued;
+    private Company company;
+
+    public Builder(String computerName) {
+      name = computerName;
+    }
+
+    public void setName(String pName) {
+      name = pName;
+    }
+
+    public void setId(Long pId) {
+      id = pId;
+    }
+
+    public void setIntroduced(LocalDateTime pIntroduced) {
+      introduced = pIntroduced;
+    }
+
+    public void setDiscontinued(LocalDateTime pDiscontinued) {
+      discontinued = pDiscontinued;
+    }
+
+    public void setCompany(Company pCompany) {
+      company = pCompany;
+    }
+
+    public Computer build() {
+      Computer c = new Computer();
+      c.setId(id);
+      c.setName(name);
+      c.setIntroduced(introduced);
+      c.setDiscontinued(discontinued);
+      c.setCompany(company);
+      return c;
+    }
   }
 }
