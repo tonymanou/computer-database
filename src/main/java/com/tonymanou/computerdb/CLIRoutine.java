@@ -3,7 +3,6 @@ package com.tonymanou.computerdb;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -20,6 +19,29 @@ import com.tonymanou.computerdb.service.ServiceManager;
  */
 public class CLIRoutine {
 
+  // @formatter:off
+  private static final String REGEX_DELIMITER = "(\\.|-|\\/)";
+  private static final String REGEX_DATE_EN = "("
+      + "((\\d{4})" + REGEX_DELIMITER + "(0[13578]|10|12)" + REGEX_DELIMITER + "(0[1-9]|[12][0-9]|3[01]))"
+      + "|((\\d{4})" + REGEX_DELIMITER + "(0[469]|11)" + REGEX_DELIMITER + "([0][1-9]|[12][0-9]|30))"
+      + "|((\\d{4})" + REGEX_DELIMITER + "(0[1-9]|1[0-9]|2[0-8])" + REGEX_DELIMITER + "(02))"
+      + "|(([02468][048]00)" + REGEX_DELIMITER + "(02)" + REGEX_DELIMITER + "(29))"
+      + "|(([13579][26]00)" + REGEX_DELIMITER + "(02)" + REGEX_DELIMITER + "(29))"
+      + "|(([0-9][0-9][0][48])" + REGEX_DELIMITER + "(02)" + REGEX_DELIMITER + "(29))"
+      + "|(([0-9][0-9][2468][048])" + REGEX_DELIMITER + "(02)" + REGEX_DELIMITER + "(29))"
+      + "|(([0-9][0-9][13579][26])" + REGEX_DELIMITER + "(02)" + REGEX_DELIMITER + "(29))"
+      + ")";
+  private static final String REGEX_DATE_FR = "("
+      + "((0[1-9]|[12][0-9]|3[01])" + REGEX_DELIMITER + "(0[13578]|10|12)" + REGEX_DELIMITER + "(\\d{4}))"
+      + "|(([0][1-9]|[12][0-9]|30)" + REGEX_DELIMITER + "(0[469]|11)" + REGEX_DELIMITER + "(\\d{4}))"
+      + "|((0[1-9]|1[0-9]|2[0-8])" + REGEX_DELIMITER + "(02)" + REGEX_DELIMITER + "(\\d{4}))"
+      + "|((29)" + REGEX_DELIMITER + "(02)" + REGEX_DELIMITER + "([02468][048]00))"
+      + "|((29)" + REGEX_DELIMITER + "(02)" + REGEX_DELIMITER + "([13579][26]00))"
+      + "|((29)" + REGEX_DELIMITER + "(02)" + REGEX_DELIMITER + "([0-9][0-9][0][48]))"
+      + "|((29)" + REGEX_DELIMITER + "(02)" + REGEX_DELIMITER + "([0-9][0-9][2468][048]))"
+      + "|((29)" + REGEX_DELIMITER + "(02)" + REGEX_DELIMITER + "([0-9][0-9][13579][26]))"
+      + ")";
+  // @formatter:on
   private static final String UNRECOGNIZED = "Unrecognized action.";
   private static final String CANCELED = "Input canceled...";
   private Scanner scanner;
@@ -417,12 +439,10 @@ public class CLIRoutine {
       } else {
         boolean bad = true;
 
-        try {
+        if (string.matches(REGEX_DATE_EN)) {
           date = LocalDate.parse(string, formatter).atStartOfDay();
           bad = false;
           System.out.println();
-        } catch (DateTimeParseException e) {
-          // Ignored
         }
         if (bad) {
           System.out.println("Please enter a valid date.");
@@ -496,13 +516,9 @@ public class CLIRoutine {
 
         // Try to parse the number
         if (words[0].matches("[+]?[0-9]+")) {
-          try {
-            number = Long.parseLong(words[0]);
-            bad = false;
-            System.out.println();
-          } catch (NumberFormatException ex) {
-            // Ignored
-          }
+          number = Long.parseLong(words[0]);
+          bad = false;
+          System.out.println();
         }
         if (bad) {
           System.out.println("Please enter a positive number.");
