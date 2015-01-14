@@ -67,16 +67,15 @@ public class SQLComputerDAO implements IComputerDAO {
     try {
       connection = SQLUtil.getConnection();
       statement = connection
-          .prepareStatement("INSERT INTO computer (id, name, introduced, discontinued, company_id) VALUES (?, ?, ?, ?, ?);");
-      statement.setLong(1, computer.getId());
-      statement.setString(2, computer.getName());
-      statement.setTimestamp(3, SQLUtil.getTimestamp(computer.getIntroduced()));
-      statement.setTimestamp(4, SQLUtil.getTimestamp(computer.getDiscontinued()));
+          .prepareStatement("INSERT INTO computer (name, introduced, discontinued, company_id) VALUES (?, ?, ?, ?);");
+      statement.setString(1, computer.getName());
+      statement.setTimestamp(2, SQLUtil.getTimestamp(computer.getIntroduced()));
+      statement.setTimestamp(3, SQLUtil.getTimestamp(computer.getDiscontinued()));
       Company company = computer.getCompany();
       if (company == null) {
-        statement.setNull(5, Types.BIGINT);
+        statement.setNull(4, Types.BIGINT);
       } else {
-        statement.setLong(5, company.getId());
+        statement.setLong(4, company.getId());
       }
       statement.executeUpdate();
     } catch (SQLException e) {
