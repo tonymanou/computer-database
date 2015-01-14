@@ -1,6 +1,6 @@
 package com.tonymanou.computerdb.entity;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * Describe a computer.
@@ -11,8 +11,8 @@ public class Computer {
 
   private Long id;
   private String name;
-  private Date introduced;
-  private Date discontinued;
+  private LocalDateTime introduced;
+  private LocalDateTime discontinued;
   private Company company;
 
   public Long getId() {
@@ -31,19 +31,19 @@ public class Computer {
     name = pName;
   }
 
-  public Date getIntroduced() {
+  public LocalDateTime getIntroduced() {
     return introduced;
   }
 
-  public void setIntroduced(Date pIntroduced) {
+  public void setIntroduced(LocalDateTime pIntroduced) {
     introduced = pIntroduced;
   }
 
-  public Date getDiscontinued() {
+  public LocalDateTime getDiscontinued() {
     return discontinued;
   }
 
-  public void setDiscontinued(Date pDiscontinued) {
+  public void setDiscontinued(LocalDateTime pDiscontinued) {
     discontinued = pDiscontinued;
   }
 

@@ -40,8 +40,8 @@ public class SQLComputerDAO implements IComputerDAO {
         Computer c = new Computer();
         c.setId(resultat.getLong(1));
         c.setName(resultat.getString(2));
-        c.setIntroduced(resultat.getDate(3));
-        c.setDiscontinued(resultat.getDate(4));
+        c.setIntroduced(SQLUtil.getLocalDateTime(resultat.getTimestamp(3)));
+        c.setDiscontinued(SQLUtil.getLocalDateTime(resultat.getTimestamp(4)));
 
         Long companyId = resultat.getLong(5);
         if (companyId != 0) {
@@ -149,8 +149,8 @@ public class SQLComputerDAO implements IComputerDAO {
         computer = new Computer();
         computer.setId(resultat.getLong(1));
         computer.setName(resultat.getString(2));
-        computer.setIntroduced(resultat.getDate(3));
-        computer.setDiscontinued(resultat.getDate(4));
+        computer.setIntroduced(SQLUtil.getLocalDateTime(resultat.getTimestamp(3)));
+        computer.setDiscontinued(SQLUtil.getLocalDateTime(resultat.getTimestamp(4)));
 
         Long companyId = resultat.getLong(5);
         if (companyId != 0) {

@@ -1,9 +1,8 @@
 package com.tonymanou.computerdb;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
@@ -157,8 +156,10 @@ public class CLIRoutine {
       return;
     }
 
-    Date introduced = getDateInput("[Add computer] Enter its introduced date.", EmptyType.EMPTY);
-    Date discontinued = getDateInput("[Add computer] Enter its discontinued date.", EmptyType.EMPTY);
+    LocalDateTime introduced = getDateInput("[Add computer] Enter its introduced date.",
+        EmptyType.EMPTY);
+    LocalDateTime discontinued = getDateInput("[Add computer] Enter its discontinued date.",
+        EmptyType.EMPTY);
 
     if (isYesAnswer("[Add computer] Do you want to list all the companies first?")) {
       doListCompanies();
@@ -223,16 +224,16 @@ public class CLIRoutine {
             oldName);
         computer.setName(name);
 
-        Date oldIntroduced = computer.getIntroduced();
+        LocalDateTime oldIntroduced = computer.getIntroduced();
         System.out.println("[Update computer] Current introduced date is " + oldIntroduced + ".");
-        Date introduced = getDateInput("[Update computer] Enter the new date.", EmptyType.KEEP,
-            oldIntroduced);
+        LocalDateTime introduced = getDateInput("[Update computer] Enter the new date.",
+            EmptyType.KEEP, oldIntroduced);
         computer.setIntroduced(introduced);
 
-        Date oldDiscontinued = computer.getDiscontinued();
+        LocalDateTime oldDiscontinued = computer.getDiscontinued();
         System.out.println("[Update computer] Current introduced date is " + oldDiscontinued + ".");
-        Date discontinued = getDateInput("[Update computer] Enter the new date.", EmptyType.KEEP,
-            oldDiscontinued);
+        LocalDateTime discontinued = getDateInput("[Update computer] Enter the new date.",
+            EmptyType.KEEP, oldDiscontinued);
         computer.setDiscontinued(discontinued);
 
         System.out.println("[Update computer] Current company is " + computer.getCompany() + ".");
@@ -368,10 +369,10 @@ public class CLIRoutine {
    *          Optional original value, only used when using emptyType KEEP.
    * @return the date, or null if the the user left the input empty.
    */
-  private Date getDateInput(String message, EmptyType emptyType, Date... original) {
+  private LocalDateTime getDateInput(String message, EmptyType emptyType, LocalDateTime... original) {
     DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
     boolean running = true;
-    Date date = null;
+    LocalDateTime date = null;
     String string;
 
     System.out.print(message + " (yyyy-MM-dd, enter nothing to ");
@@ -420,8 +421,7 @@ public class CLIRoutine {
         boolean bad = true;
 
         try {
-          LocalDate localDate = LocalDate.parse(string, formatter);
-          date = java.sql.Date.valueOf(localDate);
+          date = LocalDateTime.parse(string, formatter);
           bad = false;
           System.out.println();
         } catch (DateTimeParseException e) {

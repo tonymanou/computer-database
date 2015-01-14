@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * Helper class to create database connections.
@@ -94,13 +94,24 @@ public class SQLUtil {
   }
 
   /**
-   * Convert a {@link Date} to a {@link Timestamp}
+   * Convert a {@link LocalDateTime} to a {@link Timestamp}
    *
    * @param date
-   *          The date.
-   * @return a timestamp.
+   *          The locale date time.
+   * @return a timestamp, or null if the date wass null.
    */
-  public static Timestamp getTimestamp(Date date) {
-    return new Timestamp(date.getTime());
+  public static Timestamp getTimestamp(LocalDateTime date) {
+    return date == null ? null : Timestamp.valueOf(date);
+  }
+
+  /**
+   * Convert a {@link Timestamp} to a {@link LocalDateTime}
+   *
+   * @param timestamp
+   *          The timestamp.
+   * @return a local date time, or null if the timestamp was null.
+   */
+  public static LocalDateTime getLocalDateTime(Timestamp timestamp) {
+    return timestamp == null ? null : timestamp.toLocalDateTime();
   }
 }
