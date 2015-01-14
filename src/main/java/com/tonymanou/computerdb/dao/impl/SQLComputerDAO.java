@@ -121,7 +121,7 @@ public class SQLComputerDAO implements IComputerDAO {
 
     try {
       connection = SQLUtil.getConnection();
-      statement = connection.prepareStatement("DELETE FROM computer WHERE company_id=?;");
+      statement = connection.prepareStatement("DELETE FROM computer WHERE id=?;");
       statement.setLong(1, id);
       statement.executeUpdate();
     } catch (SQLException e) {
