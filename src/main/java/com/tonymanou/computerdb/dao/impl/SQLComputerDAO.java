@@ -23,7 +23,7 @@ public class SQLComputerDAO implements IComputerDAO {
 
   @Override
   public List<Computer> findAll() {
-    List<Computer> list = new ArrayList<Computer>();
+    List<Computer> list = null;
     Connection connection = null;
     Statement statement = null;
     ResultSet resultat = null;
@@ -33,25 +33,7 @@ public class SQLComputerDAO implements IComputerDAO {
       statement = connection.createStatement();
       resultat = statement
           .executeQuery("SELECT c.id, c.name, c.introduced, c.discontinued, c.company_id, d.name FROM computer c LEFT JOIN company d ON c.company_id = d.id;");
-
-      Computer.Builder builder = Computer.getBuilder(null);
-      while (resultat.next()) {
-        builder.setId(resultat.getLong(1));
-        builder.setName(resultat.getString(2));
-        builder.setIntroduced(SQLUtil.getLocalDateTime(resultat.getTimestamp(3)));
-        builder.setDiscontinued(SQLUtil.getLocalDateTime(resultat.getTimestamp(4)));
-
-        Long companyId = resultat.getLong(5);
-        Company company = null;
-        if (companyId != 0) {
-          company = new Company();
-          company.setId(companyId);
-          company.setName(resultat.getString(6));
-        }
-        builder.setCompany(company);
-
-        list.add(builder.build());
-      }
+      list = extractToList(resultat);
     } catch (SQLException e) {
       throw new PersistenceException(e);
     } finally {
@@ -145,22 +127,8 @@ public class SQLComputerDAO implements IComputerDAO {
       statement.setLong(1, id);
       resultat = statement.executeQuery();
 
-      if (resultat.first()) {
-        Computer.Builder builder = Computer.getBuilder(resultat.getString(2));
-        builder.setId(resultat.getLong(1));
-        builder.setIntroduced(SQLUtil.getLocalDateTime(resultat.getTimestamp(3)));
-        builder.setDiscontinued(SQLUtil.getLocalDateTime(resultat.getTimestamp(4)));
-
-        Long companyId = resultat.getLong(5);
-        if (companyId != 0) {
-          Company company = new Company();
-          company.setId(companyId);
-          company.setName(resultat.getString(6));
-          builder.setCompany(company);
-        }
-
-        computer = builder.build();
-      }
+      List<Computer> list = extractToList(resultat);
+      computer = list.size() == 0 ? null : list.get(0);
     } catch (SQLException e) {
       throw new PersistenceException(e);
     } finally {
@@ -168,5 +136,39 @@ public class SQLComputerDAO implements IComputerDAO {
     }
 
     return computer;
+  }
+
+  /**
+   * Parse a {@link ResultSet} and populate a list of {@link Computer}s.
+   *
+   * @param resultat
+   *          The result set to parse.
+   * @return a list of computers.
+   * @throws SQLException
+   *           if an error occurred while parsing the result set.
+   */
+  private static List<Computer> extractToList(ResultSet resultat) throws SQLException {
+    List<Computer> list = new ArrayList<Computer>();
+    Computer.Builder builder = Computer.getBuilder(null);
+
+    while (resultat.next()) {
+      builder.setId(resultat.getLong(1));
+      builder.setName(resultat.getString(2));
+      builder.setIntroduced(SQLUtil.getLocalDateTime(resultat.getTimestamp(3)));
+      builder.setDiscontinued(SQLUtil.getLocalDateTime(resultat.getTimestamp(4)));
+
+      Long companyId = resultat.getLong(5);
+      Company company = null;
+      if (companyId != 0) {
+        company = new Company();
+        company.setId(companyId);
+        company.setName(resultat.getString(6));
+      }
+      builder.setCompany(company);
+
+      list.add(builder.build());
+    }
+
+    return list;
   }
 }
