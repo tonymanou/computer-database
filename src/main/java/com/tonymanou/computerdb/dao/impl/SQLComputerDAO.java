@@ -32,11 +32,9 @@ public class SQLComputerDAO implements IComputerDAO {
       connection = SQLUtil.getConnection();
       statement = connection.createStatement();
       resultat = statement
-          .executeQuery("SELECT id, name, introduced, discontinued, company_id FROM computer;");
+          .executeQuery("SELECT c.id, c.name, c.introduced, c.discontinued, c.company_id, d.name FROM computer c LEFT JOIN company d ON c.company_id = d.id;");
 
-      SQLCompanyDAO companyDAO = new SQLCompanyDAO();
       Computer.Builder builder = Computer.getBuilder(null);
-
       while (resultat.next()) {
         builder.setId(resultat.getLong(1));
         builder.setName(resultat.getString(2));
@@ -46,7 +44,9 @@ public class SQLComputerDAO implements IComputerDAO {
         Long companyId = resultat.getLong(5);
         Company company = null;
         if (companyId != 0) {
-          company = companyDAO.getFromId(companyId);
+          company = new Company();
+          company.setId(companyId);
+          company.setName(resultat.getString(6));
         }
         builder.setCompany(company);
 
@@ -137,12 +137,11 @@ public class SQLComputerDAO implements IComputerDAO {
     Connection connection = null;
     PreparedStatement statement = null;
     ResultSet resultat = null;
-    SQLCompanyDAO companyDAO = new SQLCompanyDAO();
 
     try {
       connection = SQLUtil.getConnection();
       statement = connection
-          .prepareStatement("SELECT id, name, introduced, discontinued, company_id FROM computer WHERE id=?;");
+          .prepareStatement("SELECT c.id, c.name, c.introduced, c.discontinued, c.company_id, d.name FROM computer c LEFT JOIN company d ON c.company_id = d.id WHERE c.id=?;");
       statement.setLong(1, id);
       resultat = statement.executeQuery();
 
@@ -154,7 +153,10 @@ public class SQLComputerDAO implements IComputerDAO {
 
         Long companyId = resultat.getLong(5);
         if (companyId != 0) {
-          builder.setCompany(companyDAO.getFromId(companyId));
+          Company company = new Company();
+          company.setId(companyId);
+          company.setName(resultat.getString(6));
+          builder.setCompany(company);
         }
 
         computer = builder.build();
