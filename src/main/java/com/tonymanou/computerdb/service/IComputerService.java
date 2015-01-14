@@ -3,6 +3,7 @@ package com.tonymanou.computerdb.service;
 import java.util.List;
 
 import com.tonymanou.computerdb.entity.Computer;
+import com.tonymanou.computerdb.exception.PersistenceException;
 
 /**
  * Interface implemented by services to manage computers.
@@ -15,6 +16,8 @@ public interface IComputerService {
    * Retrieve all the computers from the database.
    *
    * @return A list containing all the computers.
+   * @throws PersistenceException
+   *           if an error occurred while processing the query.
    */
   List<Computer> findAll();
 
@@ -23,6 +26,8 @@ public interface IComputerService {
    *
    * @param computer
    *          The computer to create.
+   * @throws PersistenceException
+   *           if an error occurred while processing the query.
    */
   void create(Computer computer);
 
@@ -31,6 +36,8 @@ public interface IComputerService {
    *
    * @param computer
    *          The computer to update.
+   * @throws PersistenceException
+   *           if an error occurred while processing the query.
    */
   void update(Computer computer);
 
@@ -39,6 +46,8 @@ public interface IComputerService {
    *
    * @param id
    *          Id of the computer to delete.
+   * @throws PersistenceException
+   *           if an error occurred while processing the query.
    */
   void delete(Long id);
 
@@ -48,6 +57,8 @@ public interface IComputerService {
    * @param id
    *          The id of the computer to retrieve.
    * @return The {@link Computer}, or null if no matching company was found.
+   * @throws PersistenceException
+   *           if an error occurred while processing the query.
    */
   Computer getFromId(Long id);
 }

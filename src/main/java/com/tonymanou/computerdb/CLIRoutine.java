@@ -26,6 +26,9 @@ public class CLIRoutine {
   private IComputerService computerService;
   private ICompanyService companyService;
 
+  /**
+   * Enumeration describing the default action to do when the user enters an empty value.
+   */
   private static enum EmptyType {
     /**
      * Leave the field empty.
