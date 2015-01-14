@@ -1,6 +1,7 @@
 package com.tonymanou.computerdb.entity;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Describe a computer.
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
  */
 public class Computer {
 
+  private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
   private Long id;
   private String name;
   private LocalDateTime introduced;
@@ -129,11 +131,11 @@ public class Computer {
     builder.append(name);
     if (introduced != null) {
       builder.append(", introduced=");
-      builder.append(introduced);
+      builder.append(introduced.format(FORMATTER));
     }
     if (discontinued != null) {
       builder.append(", discontinued=");
-      builder.append(discontinued);
+      builder.append(discontinued.format(FORMATTER));
     }
     if (company != null) {
       builder.append(", company=");
