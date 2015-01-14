@@ -1,5 +1,6 @@
 package com.tonymanou.computerdb;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -370,7 +371,7 @@ public class CLIRoutine {
    * @return the date, or null if the the user left the input empty.
    */
   private LocalDateTime getDateInput(String message, EmptyType emptyType, LocalDateTime... original) {
-    DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     boolean running = true;
     LocalDateTime date = null;
     String string;
@@ -421,7 +422,7 @@ public class CLIRoutine {
         boolean bad = true;
 
         try {
-          date = LocalDateTime.parse(string, formatter);
+          date = LocalDate.parse(string, formatter).atStartOfDay();
           bad = false;
           System.out.println();
         } catch (DateTimeParseException e) {
