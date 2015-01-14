@@ -10,6 +10,9 @@ public class Company {
   private Long id;
   private String name;
 
+  private Company() {
+  }
+
   public Long getId() {
     return id;
   }
@@ -73,5 +76,36 @@ public class Company {
     builder.append(name);
     builder.append("]");
     return builder.toString();
+  }
+
+  public static Builder getBuilder(String companyName) {
+    return new Builder(companyName);
+  }
+
+  public static class Builder {
+
+    private Long id;
+    private String name;
+
+    public Builder(String pName) {
+      name = pName;
+    }
+
+    public Builder setId(Long pId) {
+      id = pId;
+      return this;
+    }
+
+    public Builder setName(String pName) {
+      name = pName;
+      return this;
+    }
+
+    public Company build() {
+      Company company = new Company();
+      company.setId(id);
+      company.setName(name);
+      return company;
+    }
   }
 }

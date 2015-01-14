@@ -31,12 +31,14 @@ public class SQLCompanyDAO implements ICompanyDAO {
       statement = connection.createStatement();
       resultat = statement.executeQuery("SELECT id, name FROM company;");
 
+      Company.Builder builder = Company.getBuilder(null);
       while (resultat.next()) {
-        Company c = new Company();
-        c.setId(resultat.getLong(1));
-        c.setName(resultat.getString(2));
-
-        list.add(c);
+        // @formatter:off
+        list.add(builder
+            .setId(resultat.getLong(1))
+            .setName(resultat.getString(2))
+            .build());
+        // @formatter:on
       }
     } catch (SQLException e) {
       throw new PersistenceException(e);
@@ -60,10 +62,14 @@ public class SQLCompanyDAO implements ICompanyDAO {
       statement.setLong(1, id);
       resultat = statement.executeQuery();
 
+      Company.Builder builder = Company.getBuilder(null);
       if (resultat.first()) {
-        company = new Company();
-        company.setId(resultat.getLong(1));
-        company.setName(resultat.getString(2));
+        // @formatter:off
+        company =builder
+            .setId(resultat.getLong(1))
+            .setName(resultat.getString(2))
+            .build();
+        // @formatter:off
       }
     } catch (SQLException e) {
       throw new PersistenceException(e);

@@ -149,24 +149,30 @@ public class SQLComputerDAO implements IComputerDAO {
    */
   private static List<Computer> extractToList(ResultSet resultat) throws SQLException {
     List<Computer> list = new ArrayList<Computer>();
-    Computer.Builder builder = Computer.getBuilder(null);
+    Computer.Builder builderComputer = Computer.getBuilder(null);
+    Company.Builder builderCompany = Company.getBuilder(null);
 
     while (resultat.next()) {
-      builder.setId(resultat.getLong(1));
-      builder.setName(resultat.getString(2));
-      builder.setIntroduced(SQLUtil.getLocalDateTime(resultat.getTimestamp(3)));
-      builder.setDiscontinued(SQLUtil.getLocalDateTime(resultat.getTimestamp(4)));
+      // @formatter:off
+      builderComputer.setId(resultat.getLong(1))
+          .setName(resultat.getString(2))
+          .setIntroduced(SQLUtil.getLocalDateTime(resultat.getTimestamp(3)))
+          .setDiscontinued(SQLUtil.getLocalDateTime(resultat.getTimestamp(4)));
+      // @formatter:on
 
       Long companyId = resultat.getLong(5);
       Company company = null;
       if (companyId != 0) {
-        company = new Company();
-        company.setId(companyId);
-        company.setName(resultat.getString(6));
+        // @formatter:off
+        company = builderCompany
+            .setId(companyId)
+            .setName(resultat.getString(6))
+            .build();
+        // @formatter:on
       }
-      builder.setCompany(company);
+      builderComputer.setCompany(company);
 
-      list.add(builder.build());
+      list.add(builderComputer.build());
     }
 
     return list;

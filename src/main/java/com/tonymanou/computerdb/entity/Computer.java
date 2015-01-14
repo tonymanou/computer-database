@@ -160,24 +160,29 @@ public class Computer {
       name = computerName;
     }
 
-    public void setName(String pName) {
+    public Builder setName(String pName) {
       name = pName;
+      return this;
     }
 
-    public void setId(Long pId) {
+    public Builder setId(Long pId) {
       id = pId;
+      return this;
     }
 
-    public void setIntroduced(LocalDateTime pIntroduced) {
+    public Builder setIntroduced(LocalDateTime pIntroduced) {
       introduced = pIntroduced;
+      return this;
     }
 
-    public void setDiscontinued(LocalDateTime pDiscontinued) {
+    public Builder setDiscontinued(LocalDateTime pDiscontinued) {
       discontinued = pDiscontinued;
+      return this;
     }
 
-    public void setCompany(Company pCompany) {
+    public Builder setCompany(Company pCompany) {
       company = pCompany;
+      return this;
     }
 
     public Computer build() {
