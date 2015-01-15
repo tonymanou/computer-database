@@ -10,6 +10,7 @@ import java.time.format.DateTimeFormatter;
  */
 public class Computer {
 
+  private static final boolean EQUALS_WITH_ID = false;
   private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
   private Long id;
   private String name;
@@ -66,7 +67,9 @@ public class Computer {
     int result = 1;
     result = prime * result + ((company == null) ? 0 : company.hashCode());
     result = prime * result + ((discontinued == null) ? 0 : discontinued.hashCode());
-    result = prime * result + ((id == null) ? 0 : id.hashCode());
+    if (EQUALS_WITH_ID) {
+      result = prime * result + ((id == null) ? 0 : id.hashCode());
+    }
     result = prime * result + ((introduced == null) ? 0 : introduced.hashCode());
     result = prime * result + ((name == null) ? 0 : name.hashCode());
     return result;
@@ -98,12 +101,14 @@ public class Computer {
     } else if (!discontinued.equals(other.discontinued)) {
       return false;
     }
-    if (id == null) {
-      if (other.id != null) {
+    if (EQUALS_WITH_ID) {
+      if (id == null) {
+        if (other.id != null) {
+          return false;
+        }
+      } else if (!id.equals(other.id)) {
         return false;
       }
-    } else if (!id.equals(other.id)) {
-      return false;
     }
     if (introduced == null) {
       if (other.introduced != null) {

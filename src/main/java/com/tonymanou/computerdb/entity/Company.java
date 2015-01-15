@@ -7,6 +7,7 @@ package com.tonymanou.computerdb.entity;
  */
 public class Company {
 
+  private static final boolean EQUALS_WITH_ID = false;
   private Long id;
   private String name;
 
@@ -33,7 +34,9 @@ public class Company {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((id == null) ? 0 : id.hashCode());
+    if (EQUALS_WITH_ID) {
+      result = prime * result + ((id == null) ? 0 : id.hashCode());
+    }
     result = prime * result + ((name == null) ? 0 : name.hashCode());
     return result;
   }
@@ -50,12 +53,14 @@ public class Company {
       return false;
     }
     Company other = (Company) obj;
-    if (id == null) {
-      if (other.id != null) {
+    if (EQUALS_WITH_ID) {
+      if (id == null) {
+        if (other.id != null) {
+          return false;
+        }
+      } else if (!id.equals(other.id)) {
         return false;
       }
-    } else if (!id.equals(other.id)) {
-      return false;
     }
     if (name == null) {
       if (other.name != null) {
