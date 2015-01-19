@@ -1,6 +1,7 @@
 package com.tonymanou.computerdb.controller;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -37,5 +38,24 @@ public class EditComputerController extends HttpServlet {
     req.setAttribute("computer", computer);
     req.setAttribute("companies", companies);
     req.getRequestDispatcher("/WEB-INF/views/editComputer.jsp").forward(req, resp);
+  }
+
+  @Override
+  protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
+      IOException {
+    Long id = Long.parseLong(req.getParameter("computerId"));
+    LocalDate introduced = LocalDate.parse(req.getParameter("introduced"));
+    String name = req.getParameter("computerName");
+    LocalDate discontinued = LocalDate.parse(req.getParameter("discontinued"));
+    Long companyId = Long.parseLong(req.getParameter("companyId"));
+
+    Computer computer = computerService.getFromId(id);
+    computer.setName(name);
+    computer.setIntroduced(introduced);
+    computer.setDiscontinued(discontinued);
+    computer.setCompany((companyId != 0) ? companyService.getFromId(companyId) : null);
+    computerService.update(computer);
+
+    resp.sendRedirect("../dashboard");
   }
 }
