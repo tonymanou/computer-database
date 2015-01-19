@@ -1,3 +1,4 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <jsp:include page="include/header.jsp" />
     <section id="main">
         <div class="container">
@@ -7,8 +8,7 @@
                         id: 0
                     </div>
                     <h1>Edit Computer</h1>
-
-                    <form action="editComputer" method="POST">
+                    <form action="" method="POST">
                         <input type="hidden" value="0"/>
                         <fieldset>
                             <div class="form-group">
@@ -33,7 +33,7 @@
                         <div class="actions pull-right">
                             <input type="submit" value="Edit" class="btn btn-primary">
                             or
-                            <a href="dashboard.html" class="btn btn-default">Cancel</a>
+                            <a href="<c:url value="/" />dashboard" class="btn btn-default">Cancel</a>
                         </div>
                     </form>
                 </div>
