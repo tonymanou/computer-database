@@ -155,8 +155,8 @@ public class SQLComputerDAO implements IComputerDAO {
       Computer.Builder builderComputer = Computer.getBuilder(null)
           .setId(resultat.getLong(1))
           .setName(resultat.getString(2))
-          .setIntroduced(SQLUtil.getLocalDateTime(resultat.getTimestamp(3)))
-          .setDiscontinued(SQLUtil.getLocalDateTime(resultat.getTimestamp(4)));
+          .setIntroduced(SQLUtil.getLocalDate(resultat.getTimestamp(3)))
+          .setDiscontinued(SQLUtil.getLocalDate(resultat.getTimestamp(4)));
       // @formatter:on
 
       Long companyId = resultat.getLong(5);

@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -100,8 +101,8 @@ public class SQLUtil {
    *          The locale date time.
    * @return a timestamp, or null if the date wass null.
    */
-  public static Timestamp getTimestamp(LocalDateTime date) {
-    return date == null ? null : Timestamp.valueOf(date);
+  public static Timestamp getTimestamp(LocalDate date) {
+    return date == null ? null : Timestamp.valueOf(date.atStartOfDay());
   }
 
   /**
@@ -111,7 +112,7 @@ public class SQLUtil {
    *          The timestamp.
    * @return a local date time, or null if the timestamp was null.
    */
-  public static LocalDateTime getLocalDateTime(Timestamp timestamp) {
-    return timestamp == null ? null : timestamp.toLocalDateTime();
+  public static LocalDate getLocalDate(Timestamp timestamp) {
+    return timestamp == null ? null : timestamp.toLocalDateTime().toLocalDate();
   }
 }

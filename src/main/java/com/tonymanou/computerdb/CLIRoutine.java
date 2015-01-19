@@ -1,7 +1,6 @@
 package com.tonymanou.computerdb;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Scanner;
@@ -243,15 +242,15 @@ public class CLIRoutine {
             oldName);
         computer.setName(name);
 
-        LocalDateTime oldIntroduced = computer.getIntroduced();
+        LocalDate oldIntroduced = computer.getIntroduced();
         System.out.println("[Update computer] Current introduced date is " + oldIntroduced + ".");
-        LocalDateTime introduced = getDateInput("[Update computer] Enter the new date.",
+        LocalDate introduced = getDateInput("[Update computer] Enter the new date.",
             EmptyType.KEEP, oldIntroduced);
         computer.setIntroduced(introduced);
 
-        LocalDateTime oldDiscontinued = computer.getDiscontinued();
+        LocalDate oldDiscontinued = computer.getDiscontinued();
         System.out.println("[Update computer] Current introduced date is " + oldDiscontinued + ".");
-        LocalDateTime discontinued = getDateInput("[Update computer] Enter the new date.",
+        LocalDate discontinued = getDateInput("[Update computer] Enter the new date.",
             EmptyType.KEEP, oldDiscontinued);
         computer.setDiscontinued(discontinued);
 
@@ -388,10 +387,10 @@ public class CLIRoutine {
    *          Optional original value, only used when using emptyType KEEP.
    * @return the date, or null if the the user left the input empty.
    */
-  private LocalDateTime getDateInput(String message, EmptyType emptyType, LocalDateTime... original) {
+  private LocalDate getDateInput(String message, EmptyType emptyType, LocalDate... original) {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     boolean running = true;
-    LocalDateTime date = null;
+    LocalDate date = null;
     String string;
 
     System.out.print(message + " (yyyy-MM-dd, enter nothing to ");
@@ -440,7 +439,7 @@ public class CLIRoutine {
         boolean bad = true;
 
         if (string.matches(REGEX_DATE_EN)) {
-          date = LocalDate.parse(string, formatter).atStartOfDay();
+          date = LocalDate.parse(string, formatter);
           bad = false;
           System.out.println();
         }

@@ -1,7 +1,6 @@
 package com.tonymanou.computerdb.entity;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDate;
 
 /**
  * Describe a computer.
@@ -11,11 +10,10 @@ import java.time.format.DateTimeFormatter;
 public class Computer {
 
   private static final boolean EQUALS_WITH_ID = false;
-  private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
   private Long id;
   private String name;
-  private LocalDateTime introduced;
-  private LocalDateTime discontinued;
+  private LocalDate introduced;
+  private LocalDate discontinued;
   private Company company;
 
   private Computer() {
@@ -37,19 +35,19 @@ public class Computer {
     name = pName;
   }
 
-  public LocalDateTime getIntroduced() {
+  public LocalDate getIntroduced() {
     return introduced;
   }
 
-  public void setIntroduced(LocalDateTime pIntroduced) {
+  public void setIntroduced(LocalDate pIntroduced) {
     introduced = pIntroduced;
   }
 
-  public LocalDateTime getDiscontinued() {
+  public LocalDate getDiscontinued() {
     return discontinued;
   }
 
-  public void setDiscontinued(LocalDateTime pDiscontinued) {
+  public void setDiscontinued(LocalDate pDiscontinued) {
     discontinued = pDiscontinued;
   }
 
@@ -136,11 +134,11 @@ public class Computer {
     builder.append(name);
     if (introduced != null) {
       builder.append(", introduced=");
-      builder.append(introduced.format(FORMATTER));
+      builder.append(introduced.toString());
     }
     if (discontinued != null) {
       builder.append(", discontinued=");
-      builder.append(discontinued.format(FORMATTER));
+      builder.append(discontinued.toString());
     }
     if (company != null) {
       builder.append(", company=");
@@ -173,12 +171,12 @@ public class Computer {
       return this;
     }
 
-    public Builder setIntroduced(LocalDateTime pIntroduced) {
+    public Builder setIntroduced(LocalDate pIntroduced) {
       computer.introduced = pIntroduced;
       return this;
     }
 
-    public Builder setDiscontinued(LocalDateTime pDiscontinued) {
+    public Builder setDiscontinued(LocalDate pDiscontinued) {
       computer.discontinued = pDiscontinued;
       return this;
     }

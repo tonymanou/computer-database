@@ -21,12 +21,12 @@ public class MemComputerDAO implements IComputerDAO {
     // @formatter:off
     map.put(1L, Computer.getBuilder("Vaio SCE1230-Z")
         .setId(1L)
-        .setIntroduced(LocalDate.of(2011, 5, 12).atStartOfDay())
+        .setIntroduced(LocalDate.of(2011, 5, 12))
         .build());
     map.put(2L, Computer.getBuilder("Macbook Pro 13 late 2010")
         .setId(2L)
-        .setIntroduced(LocalDate.of(2010, 10, 01).atStartOfDay())
-        .setDiscontinued(LocalDate.of(2012, 02, 25).atStartOfDay())
+        .setIntroduced(LocalDate.of(2010, 10, 01))
+        .setDiscontinued(LocalDate.of(2012, 02, 25))
         .setCompany(Company.getBuilder("Apple")
             .setId(1L)
             .build())
