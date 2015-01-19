@@ -89,27 +89,24 @@ public class Company {
 
   public static class Builder {
 
-    private Long id;
-    private String name;
+    private Company company;
 
     public Builder(String pName) {
-      name = pName;
+      company = new Company();
+      company.name = pName;
     }
 
     public Builder setId(Long pId) {
-      id = pId;
+      company.id = pId;
       return this;
     }
 
     public Builder setName(String pName) {
-      name = pName;
+      company.name = pName;
       return this;
     }
 
     public Company build() {
-      Company company = new Company();
-      company.setId(id);
-      company.setName(name);
       return company;
     }
   }

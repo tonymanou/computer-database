@@ -155,49 +155,41 @@ public class Computer {
   }
 
   public static class Builder {
-    private Long id;
-    private String name;
-    private LocalDateTime introduced;
-    private LocalDateTime discontinued;
-    private Company company;
+
+    private Computer computer;
 
     public Builder(String computerName) {
-      name = computerName;
+      computer = new Computer();
+      computer.name = computerName;
     }
 
     public Builder setName(String pName) {
-      name = pName;
+      computer.name = pName;
       return this;
     }
 
     public Builder setId(Long pId) {
-      id = pId;
+      computer.id = pId;
       return this;
     }
 
     public Builder setIntroduced(LocalDateTime pIntroduced) {
-      introduced = pIntroduced;
+      computer.introduced = pIntroduced;
       return this;
     }
 
     public Builder setDiscontinued(LocalDateTime pDiscontinued) {
-      discontinued = pDiscontinued;
+      computer.discontinued = pDiscontinued;
       return this;
     }
 
     public Builder setCompany(Company pCompany) {
-      company = pCompany;
+      computer.company = pCompany;
       return this;
     }
 
     public Computer build() {
-      Computer c = new Computer();
-      c.setId(id);
-      c.setName(name);
-      c.setIntroduced(introduced);
-      c.setDiscontinued(discontinued);
-      c.setCompany(company);
-      return c;
+      return computer;
     }
   }
 }
