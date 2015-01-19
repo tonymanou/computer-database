@@ -63,7 +63,7 @@
 	                            <input type="checkbox" name="cb" class="cb" value="${computer.id} }">
 	                        </td>
 	                        <td>
-	                            <a href="<c:url value="/" />computer/edit" onclick="">${computer.name}</a>
+	                            <a href="<c:url value="/" />computer/edit?id=${computer.id}" onclick="">${computer.name}</a>
 	                        </td>
 	                        <td>${computer.introduced}</td>
 	                        <td>${computer.discontinued}</td>
