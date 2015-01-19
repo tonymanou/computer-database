@@ -5,16 +5,16 @@
 		<c:choose>
 			<c:when test="${errorCode != null}">
 				<div class="alert alert-danger">
-					<p>
+					<h4>
 						<c:choose>
 							<c:when test="${errorCode == 403}">Error 403: Access denied.</c:when>
 							<c:when test="${errorCode == 404}">Error 404: Page not found.</c:when>
 							<c:when test="${errorCode == 500}">Error 500: Server error.</c:when>
-							<c:otherwise>Unknown error occurred: ${errorCode}</c:otherwise>
+							<c:otherwise>Error ${errorCode}</c:otherwise>
 						</c:choose>
-					</p>
+					</h4>
 					<c:if test="${errorMessage != null && errorMessage != \"\" }">
-						<p>Message: ${errorMessage}</p>
+						<p>${errorMessage}</p>
 					</c:if>
 				</div>
 			</c:when>

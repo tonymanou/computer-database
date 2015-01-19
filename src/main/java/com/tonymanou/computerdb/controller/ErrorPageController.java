@@ -21,4 +21,40 @@ public class ErrorPageController extends HttpServlet {
     req.setAttribute("errorMessage", req.getAttribute(RequestDispatcher.ERROR_MESSAGE));
     req.getRequestDispatcher("/WEB-INF/views/error.jsp").forward(req, resp);
   }
+
+  @Override
+  protected void doDelete(HttpServletRequest req, HttpServletResponse resp)
+      throws ServletException, IOException {
+    doGet(req, resp);
+  }
+
+  @Override
+  protected void doHead(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
+      IOException {
+    doGet(req, resp);
+  }
+
+  @Override
+  protected void doOptions(HttpServletRequest req, HttpServletResponse resp)
+      throws ServletException, IOException {
+    doGet(req, resp);
+  }
+
+  @Override
+  protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
+      IOException {
+    doGet(req, resp);
+  }
+
+  @Override
+  protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
+      IOException {
+    doGet(req, resp);
+  }
+
+  @Override
+  protected void doTrace(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
+      IOException {
+    doGet(req, resp);
+  }
 }
