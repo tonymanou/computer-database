@@ -3,7 +3,7 @@
     <section id="main">
         <div class="container">
             <h1 id="homeTitle">
-                121 Computers found
+                ${computers.size()} Computers found
             </h1>
             <div id="actions" class="form-horizontal">
                 <div class="pull-left">
@@ -31,7 +31,6 @@
                     <tr>
                         <!-- Variable declarations for passing labels as parameters -->
                         <!-- Table header for Computer Name -->
-
                         <th class="editMode" style="width: 60px; height: 22px;">
                             <input type="checkbox" id="selectall" /> 
                             <span style="vertical-align: top;">
@@ -54,22 +53,23 @@
                         <th>
                             Company
                         </th>
-
                     </tr>
                 </thead>
                 <!-- Browse attribute computers -->
                 <tbody id="results">
-                    <tr>
-                        <td class="editMode">
-                            <input type="checkbox" name="cb" class="cb" value="0">
-                        </td>
-                        <td>
-                            <a href="<c:url value="/" />computer/edit" onclick="">IBM 650</a>
-                        </td>
-                        <td>1953-01-01</td>
-                        <td>1962-01-01</td>
-                        <td>IBM</td>
-                    </tr>
+	                <c:forEach items="${computers}" var="computer">
+	                    <tr>
+	                        <td class="editMode">
+	                            <input type="checkbox" name="cb" class="cb" value="${computer.id} }">
+	                        </td>
+	                        <td>
+	                            <a href="<c:url value="/" />computer/edit" onclick="">${computer.name}</a>
+	                        </td>
+	                        <td>${computer.introduced}</td>
+	                        <td>${computer.discontinued}</td>
+	                        <td>${computer.company.name}</td>
+	                    </tr>
+	                </c:forEach>
                 </tbody>
             </table>
         </div>
@@ -100,6 +100,5 @@
             <button type="button" class="btn btn-default">50</button>
             <button type="button" class="btn btn-default">100</button>
         </div>
-
     </footer>
 <jsp:include page="include/footer.jsp" />
