@@ -31,10 +31,9 @@ public class SQLCompanyDAO implements ICompanyDAO {
       statement = connection.createStatement();
       resultat = statement.executeQuery("SELECT id, name FROM company;");
 
-      Company.Builder builder = Company.getBuilder(null);
       while (resultat.next()) {
         // @formatter:off
-        list.add(builder
+        list.add(Company.getBuilder(null)
             .setId(resultat.getLong(1))
             .setName(resultat.getString(2))
             .build());
@@ -62,10 +61,9 @@ public class SQLCompanyDAO implements ICompanyDAO {
       statement.setLong(1, id);
       resultat = statement.executeQuery();
 
-      Company.Builder builder = Company.getBuilder(null);
       if (resultat.first()) {
         // @formatter:off
-        company =builder
+        company = Company.getBuilder(null)
             .setId(resultat.getLong(1))
             .setName(resultat.getString(2))
             .build();
