@@ -14,7 +14,7 @@ public enum DAOManager {
 
   INSTANCE;
 
-  private static final boolean IN_MEMORY = false;
+  public static final boolean IN_MEMORY = true;
   private IComputerDAO computerDAO;
   private ICompanyDAO companyDAO;
 
