@@ -92,13 +92,14 @@
                 <a href="#" aria-label="Next">
                     <span aria-hidden="true">&raquo;</span>
                 </a>
-            </li>
-        </ul>
+              </li>
+            </ul>
 
-        <div class="btn-group btn-group-sm pull-right" role="group" >
-            <button type="button" class="btn btn-default">10</button>
-            <button type="button" class="btn btn-default">50</button>
-            <button type="button" class="btn btn-default">100</button>
+            <div class="btn-group btn-group-sm pull-right" role="group" >
+                <button type="button" class="btn btn-default">10</button>
+                <button type="button" class="btn btn-default">50</button>
+                <button type="button" class="btn btn-default">100</button>
+            </div>
         </div>
     </footer>
 <jsp:include page="include/footer.jsp" />
