@@ -15,7 +15,7 @@
                     </form>
                 </div>
                 <div class="pull-right">
-                    <a class="btn btn-success" id="addComputer" href="<c:url value="/" />computer/add">Add Computer</a> 
+                    <a class="btn btn-success" id="addComputer" href="<c:url value="/computer/add" />">Add Computer</a> 
                     <a class="btn btn-default" id="editComputer" href="#" onclick="$.fn.toggleEditMode();">Edit</a>
                 </div>
             </div>
@@ -63,7 +63,7 @@
 	                            <input type="checkbox" name="cb" class="cb" value="${computer.id} }">
 	                        </td>
 	                        <td>
-	                            <a href="<c:url value="/" />computer/edit?id=${computer.id}" onclick="">${computer.name}</a>
+	                            <a href="<c:url value="/computer/edit?id=${computer.id}" />" onclick="">${computer.name}</a>
 	                        </td>
 	                        <td>${computer.introduced}</td>
 	                        <td>${computer.discontinued}</td>

@@ -16,7 +16,7 @@
 					<c:if test="${errorMessage != null && errorMessage != \"\" }">
 						<p>${errorMessage}</p>
 					</c:if>
-					<img class="centered" alt="Sad panda" src="<c:url value="/" />images/sad_panda.png">
+					<img class="centered" alt="Sad panda" src="<c:url value="/images/sad_panda.png" />">
 				</div>
 			</c:when>
 			<c:otherwise>

@@ -8,7 +8,7 @@
                         id: ${computer.id}
                     </div>
                     <h1>Edit Computer</h1>
-                    <form action="<c:url value="/" />computer/edit" method="POST">
+                    <form action="<c:url value="/computer/edit" />" method="POST">
                         <input type="hidden" name="computerId" value="${computer.id}"/>
                         <fieldset>
                             <div class="form-group">
@@ -36,7 +36,7 @@
                         <div class="actions pull-right">
                             <input type="submit" value="Edit" class="btn btn-primary">
                             or
-                            <a href="<c:url value="/" />dashboard" class="btn btn-default">Cancel</a>
+                            <a href="<c:url value="/dashboard" />" class="btn btn-default">Cancel</a>
                         </div>
                     </form>
                 </div>
