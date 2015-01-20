@@ -15,6 +15,7 @@ import com.tonymanou.computerdb.entity.Computer;
 import com.tonymanou.computerdb.service.ICompanyService;
 import com.tonymanou.computerdb.service.IComputerService;
 import com.tonymanou.computerdb.service.ServiceManager;
+import com.tonymanou.computerdb.util.Util;
 
 @WebServlet("/computer/edit")
 public class EditComputerController extends HttpServlet {
@@ -44,9 +45,9 @@ public class EditComputerController extends HttpServlet {
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
       IOException {
     Long id = Long.parseLong(req.getParameter("computerId"));
-    LocalDate introduced = LocalDate.parse(req.getParameter("introduced"));
     String name = req.getParameter("computerName");
-    LocalDate discontinued = LocalDate.parse(req.getParameter("discontinued"));
+    LocalDate introduced = Util.parseLocalDate(req.getParameter("introduced"));
+    LocalDate discontinued = Util.parseLocalDate(req.getParameter("discontinued"));
     Long companyId = Long.parseLong(req.getParameter("companyId"));
 
     Computer computer = computerService.getFromId(id);

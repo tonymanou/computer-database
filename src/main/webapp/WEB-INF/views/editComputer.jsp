@@ -28,7 +28,7 @@
                                 <select class="form-control" id="companyId" name="companyId" >
                                     <option value="0">--</option>
                                     <c:forEach items="${companies}" var="company">
-                                    	<option value="${company.id}">${company.name}</option>
+                                        <option value="${company.id}"<c:if test="${company.id == computer.company.id}"> selected="selected"</c:if>>${company.name}</option>
                                     </c:forEach>
                                 </select>
                             </div>
