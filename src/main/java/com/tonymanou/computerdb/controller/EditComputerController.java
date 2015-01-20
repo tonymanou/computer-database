@@ -50,12 +50,14 @@ public class EditComputerController extends HttpServlet {
     LocalDate discontinued = Util.parseLocalDate(req.getParameter("discontinued"));
     Long companyId = Long.parseLong(req.getParameter("companyId"));
 
-    Computer computer = computerService.getFromId(id);
-    computer.setName(name);
-    computer.setIntroduced(introduced);
-    computer.setDiscontinued(discontinued);
-    computer.setCompany((companyId != 0) ? companyService.getFromId(companyId) : null);
-    computerService.update(computer);
+    // @formatter:off
+    computerService.update(Computer.getBuilder(name)
+        .setId(id)
+        .setIntroduced(introduced)
+        .setDiscontinued(discontinued)
+        .setCompany((companyId != 0) ? companyService.getFromId(companyId) : null)
+        .build());
+    // @formatter:on
 
     resp.sendRedirect("../dashboard");
   }

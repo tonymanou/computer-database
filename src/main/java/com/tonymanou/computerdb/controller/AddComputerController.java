@@ -46,11 +46,13 @@ public class AddComputerController extends HttpServlet {
     LocalDate discontinued = Util.parseLocalDate(req.getParameter("discontinued"));
     Long companyId = Long.parseLong(req.getParameter("companyId"));
 
+    // @formatter:off
     computerService.create(Computer.getBuilder(name)
         .setIntroduced(introduced)
         .setDiscontinued(discontinued)
         .setCompany((companyId != 0) ? companyService.getFromId(companyId) : null)
         .build());
+    // @formatter:on
 
     resp.sendRedirect("../dashboard");
   }
