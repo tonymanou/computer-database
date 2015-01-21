@@ -10,6 +10,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.tonymanou.computerdb.dto.CompanyDTO;
 import com.tonymanou.computerdb.entity.Computer;
 import com.tonymanou.computerdb.mapper.CompanyMapper;
@@ -22,6 +25,7 @@ import com.tonymanou.computerdb.util.Util;
 public class AddComputerController extends HttpServlet {
 
   private static final long serialVersionUID = -4711445570099851743L;
+  private static final Logger LOGGER = LoggerFactory.getLogger(AddComputerController.class);
 
   private ICompanyService companyService;
   private IComputerService computerService;
@@ -43,8 +47,34 @@ public class AddComputerController extends HttpServlet {
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
       IOException {
     String name = req.getParameter("computerName");
-    LocalDate introduced = Util.parseLocalDate(req.getParameter("introduced"));
-    LocalDate discontinued = Util.parseLocalDate(req.getParameter("discontinued"));
+    if (Util.isStringEmpty(name)) {
+      RuntimeException exception = new IllegalArgumentException("Computer name cannot be empty");
+      LOGGER.error(exception.getMessage(), exception);
+      throw exception;
+    }
+
+    String introducedDate = req.getParameter("introduced");
+    LocalDate introduced;
+    if (Util.isStringEmpty(introducedDate)) {
+      introduced = null;
+    } else {
+      introduced = Util.parseLocalDate(introducedDate);
+      if (introduced == null) {
+        // TODO Cannot parse date
+      }
+    }
+
+    String discontinuedDate = req.getParameter("discontinued");
+    LocalDate discontinued;
+    if (Util.isStringEmpty(discontinuedDate)) {
+      discontinued = null;
+    } else {
+      discontinued = Util.parseLocalDate(discontinuedDate);
+      if (discontinued == null) {
+        // TODO Cannot parse date
+      }
+    }
+
     Long companyId = Long.parseLong(req.getParameter("companyId"));
 
     // @formatter:off
