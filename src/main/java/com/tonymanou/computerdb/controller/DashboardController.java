@@ -9,7 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.tonymanou.computerdb.entity.Computer;
+import com.tonymanou.computerdb.dto.ComputerDTO;
+import com.tonymanou.computerdb.mapper.ComputerMapper;
 import com.tonymanou.computerdb.service.IComputerService;
 import com.tonymanou.computerdb.service.ServiceManager;
 
@@ -27,7 +28,7 @@ public class DashboardController extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
       IOException {
-    List<Computer> computers = computerService.findAll();
+    List<ComputerDTO> computers = ComputerMapper.mapToDTOList(computerService.findAll());
     req.setAttribute("computers", computers);
     req.getRequestDispatcher("/WEB-INF/views/dashboard.jsp").forward(req, resp);
   }

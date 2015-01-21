@@ -10,8 +10,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.tonymanou.computerdb.entity.Company;
+import com.tonymanou.computerdb.dto.CompanyDTO;
 import com.tonymanou.computerdb.entity.Computer;
+import com.tonymanou.computerdb.mapper.CompanyMapper;
 import com.tonymanou.computerdb.service.ICompanyService;
 import com.tonymanou.computerdb.service.IComputerService;
 import com.tonymanou.computerdb.service.ServiceManager;
@@ -33,7 +34,7 @@ public class AddComputerController extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
       IOException {
-    List<Company> companies = companyService.findAll();
+    List<CompanyDTO> companies = CompanyMapper.mapToDTOList(companyService.findAll());
     req.setAttribute("companies", companies);
     req.getRequestDispatcher("/WEB-INF/views/addComputer.jsp").forward(req, resp);
   }

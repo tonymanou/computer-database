@@ -65,9 +65,9 @@
 	                        <td>
 	                            <a href="<c:url value="/computer/edit?id=${computer.id}" />" onclick="">${computer.name}</a>
 	                        </td>
-	                        <td>${computer.introduced}</td>
-	                        <td>${computer.discontinued}</td>
-	                        <td>${computer.company.name}</td>
+	                        <td>${computer.introducedDate}</td>
+	                        <td>${computer.discontinuedDate}</td>
+	                        <td>${computer.companyName}</td>
 	                    </tr>
 	                </c:forEach>
                 </tbody>

@@ -10,8 +10,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.tonymanou.computerdb.entity.Company;
+import com.tonymanou.computerdb.dto.CompanyDTO;
 import com.tonymanou.computerdb.entity.Computer;
+import com.tonymanou.computerdb.mapper.CompanyMapper;
 import com.tonymanou.computerdb.service.ICompanyService;
 import com.tonymanou.computerdb.service.IComputerService;
 import com.tonymanou.computerdb.service.ServiceManager;
@@ -34,7 +35,7 @@ public class EditComputerController extends HttpServlet {
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
       IOException {
     Long id = Long.parseLong(req.getParameter("id"));
-    List<Company> companies = companyService.findAll();
+    List<CompanyDTO> companies = CompanyMapper.mapToDTOList(companyService.findAll());
     Computer computer = computerService.getFromId(id);
     req.setAttribute("computer", computer);
     req.setAttribute("companies", companies);
