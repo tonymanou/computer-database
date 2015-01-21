@@ -33,9 +33,8 @@ public class SQLCompanyDAO implements ICompanyDAO {
 
       while (resultat.next()) {
         // @formatter:off
-        list.add(Company.getBuilder(null)
+        list.add(Company.getBuilder(resultat.getString(2))
             .setId(resultat.getLong(1))
-            .setName(resultat.getString(2))
             .build());
         // @formatter:on
       }
@@ -63,9 +62,8 @@ public class SQLCompanyDAO implements ICompanyDAO {
 
       if (resultat.first()) {
         // @formatter:off
-        company = Company.getBuilder(null)
+        company = Company.getBuilder(resultat.getString(2))
             .setId(resultat.getLong(1))
-            .setName(resultat.getString(2))
             .build();
         // @formatter:off
       }

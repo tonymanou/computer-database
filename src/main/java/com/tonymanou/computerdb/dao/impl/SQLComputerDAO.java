@@ -152,9 +152,8 @@ public class SQLComputerDAO implements IComputerDAO {
 
     while (resultat.next()) {
       // @formatter:off
-      Computer.Builder builderComputer = Computer.getBuilder(null)
+      Computer.Builder builderComputer = Computer.getBuilder(resultat.getString(2))
           .setId(resultat.getLong(1))
-          .setName(resultat.getString(2))
           .setIntroduced(SQLUtil.getLocalDate(resultat.getTimestamp(3)))
           .setDiscontinued(SQLUtil.getLocalDate(resultat.getTimestamp(4)));
       // @formatter:on
@@ -163,9 +162,8 @@ public class SQLComputerDAO implements IComputerDAO {
       Company company = null;
       if (companyId != 0) {
         // @formatter:off
-        company = Company.getBuilder(null)
+        company = Company.getBuilder(resultat.getString(6))
             .setId(companyId)
-            .setName(resultat.getString(6))
             .build();
         // @formatter:on
       }
