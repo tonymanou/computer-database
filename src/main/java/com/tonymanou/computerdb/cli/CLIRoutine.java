@@ -1,4 +1,4 @@
-package com.tonymanou.computerdb;
+package com.tonymanou.computerdb.cli;
 
 import java.time.LocalDate;
 import java.util.List;

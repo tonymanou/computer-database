@@ -1,4 +1,4 @@
-package com.tonymanou.computerdb;
+package com.tonymanou.computerdb.cli;
 
 /**
  * Program's entry point.
