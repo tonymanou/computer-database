@@ -9,7 +9,6 @@
             <div id="actions" class="form-horizontal">
                 <div class="pull-left">
                     <form id="searchForm" action="#" method="GET" class="form-inline">
-
                         <input type="search" id="searchbox" name="search" class="form-control" placeholder="Search name" />
                         <input type="submit" id="searchsubmit" value="Filter by name"
                         class="btn btn-primary" />
@@ -40,20 +39,10 @@
                                     </a>
                             </span>
                         </th>
-                        <th>
-                            Computer name
-                        </th>
-                        <th>
-                            Introduced date
-                        </th>
-                        <!-- Table header for Discontinued Date -->
-                        <th>
-                            Discontinued date
-                        </th>
-                        <!-- Table header for Company -->
-                        <th>
-                            Company
-                        </th>
+                        <th>Computer name</th>
+                        <th>Introduced date</th>
+                        <th>Discontinued date</th>
+                        <th>Company</th>
                     </tr>
                 </thead>
                 <!-- Browse attribute computers -->
@@ -66,31 +55,22 @@
         </div>
     </section>
 
-    <footer class="navbar-fixed-bottom">
-        <div class="container text-center">
-            <ul class="pagination">
-                <li>
-                    <a href="#" aria-label="Previous">
-                      <span aria-hidden="true">&laquo;</span>
-                  </a>
-              </li>
-              <li><a href="#">1</a></li>
-              <li><a href="#">2</a></li>
-              <li><a href="#">3</a></li>
-              <li><a href="#">4</a></li>
-              <li><a href="#">5</a></li>
-              <li>
-                <a href="#" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-              </li>
-            </ul>
-
-            <div class="btn-group btn-group-sm pull-right" role="group" >
-                <button type="button" class="btn btn-default">10</button>
-                <button type="button" class="btn btn-default">50</button>
-                <button type="button" class="btn btn-default">100</button>
-            </div>
-        </div>
-    </footer>
+	<footer class="navbar-fixed-bottom">
+		<div class="container text-center">
+			<ul class="pagination">
+				<li><a href="#" aria-label="Previous"> <span aria-hidden="true">&laquo;</span></a></li>
+				<li><a href="#">1</a></li>
+				<li><a href="#">2</a></li>
+				<li><a href="#">3</a></li>
+				<li><a href="#">4</a></li>
+				<li><a href="#">5</a></li>
+				<li><a href="#" aria-label="Next"> <span aria-hidden="true">&raquo;</span></a></li>
+			</ul>
+			<div class="btn-group btn-group-sm pull-right" role="group">
+				<button type="button" class="btn btn-default">10</button>
+				<button type="button" class="btn btn-default">50</button>
+				<button type="button" class="btn btn-default">100</button>
+			</div>
+		</div>
+	</footer>
 <jsp:include page="include/footer.jsp" />
