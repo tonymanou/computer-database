@@ -14,8 +14,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.tonymanou.computerdb.dto.CompanyDTO;
+import com.tonymanou.computerdb.entity.Company;
 import com.tonymanou.computerdb.entity.Computer;
-import com.tonymanou.computerdb.mapper.CompanyMapper;
+import com.tonymanou.computerdb.mapper.IEntityMapper;
+import com.tonymanou.computerdb.mapper.MapperManager;
 import com.tonymanou.computerdb.service.ICompanyService;
 import com.tonymanou.computerdb.service.IComputerService;
 import com.tonymanou.computerdb.service.ServiceManager;
@@ -29,10 +31,12 @@ public class EditComputerController extends HttpServlet {
 
   private ICompanyService companyService;
   private IComputerService computerService;
+  private IEntityMapper<Company, CompanyDTO> companyMapper;
 
   public EditComputerController() {
     companyService = ServiceManager.INSTANCE.getCompanyService();
     computerService = ServiceManager.INSTANCE.getComputerService();
+    companyMapper = MapperManager.INSTANCE.getCompanyMapper();
   }
 
   @Override
@@ -45,7 +49,7 @@ public class EditComputerController extends HttpServlet {
       throw exception;
     }
 
-    List<CompanyDTO> companies = CompanyMapper.mapToDTOList(companyService.findAll());
+    List<CompanyDTO> companies = companyMapper.mapToDTOList(companyService.findAll());
     Computer computer = computerService.getFromId(id);
     req.setAttribute("computer", computer);
     req.setAttribute("companies", companies);

@@ -14,8 +14,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.tonymanou.computerdb.dto.CompanyDTO;
+import com.tonymanou.computerdb.entity.Company;
 import com.tonymanou.computerdb.entity.Computer;
-import com.tonymanou.computerdb.mapper.CompanyMapper;
+import com.tonymanou.computerdb.mapper.IEntityMapper;
+import com.tonymanou.computerdb.mapper.MapperManager;
 import com.tonymanou.computerdb.service.ICompanyService;
 import com.tonymanou.computerdb.service.IComputerService;
 import com.tonymanou.computerdb.service.ServiceManager;
@@ -29,16 +31,18 @@ public class AddComputerController extends HttpServlet {
 
   private ICompanyService companyService;
   private IComputerService computerService;
+  private IEntityMapper<Company, CompanyDTO> companyMapper;
 
   public AddComputerController() {
     companyService = ServiceManager.INSTANCE.getCompanyService();
     computerService = ServiceManager.INSTANCE.getComputerService();
+    companyMapper = MapperManager.INSTANCE.getCompanyMapper();
   }
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
       IOException {
-    List<CompanyDTO> companies = CompanyMapper.mapToDTOList(companyService.findAll());
+    List<CompanyDTO> companies = companyMapper.mapToDTOList(companyService.findAll());
     req.setAttribute("companies", companies);
     req.getRequestDispatcher("/WEB-INF/views/addComputer.jsp").forward(req, resp);
   }
