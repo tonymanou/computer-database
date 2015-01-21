@@ -8,6 +8,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.tonymanou.computerdb.dao.ICompanyDAO;
 import com.tonymanou.computerdb.entity.Company;
 import com.tonymanou.computerdb.exception.PersistenceException;
@@ -18,6 +21,8 @@ import com.tonymanou.computerdb.exception.PersistenceException;
  * @author tonymanou
  */
 public class SQLCompanyDAO implements ICompanyDAO {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(SQLCompanyDAO.class);
 
   @Override
   public List<Company> findAll() {
@@ -39,6 +44,7 @@ public class SQLCompanyDAO implements ICompanyDAO {
         // @formatter:on
       }
     } catch (SQLException e) {
+      LOGGER.error("SQL exception", e);
       throw new PersistenceException(e);
     } finally {
       SQLUtil.close(resultat, statement, connection);
@@ -66,8 +72,12 @@ public class SQLCompanyDAO implements ICompanyDAO {
             .setId(resultat.getLong(1))
             .build();
         // @formatter:off
+      } else {
+        StringBuilder sb = new StringBuilder("No company found with the id ").append(id);
+        LOGGER.warn(sb.toString());
       }
     } catch (SQLException e) {
+      LOGGER.error("SQL exception", e);
       throw new PersistenceException(e);
     } finally {
       SQLUtil.close(resultat, statement, connection);

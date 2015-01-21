@@ -9,6 +9,9 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.tonymanou.computerdb.dao.IComputerDAO;
 import com.tonymanou.computerdb.entity.Company;
 import com.tonymanou.computerdb.entity.Computer;
@@ -20,6 +23,8 @@ import com.tonymanou.computerdb.exception.PersistenceException;
  * @author tonymanou
  */
 public class SQLComputerDAO implements IComputerDAO {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(SQLComputerDAO.class);
 
   @Override
   public List<Computer> findAll() {
@@ -35,6 +40,7 @@ public class SQLComputerDAO implements IComputerDAO {
           .executeQuery("SELECT c.id, c.name, c.introduced, c.discontinued, c.company_id, d.name FROM computer c LEFT JOIN company d ON c.company_id = d.id;");
       list = extractToList(resultat);
     } catch (SQLException e) {
+      LOGGER.error("SQL exception", e);
       throw new PersistenceException(e);
     } finally {
       SQLUtil.close(resultat, statement, connection);
@@ -63,6 +69,7 @@ public class SQLComputerDAO implements IComputerDAO {
       }
       statement.executeUpdate();
     } catch (SQLException e) {
+      LOGGER.error("SQL exception", e);
       throw new PersistenceException(e);
     } finally {
       SQLUtil.close(statement, connection);
@@ -90,6 +97,7 @@ public class SQLComputerDAO implements IComputerDAO {
       statement.setLong(5, computer.getId());
       statement.executeUpdate();
     } catch (SQLException e) {
+      LOGGER.error("SQL exception", e);
       throw new PersistenceException(e);
     } finally {
       SQLUtil.close(statement, connection);
@@ -107,6 +115,7 @@ public class SQLComputerDAO implements IComputerDAO {
       statement.setLong(1, id);
       statement.executeUpdate();
     } catch (SQLException e) {
+      LOGGER.error("SQL exception", e);
       throw new PersistenceException(e);
     } finally {
       SQLUtil.close(statement, connection);
@@ -128,8 +137,15 @@ public class SQLComputerDAO implements IComputerDAO {
       resultat = statement.executeQuery();
 
       List<Computer> list = extractToList(resultat);
-      computer = list.size() == 0 ? null : list.get(0);
+      if (list.size() == 0) {
+        StringBuilder sb = new StringBuilder("No computer found with the id ").append(id);
+        LOGGER.warn(sb.toString());
+        computer = null;
+      } else {
+        computer = list.get(0);
+      }
     } catch (SQLException e) {
+      LOGGER.error("SQL exception", e);
       throw new PersistenceException(e);
     } finally {
       SQLUtil.close(resultat, statement, connection);
@@ -159,13 +175,15 @@ public class SQLComputerDAO implements IComputerDAO {
       // @formatter:on
 
       Long companyId = resultat.getLong(5);
-      Company company = null;
+      Company company;
       if (companyId != 0) {
         // @formatter:off
         company = Company.getBuilder(resultat.getString(6))
             .setId(companyId)
             .build();
         // @formatter:on
+      } else {
+        company = null;
       }
       builderComputer.setCompany(company);
 
