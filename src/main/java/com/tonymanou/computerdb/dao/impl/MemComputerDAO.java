@@ -37,11 +37,6 @@ public class MemComputerDAO implements IComputerDAO {
   }
 
   @Override
-  public List<Computer> findAll() {
-    return new ArrayList<>(map.values());
-  }
-
-  @Override
   public List<Computer> findAll(ComputerPage page) {
     return new ArrayList<>(map.values());
   }

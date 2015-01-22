@@ -13,6 +13,7 @@ import com.tonymanou.computerdb.domain.Computer;
 import com.tonymanou.computerdb.dto.ComputerDTO;
 import com.tonymanou.computerdb.mapper.IEntityMapper;
 import com.tonymanou.computerdb.mapper.MapperManager;
+import com.tonymanou.computerdb.pagination.ComputerPage;
 import com.tonymanou.computerdb.service.IComputerService;
 import com.tonymanou.computerdb.service.ServiceManager;
 
@@ -32,7 +33,8 @@ public class DashboardController extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
       IOException {
-    List<ComputerDTO> computers = computerMapper.mapToDTOList(computerService.findAll());
+    ComputerPage page = new ComputerPage();
+    List<ComputerDTO> computers = computerMapper.mapToDTOList(computerService.findAll(page));
     req.setAttribute("computers", computers);
     req.getRequestDispatcher("/WEB-INF/views/dashboard.jsp").forward(req, resp);
   }

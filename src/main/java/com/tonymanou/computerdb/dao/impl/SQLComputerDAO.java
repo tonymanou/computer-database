@@ -27,11 +27,6 @@ public class SQLComputerDAO implements IComputerDAO {
   private static final Logger LOGGER = LoggerFactory.getLogger(SQLComputerDAO.class);
 
   @Override
-  public List<Computer> findAll() {
-    return findAll(new ComputerPage());
-  }
-
-  @Override
   public List<Computer> findAll(ComputerPage page) {
     List<Computer> list = null;
     Connection connection = null;

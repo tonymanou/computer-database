@@ -14,15 +14,6 @@ import com.tonymanou.computerdb.pagination.ComputerPage;
 public interface IComputerDAO {
 
   /**
-   * Retrieve all the computers from the database.
-   *
-   * @return A list containing all the computers.
-   * @throws PersistenceException
-   *           if an error occurred while processing the query.
-   */
-  List<Computer> findAll();
-
-  /**
    * Retrieve a list of computers from the database.
    *
    * @param page

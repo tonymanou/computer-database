@@ -19,6 +19,7 @@ import org.mockito.stubbing.Answer;
 
 import com.tonymanou.computerdb.dao.IComputerDAO;
 import com.tonymanou.computerdb.domain.Computer;
+import com.tonymanou.computerdb.pagination.ComputerPage;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ComputerServiceTest {
@@ -30,6 +31,7 @@ public class ComputerServiceTest {
   private static IComputerDAO computerDAO;
   private static Computer computer1;
   private static Computer computer2;
+  private static ComputerPage page;
 
   @BeforeClass
   public static void setUp() {
@@ -38,8 +40,9 @@ public class ComputerServiceTest {
 
     computer1 = Computer.getBuilder("Computer 1").setId(ID).build();
     computer2 = Computer.getBuilder("Computer 2").setId(ID2).build();
+    page = new ComputerPage();
 
-    when(computerDAO.findAll()).thenReturn(Arrays.asList(computer1, computer2));
+    when(computerDAO.findAll(page)).thenReturn(Arrays.asList(computer1, computer2));
     doAnswer(new Answer<Object>() {
       public Object answer(InvocationOnMock invocation) {
         Object[] args = invocation.getArguments();
@@ -71,7 +74,7 @@ public class ComputerServiceTest {
     Computer computer = Computer.getBuilder("Computer 2").setId(ID2).build();
     assertEquals(computer, list.get(1));
 
-    verify(computerDAO).findAll();
+    verify(computerDAO).findAll(page);
   }
 
   @Test

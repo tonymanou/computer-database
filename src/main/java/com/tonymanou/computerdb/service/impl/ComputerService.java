@@ -5,6 +5,7 @@ import java.util.List;
 import com.tonymanou.computerdb.dao.DAOManager;
 import com.tonymanou.computerdb.dao.IComputerDAO;
 import com.tonymanou.computerdb.domain.Computer;
+import com.tonymanou.computerdb.pagination.ComputerPage;
 import com.tonymanou.computerdb.service.IComputerService;
 
 /**
@@ -26,7 +27,12 @@ public class ComputerService implements IComputerService {
 
   @Override
   public List<Computer> findAll() {
-    return computerDAO.findAll();
+    return computerDAO.findAll(new ComputerPage());
+  }
+
+  @Override
+  public List<Computer> findAll(ComputerPage page) {
+    return computerDAO.findAll(page);
   }
 
   @Override
