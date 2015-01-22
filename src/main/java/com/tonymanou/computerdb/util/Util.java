@@ -1,6 +1,8 @@
 package com.tonymanou.computerdb.util;
 
 import java.time.LocalDate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Utility class.
@@ -31,8 +33,16 @@ public class Util {
       + "|((29)" + REGEX_DELIMITER + "(02)" + REGEX_DELIMITER + "([0-9][0-9][2468][048]))"
       + "|((29)" + REGEX_DELIMITER + "(02)" + REGEX_DELIMITER + "([0-9][0-9][13579][26]))"
       + ")";
-  private static final String REGEX_NUMBER = "[+-]?[0-9]+";
+  private static final String REGEX_NUMBER = "[+-]?\\d{1,19}";
   // @formatter:on
+
+  private static final Matcher NUMBER_MATCHER;
+  private static final Matcher DATE_MATCHER;
+
+  static {
+    DATE_MATCHER = Pattern.compile(REGEX_DATE_EN).matcher("");
+    NUMBER_MATCHER = Pattern.compile(REGEX_NUMBER).matcher("");
+  }
 
   /**
    * Parse the given date string to a {@link LocalDate}.
@@ -43,7 +53,7 @@ public class Util {
    */
   public static LocalDate parseLocalDate(String str) {
     LocalDate localDate;
-    if (str != null && str.matches(REGEX_DATE_EN)) {
+    if (str != null && DATE_MATCHER.reset(str).matches()) {
       localDate = LocalDate.parse(str);
     } else {
       localDate = null;
@@ -60,7 +70,7 @@ public class Util {
    */
   public static Long parseLong(String str) {
     Long result;
-    if (str != null && str.matches(REGEX_NUMBER)) {
+    if (str != null && NUMBER_MATCHER.reset(str).matches()) {
       result = Long.parseLong(str);
     } else {
       result = null;
