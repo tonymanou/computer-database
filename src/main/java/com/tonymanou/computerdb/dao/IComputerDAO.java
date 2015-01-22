@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.tonymanou.computerdb.domain.Computer;
 import com.tonymanou.computerdb.exception.PersistenceException;
+import com.tonymanou.computerdb.pagination.ComputerPage;
 
 /**
  * Interface implemented by DAOs to manage computers.
@@ -20,6 +21,17 @@ public interface IComputerDAO {
    *           if an error occurred while processing the query.
    */
   List<Computer> findAll();
+
+  /**
+   * Retrieve a list of computers from the database.
+   *
+   * @param page
+   *          Description of the pagination to use.
+   * @return A list containing the computers.
+   * @throws PersistenceException
+   *           if an error occurred while processing the query.
+   */
+  List<Computer> findAll(ComputerPage page);
 
   /**
    * Create a new computer in the database.

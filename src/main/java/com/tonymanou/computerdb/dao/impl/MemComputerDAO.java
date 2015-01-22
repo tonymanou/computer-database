@@ -10,6 +10,7 @@ import com.tonymanou.computerdb.dao.IComputerDAO;
 import com.tonymanou.computerdb.domain.Company;
 import com.tonymanou.computerdb.domain.Computer;
 import com.tonymanou.computerdb.exception.PersistenceException;
+import com.tonymanou.computerdb.pagination.ComputerPage;
 
 public class MemComputerDAO implements IComputerDAO {
 
@@ -37,6 +38,11 @@ public class MemComputerDAO implements IComputerDAO {
 
   @Override
   public List<Computer> findAll() {
+    return new ArrayList<>(map.values());
+  }
+
+  @Override
+  public List<Computer> findAll(ComputerPage page) {
     return new ArrayList<>(map.values());
   }
 
