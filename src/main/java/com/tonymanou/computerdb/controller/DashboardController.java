@@ -47,7 +47,6 @@ public class DashboardController extends HttpServlet {
     if (elementsPerPage != null) {
       page.setNumElementsPerPage((int) elementsPerPage);
     }
-    page.setNumElements(computerService.count());
 
     String search = req.getParameter("search");
     if (!Util.isStringEmpty(search)) {
@@ -61,6 +60,7 @@ public class DashboardController extends HttpServlet {
     }
 
     List<ComputerDTO> computers = computerMapper.mapToDTOList(computerService.findAll(page));
+
     req.setAttribute("computers", computers);
     req.setAttribute("page", page);
     req.getRequestDispatcher("/WEB-INF/views/dashboard.jsp").forward(req, resp);
