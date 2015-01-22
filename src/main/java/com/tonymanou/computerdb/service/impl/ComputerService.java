@@ -48,4 +48,9 @@ public class ComputerService implements IComputerService {
   public Computer getFromId(Long id) {
     return computerDAO.getFromId(id);
   }
+
+  @Override
+  public int count() {
+    return computerDAO.count();
+  }
 }

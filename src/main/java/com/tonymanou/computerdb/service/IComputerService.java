@@ -61,4 +61,11 @@ public interface IComputerService {
    *           if an error occurred while processing the query.
    */
   Computer getFromId(Long id);
+
+  /**
+   * Count the number of computers.
+   * 
+   * @return The number of computers.
+   */
+  int count();
 }

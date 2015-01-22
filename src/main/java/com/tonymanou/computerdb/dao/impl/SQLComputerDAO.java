@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +15,7 @@ import com.tonymanou.computerdb.dao.IComputerDAO;
 import com.tonymanou.computerdb.domain.Company;
 import com.tonymanou.computerdb.domain.Computer;
 import com.tonymanou.computerdb.exception.PersistenceException;
+import com.tonymanou.computerdb.pagination.ComputerPage;
 
 /**
  * DAO implementation to manage computers in a SQL database.
@@ -28,16 +28,39 @@ public class SQLComputerDAO implements IComputerDAO {
 
   @Override
   public List<Computer> findAll() {
+    return findAll(new ComputerPage());
+  }
+
+  @Override
+  public List<Computer> findAll(ComputerPage page) {
     List<Computer> list = null;
     Connection connection = null;
-    Statement statement = null;
+    PreparedStatement statement = null;
     ResultSet resultat = null;
 
     try {
       connection = SQLUtil.getConnection();
-      statement = connection.createStatement();
-      resultat = statement
-          .executeQuery("SELECT c.id, c.name, c.introduced, c.discontinued, c.company_id, d.name FROM computer c LEFT JOIN company d ON c.company_id = d.id;");
+      statement = connection
+          .prepareStatement("SELECT c.id, c.name, c.introduced, c.discontinued, c.company_id, d.name FROM computer c LEFT JOIN company d ON c.company_id = d.id ORDER BY ? ? LIMIT ? OFFSET ?;");
+
+      String order;
+      switch (page.getOrder()) {
+      case NAME:
+        order = "c.name";
+        break;
+      case COMPANY:
+        order = "d.name";
+        break;
+      default:
+        order = "c.id";
+        break;
+      }
+      statement.setString(1, order);
+      statement.setString(2, page.getOrderType().name());
+      statement.setInt(3, page.getElementsPerPage());
+      statement.setInt(4, page.getElementsOffset());
+
+      resultat = statement.executeQuery();
       list = extractToList(resultat);
     } catch (SQLException e) {
       LOGGER.error("SQL exception", e);
@@ -152,6 +175,30 @@ public class SQLComputerDAO implements IComputerDAO {
     }
 
     return computer;
+  }
+
+  @Override
+  public int count() {
+    int result = 0;
+    Connection connection = null;
+    PreparedStatement statement = null;
+    ResultSet resultat = null;
+
+    try {
+      connection = SQLUtil.getConnection();
+      statement = connection.prepareStatement("SELECT COUNT(id) FROM computer;");
+      resultat = statement.executeQuery();
+
+      resultat.next(); // Do not check if it succeeded and let the next instruction crash
+      result = resultat.getInt(1);
+    } catch (SQLException e) {
+      LOGGER.error("SQL exception", e);
+      throw new PersistenceException(e);
+    } finally {
+      SQLUtil.close(statement, connection);
+    }
+
+    return result;
   }
 
   /**

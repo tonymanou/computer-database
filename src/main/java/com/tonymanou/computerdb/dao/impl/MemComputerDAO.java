@@ -72,4 +72,9 @@ public class MemComputerDAO implements IComputerDAO {
   public Computer getFromId(Long id) {
     return map.get(id);
   }
+
+  @Override
+  public int count() {
+    return map.size();
+  }
 }
