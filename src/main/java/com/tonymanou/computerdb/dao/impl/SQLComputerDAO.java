@@ -52,7 +52,7 @@ public class SQLComputerDAO implements IComputerDAO {
       }
       statement.setString(1, order);
       statement.setString(2, page.getOrderType().name());
-      statement.setInt(3, page.getElementsPerPage());
+      statement.setInt(3, page.getNumElementsPerPage());
       statement.setInt(4, page.getElementsOffset());
 
       resultat = statement.executeQuery();

@@ -8,6 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.tonymanou.computerdb.domain.Computer;
 import com.tonymanou.computerdb.dto.ComputerDTO;
@@ -16,11 +17,13 @@ import com.tonymanou.computerdb.mapper.MapperManager;
 import com.tonymanou.computerdb.pagination.ComputerPage;
 import com.tonymanou.computerdb.service.IComputerService;
 import com.tonymanou.computerdb.service.ServiceManager;
+import com.tonymanou.computerdb.util.Util;
 
 @WebServlet("/dashboard")
 public class DashboardController extends HttpServlet {
 
   private static final long serialVersionUID = 1075773814185556399L;
+  private static final String ELEMENT_PER_PAGE = "element_per_page";
 
   private IComputerService computerService;
   private IEntityMapper<Computer, ComputerDTO> computerMapper;
@@ -33,9 +36,24 @@ public class DashboardController extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
       IOException {
+    HttpSession session = req.getSession();
     ComputerPage page = new ComputerPage();
+
+    Object elementsPerPage = session.getAttribute(ELEMENT_PER_PAGE);
+    if (elementsPerPage != null) {
+      page.setNumElementsPerPage((int) elementsPerPage);
+    }
+    page.setNumElements(computerService.count());
+
+    String pageNumber = req.getParameter("page");
+    if (!Util.isStringEmpty(pageNumber)) {
+      int number = Util.parseLong(pageNumber).intValue();
+      page.setCurrentPage(number);
+    }
+
     List<ComputerDTO> computers = computerMapper.mapToDTOList(computerService.findAll(page));
     req.setAttribute("computers", computers);
+    req.setAttribute("page", page);
     req.getRequestDispatcher("/WEB-INF/views/dashboard.jsp").forward(req, resp);
   }
 }

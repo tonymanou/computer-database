@@ -4,7 +4,7 @@
     <section id="main">
         <div class="container">
             <h1 id="homeTitle">
-                ${computers.size()} Computers found
+                ${page.getNumElements()} Computers found
             </h1>
             <div id="actions" class="form-horizontal">
                 <div class="pull-left">
@@ -57,11 +57,11 @@
 
 	<footer class="navbar-fixed-bottom">
 		<div class="container text-center">
-			<tony:pagination pageCount="12" currentPage="2"/>
+			<tony:pagination pageCount="${page.getNumPages()}" currentPage="${page.getCurrentPage()}"/>
 			<div class="btn-group btn-group-sm pull-right" role="group">
-				<button type="button" class="btn btn-default">10</button>
-				<button type="button" class="btn btn-default">50</button>
-				<button type="button" class="btn btn-default">100</button>
+				<button type="button" class="btn btn-default <c:if test="${page.getNumElementsPerPage() == 10}">active</c:if>">10</button>
+				<button type="button" class="btn btn-default <c:if test="${page.getNumElementsPerPage() == 50}">active</c:if>">50</button>
+				<button type="button" class="btn btn-default <c:if test="${page.getNumElementsPerPage() == 100}">active</c:if>">100</button>
 			</div>
 		</div>
 	</footer>

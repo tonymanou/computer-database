@@ -39,7 +39,7 @@ public class ComputerPage {
     return (currentPage - 1) * numElementsPerPage;
   }
 
-  public int getElementsPerPage() {
+  public int getNumElementsPerPage() {
     return numElementsPerPage;
   }
 
@@ -55,6 +55,7 @@ public class ComputerPage {
 
   public void setNumElements(int numElements) {
     this.numElements = numElements;
+    numPages = (int) Math.floor(0.5 +  (double) numElements / numElementsPerPage);
   }
 
   public ComputerOrder getOrder() {
