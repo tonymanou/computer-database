@@ -49,6 +49,11 @@ public class DashboardController extends HttpServlet {
     }
     page.setNumElements(computerService.count());
 
+    String search = req.getParameter("search");
+    if (!Util.isStringEmpty(search)) {
+      page.setSearchQuery(search);
+    }
+
     String pageNumber = req.getParameter("page");
     if (!Util.isStringEmpty(pageNumber)) {
       int number = Util.parseLong(pageNumber).intValue();

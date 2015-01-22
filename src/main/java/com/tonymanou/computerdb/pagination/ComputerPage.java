@@ -6,6 +6,7 @@ public class ComputerPage {
   private int numPages;
   private int numElementsPerPage;
   private int numElements;
+  private String searchQuery;
   private ComputerOrder order;
   private OrderType orderType;
 
@@ -55,7 +56,15 @@ public class ComputerPage {
 
   public void setNumElements(int numElements) {
     this.numElements = numElements;
-    numPages = (int) Math.floor(0.5 +  (double) numElements / numElementsPerPage);
+    numPages = (int) Math.floor(0.5 + (double) numElements / numElementsPerPage);
+  }
+
+  public String getSearchQuery() {
+    return searchQuery;
+  }
+
+  public void setSearchQuery(String searchQuery) {
+    this.searchQuery = searchQuery;
   }
 
   public ComputerOrder getOrder() {
