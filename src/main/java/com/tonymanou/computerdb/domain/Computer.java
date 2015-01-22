@@ -1,4 +1,4 @@
-package com.tonymanou.computerdb.entity;
+package com.tonymanou.computerdb.domain;
 
 import java.time.LocalDate;
 

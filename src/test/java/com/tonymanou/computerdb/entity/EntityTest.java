@@ -6,8 +6,8 @@ import java.time.LocalDate;
 
 import org.junit.Test;
 
-import com.tonymanou.computerdb.entity.Company;
-import com.tonymanou.computerdb.entity.Computer;
+import com.tonymanou.computerdb.domain.Company;
+import com.tonymanou.computerdb.domain.Computer;
 
 public class EntityTest {
 

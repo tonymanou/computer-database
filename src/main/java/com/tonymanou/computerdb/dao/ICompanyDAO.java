@@ -2,7 +2,7 @@ package com.tonymanou.computerdb.dao;
 
 import java.util.List;
 
-import com.tonymanou.computerdb.entity.Company;
+import com.tonymanou.computerdb.domain.Company;
 import com.tonymanou.computerdb.exception.PersistenceException;
 
 /**

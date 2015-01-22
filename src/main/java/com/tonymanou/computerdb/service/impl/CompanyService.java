@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.tonymanou.computerdb.dao.DAOManager;
 import com.tonymanou.computerdb.dao.ICompanyDAO;
-import com.tonymanou.computerdb.entity.Company;
+import com.tonymanou.computerdb.domain.Company;
 import com.tonymanou.computerdb.service.ICompanyService;
 
 /**

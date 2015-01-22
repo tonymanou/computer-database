@@ -17,8 +17,8 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.Select;
 
 import com.tonymanou.computerdb.dao.DAOManager;
-import com.tonymanou.computerdb.entity.Company;
-import com.tonymanou.computerdb.entity.Computer;
+import com.tonymanou.computerdb.domain.Company;
+import com.tonymanou.computerdb.domain.Computer;
 import com.tonymanou.computerdb.service.ServiceManager;
 
 public class ComputerDashboardTest {

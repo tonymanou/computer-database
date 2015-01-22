@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.tonymanou.computerdb.dao.ICompanyDAO;
-import com.tonymanou.computerdb.entity.Company;
+import com.tonymanou.computerdb.domain.Company;
 
 public class MemCompanyDAO implements ICompanyDAO {
 

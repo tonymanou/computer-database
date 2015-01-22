@@ -4,8 +4,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Scanner;
 
-import com.tonymanou.computerdb.entity.Company;
-import com.tonymanou.computerdb.entity.Computer;
+import com.tonymanou.computerdb.domain.Company;
+import com.tonymanou.computerdb.domain.Computer;
 import com.tonymanou.computerdb.service.ICompanyService;
 import com.tonymanou.computerdb.service.IComputerService;
 import com.tonymanou.computerdb.service.ServiceManager;

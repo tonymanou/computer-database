@@ -13,9 +13,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.tonymanou.computerdb.domain.Company;
+import com.tonymanou.computerdb.domain.Computer;
 import com.tonymanou.computerdb.dto.CompanyDTO;
-import com.tonymanou.computerdb.entity.Company;
-import com.tonymanou.computerdb.entity.Computer;
 import com.tonymanou.computerdb.mapper.IEntityMapper;
 import com.tonymanou.computerdb.mapper.MapperManager;
 import com.tonymanou.computerdb.service.ICompanyService;

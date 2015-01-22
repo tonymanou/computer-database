@@ -18,7 +18,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
 import com.tonymanou.computerdb.dao.IComputerDAO;
-import com.tonymanou.computerdb.entity.Computer;
+import com.tonymanou.computerdb.domain.Computer;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ComputerServiceTest {

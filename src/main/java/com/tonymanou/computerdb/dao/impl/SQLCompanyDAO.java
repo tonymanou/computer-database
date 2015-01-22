@@ -12,7 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.tonymanou.computerdb.dao.ICompanyDAO;
-import com.tonymanou.computerdb.entity.Company;
+import com.tonymanou.computerdb.domain.Company;
 import com.tonymanou.computerdb.exception.PersistenceException;
 
 /**

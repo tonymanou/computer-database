@@ -1,7 +1,7 @@
 package com.tonymanou.computerdb.mapper.impl;
 
+import com.tonymanou.computerdb.domain.Company;
 import com.tonymanou.computerdb.dto.CompanyDTO;
-import com.tonymanou.computerdb.entity.Company;
 import com.tonymanou.computerdb.mapper.IEntityMapper;
 
 public class CompanyMapper implements IEntityMapper<Company, CompanyDTO> {

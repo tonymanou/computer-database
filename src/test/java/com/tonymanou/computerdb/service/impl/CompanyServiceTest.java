@@ -15,7 +15,7 @@ import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import com.tonymanou.computerdb.dao.ICompanyDAO;
-import com.tonymanou.computerdb.entity.Company;
+import com.tonymanou.computerdb.domain.Company;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CompanyServiceTest {
