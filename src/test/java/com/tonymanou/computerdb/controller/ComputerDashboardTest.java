@@ -16,7 +16,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.Select;
 
-import com.tonymanou.computerdb.dao.DAOManager;
 import com.tonymanou.computerdb.domain.Company;
 import com.tonymanou.computerdb.domain.Computer;
 import com.tonymanou.computerdb.service.ServiceManager;
@@ -62,7 +61,7 @@ public class ComputerDashboardTest {
      * The following code does not work in the case of an in-memory database. Indeed,
      * ServiceManager.INSTANCE is not the same in test case and in the server.
      */
-    if (!DAOManager.IN_MEMORY) {
+    if ("".equals("1")) {
       // @formatter:off
       Computer computer = Computer.getBuilder("HAL 9000")
           .setIntroduced(LocalDate.of(1986, 9, 30))
