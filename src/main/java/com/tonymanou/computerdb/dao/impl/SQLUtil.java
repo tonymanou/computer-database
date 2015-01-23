@@ -9,6 +9,11 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.tonymanou.computerdb.exception.PersistenceException;
+
 /**
  * Helper class to create database connections.
  *
@@ -31,6 +36,8 @@ public class SQLUtil {
    */
   private static final String DB_PW = "qwerty1234";
 
+  private static final Logger LOGGER = LoggerFactory.getLogger(SQLUtil.class);
+
   static {
     try {
       // Load the driver for mysql database
@@ -44,11 +51,35 @@ public class SQLUtil {
    * Retrieve a connection to the database.
    *
    * @return The {@link Connection} instance.
-   * @throws SQLException
+   * @throws PersistenceException
    *           if a database access error occurs
    */
-  public static Connection getConnection() throws SQLException {
-    return DriverManager.getConnection(DB_URL, DB_USR, DB_PW);
+  public static Connection getConnection() {
+    try {
+      Connection connection = DriverManager.getConnection(DB_URL, DB_USR, DB_PW);
+      // Isolate connections
+      connection.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+      return connection;
+    } catch (SQLException e) {
+      LOGGER.error("Unable to get connection", e);
+      throw new PersistenceException(e);
+    }
+  }
+
+  /**
+   * Close a connection.
+   * 
+   * @param connection
+   *          The connection to close.
+   */
+  public static void closeConnection(Connection connection) {
+    if (connection != null) {
+      try {
+        connection.close();
+      } catch (SQLException e) {
+        LOGGER.warn("Unable to close connection", e);
+      }
+    }
   }
 
   // ========== Utility ==========
@@ -58,38 +89,29 @@ public class SQLUtil {
    *
    * @param resultat
    * @param statement
-   * @param connection
    */
-  public static void close(ResultSet resultat, Statement statement, Connection connection) {
+  public static void close(ResultSet resultat, Statement statement) {
     if (resultat != null) {
       try {
         resultat.close();
       } catch (SQLException e) {
-        // Ignored
+        LOGGER.warn("Unable to close resultat", e);
       }
     }
-    close(statement, connection);
+    close(statement);
   }
 
   /**
    * Close elements if they are not null.
    *
    * @param statement
-   * @param connection
    */
-  public static void close(Statement statement, Connection connection) {
+  public static void close(Statement statement) {
     if (statement != null) {
       try {
         statement.close();
       } catch (SQLException e) {
-        // Ignored
-      }
-    }
-    if (connection != null) {
-      try {
-        connection.close();
-      } catch (SQLException e) {
-        // Ignored
+        LOGGER.warn("Unable to close statement", e);
       }
     }
   }

@@ -25,14 +25,12 @@ public class SQLCompanyDAO implements ICompanyDAO {
   private static final Logger LOGGER = LoggerFactory.getLogger(SQLCompanyDAO.class);
 
   @Override
-  public List<Company> findAll() {
+  public List<Company> findAll(Connection connection) {
     List<Company> list = new ArrayList<Company>();
-    Connection connection = null;
     Statement statement = null;
     ResultSet resultat = null;
 
     try {
-      connection = SQLUtil.getConnection();
       statement = connection.createStatement();
       resultat = statement.executeQuery("SELECT id, name FROM company;");
 
@@ -47,21 +45,19 @@ public class SQLCompanyDAO implements ICompanyDAO {
       LOGGER.error("SQL exception", e);
       throw new PersistenceException(e);
     } finally {
-      SQLUtil.close(resultat, statement, connection);
+      SQLUtil.close(resultat, statement);
     }
 
     return list;
   }
 
   @Override
-  public Company getFromId(Long id) {
+  public Company getFromId(Connection connection, Long id) {
     Company company = null;
-    Connection connection = null;
     PreparedStatement statement = null;
     ResultSet resultat = null;
 
     try {
-      connection = SQLUtil.getConnection();
       statement = connection.prepareStatement("SELECT id, name FROM company WHERE id=?;");
       statement.setLong(1, id);
       resultat = statement.executeQuery();
@@ -80,7 +76,7 @@ public class SQLCompanyDAO implements ICompanyDAO {
       LOGGER.error("SQL exception", e);
       throw new PersistenceException(e);
     } finally {
-      SQLUtil.close(resultat, statement, connection);
+      SQLUtil.close(resultat, statement);
     }
 
     return company;

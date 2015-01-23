@@ -1,9 +1,11 @@
 package com.tonymanou.computerdb.service.impl;
 
+import java.sql.Connection;
 import java.util.List;
 
 import com.tonymanou.computerdb.dao.DAOManager;
 import com.tonymanou.computerdb.dao.IComputerDAO;
+import com.tonymanou.computerdb.dao.impl.SQLUtil;
 import com.tonymanou.computerdb.domain.Computer;
 import com.tonymanou.computerdb.pagination.ComputerPage;
 import com.tonymanou.computerdb.service.IComputerService;
@@ -27,36 +29,51 @@ public class ComputerService implements IComputerService {
 
   @Override
   public List<Computer> findAll() {
-    return computerDAO.findAll(new ComputerPage());
+    return findAll(new ComputerPage());
   }
 
   @Override
   public List<Computer> findAll(ComputerPage page) {
-    return computerDAO.findAll(page);
+    Connection connection = SQLUtil.getConnection();
+    List<Computer> result = computerDAO.findAll(connection, page);
+    SQLUtil.closeConnection(connection);
+    return result;
   }
 
   @Override
   public void create(Computer computer) {
-    computerDAO.create(computer);
+    Connection connection = SQLUtil.getConnection();
+    computerDAO.create(connection, computer);
+    SQLUtil.closeConnection(connection);
   }
 
   @Override
   public void update(Computer computer) {
-    computerDAO.update(computer);
+    Connection connection = SQLUtil.getConnection();
+    computerDAO.update(connection, computer);
+    SQLUtil.closeConnection(connection);
   }
 
   @Override
   public void delete(Long id) {
-    computerDAO.delete(id);
+    Connection connection = SQLUtil.getConnection();
+    computerDAO.delete(connection, id);
+    SQLUtil.closeConnection(connection);
   }
 
   @Override
   public Computer getFromId(Long id) {
-    return computerDAO.getFromId(id);
+    Connection connection = SQLUtil.getConnection();
+    Computer result = computerDAO.getFromId(connection, id);
+    SQLUtil.closeConnection(connection);
+    return result;
   }
 
   @Override
   public int count() {
-    return computerDAO.count();
+    Connection connection = SQLUtil.getConnection();
+    int result = computerDAO.count(connection);
+    SQLUtil.closeConnection(connection);
+    return result;
   }
 }

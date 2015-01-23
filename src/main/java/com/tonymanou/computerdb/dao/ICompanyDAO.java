@@ -1,5 +1,6 @@
 package com.tonymanou.computerdb.dao;
 
+import java.sql.Connection;
 import java.util.List;
 
 import com.tonymanou.computerdb.domain.Company;
@@ -15,20 +16,24 @@ public interface ICompanyDAO {
   /**
    * Retrieve all the companies from the database.
    *
+   * @param connection
+   *          Active database connection.
    * @return A list containing all the companies.
    * @throws PersistenceException
    *           if an error occurred while processing the query.
    */
-  List<Company> findAll();
+  List<Company> findAll(Connection connection);
 
   /**
    * Retrieve a company from the database thanks to the given id.
    *
+   * @param connection
+   *          Active database connection.
    * @param id
    *          The id of the company to retrieve.
    * @return The {@link Company}, or null if no matching company was found.
    * @throws PersistenceException
    *           if an error occurred while processing the query.
    */
-  Company getFromId(Long id);
+  Company getFromId(Connection connection, Long id);
 }

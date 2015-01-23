@@ -27,14 +27,12 @@ public class SQLComputerDAO implements IComputerDAO {
   private static final Logger LOGGER = LoggerFactory.getLogger(SQLComputerDAO.class);
 
   @Override
-  public List<Computer> findAll(ComputerPage page) {
+  public List<Computer> findAll(Connection connection, ComputerPage page) {
     List<Computer> list = null;
-    Connection connection = null;
     PreparedStatement statement = null;
     ResultSet resultat = null;
 
     try {
-      connection = SQLUtil.getConnection();
       statement = connection
           .prepareStatement("SELECT c.id, c.name, c.introduced, c.discontinued, c.company_id, d.name FROM computer c LEFT JOIN company d ON c.company_id = d.id ORDER BY ? ? LIMIT ? OFFSET ?;");
 
@@ -61,19 +59,17 @@ public class SQLComputerDAO implements IComputerDAO {
       LOGGER.error("SQL exception", e);
       throw new PersistenceException(e);
     } finally {
-      SQLUtil.close(resultat, statement, connection);
+      SQLUtil.close(resultat, statement);
     }
 
     return list;
   }
 
   @Override
-  public void create(Computer computer) {
-    Connection connection = null;
+  public void create(Connection connection, Computer computer) {
     PreparedStatement statement = null;
 
     try {
-      connection = SQLUtil.getConnection();
       statement = connection
           .prepareStatement("INSERT INTO computer (name, introduced, discontinued, company_id) VALUES (?, ?, ?, ?);");
       statement.setString(1, computer.getName());
@@ -86,21 +82,20 @@ public class SQLComputerDAO implements IComputerDAO {
         statement.setLong(4, company.getId());
       }
       statement.executeUpdate();
+      connection.commit();
     } catch (SQLException e) {
       LOGGER.error("SQL exception", e);
       throw new PersistenceException(e);
     } finally {
-      SQLUtil.close(statement, connection);
+      SQLUtil.close(statement);
     }
   }
 
   @Override
-  public void update(Computer computer) {
-    Connection connection = null;
+  public void update(Connection connection, Computer computer) {
     PreparedStatement statement = null;
 
     try {
-      connection = SQLUtil.getConnection();
       statement = connection
           .prepareStatement("UPDATE computer SET name=?, introduced=?, discontinued=?, company_id=? WHERE id=?;");
       statement.setString(1, computer.getName());
@@ -118,17 +113,15 @@ public class SQLComputerDAO implements IComputerDAO {
       LOGGER.error("SQL exception", e);
       throw new PersistenceException(e);
     } finally {
-      SQLUtil.close(statement, connection);
+      SQLUtil.close(statement);
     }
   }
 
   @Override
-  public void delete(Long id) {
-    Connection connection = null;
+  public void delete(Connection connection, Long id) {
     PreparedStatement statement = null;
 
     try {
-      connection = SQLUtil.getConnection();
       statement = connection.prepareStatement("DELETE FROM computer WHERE id=?;");
       statement.setLong(1, id);
       statement.executeUpdate();
@@ -136,19 +129,17 @@ public class SQLComputerDAO implements IComputerDAO {
       LOGGER.error("SQL exception", e);
       throw new PersistenceException(e);
     } finally {
-      SQLUtil.close(statement, connection);
+      SQLUtil.close(statement);
     }
   }
 
   @Override
-  public Computer getFromId(Long id) {
+  public Computer getFromId(Connection connection, Long id) {
     Computer computer = null;
-    Connection connection = null;
     PreparedStatement statement = null;
     ResultSet resultat = null;
 
     try {
-      connection = SQLUtil.getConnection();
       statement = connection
           .prepareStatement("SELECT c.id, c.name, c.introduced, c.discontinued, c.company_id, d.name FROM computer c LEFT JOIN company d ON c.company_id = d.id WHERE c.id=?;");
       statement.setLong(1, id);
@@ -166,21 +157,19 @@ public class SQLComputerDAO implements IComputerDAO {
       LOGGER.error("SQL exception", e);
       throw new PersistenceException(e);
     } finally {
-      SQLUtil.close(resultat, statement, connection);
+      SQLUtil.close(resultat, statement);
     }
 
     return computer;
   }
 
   @Override
-  public int count() {
+  public int count(Connection connection) {
     int result = 0;
-    Connection connection = null;
     PreparedStatement statement = null;
     ResultSet resultat = null;
 
     try {
-      connection = SQLUtil.getConnection();
       statement = connection.prepareStatement("SELECT COUNT(id) FROM computer;");
       resultat = statement.executeQuery();
 
@@ -190,7 +179,7 @@ public class SQLComputerDAO implements IComputerDAO {
       LOGGER.error("SQL exception", e);
       throw new PersistenceException(e);
     } finally {
-      SQLUtil.close(statement, connection);
+      SQLUtil.close(statement);
     }
 
     return result;

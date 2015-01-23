@@ -1,9 +1,11 @@
 package com.tonymanou.computerdb.service.impl;
 
+import java.sql.Connection;
 import java.util.List;
 
 import com.tonymanou.computerdb.dao.DAOManager;
 import com.tonymanou.computerdb.dao.ICompanyDAO;
+import com.tonymanou.computerdb.dao.impl.SQLUtil;
 import com.tonymanou.computerdb.domain.Company;
 import com.tonymanou.computerdb.service.ICompanyService;
 
@@ -26,11 +28,17 @@ public class CompanyService implements ICompanyService {
 
   @Override
   public List<Company> findAll() {
-    return companyDAO.findAll();
+    Connection connection = SQLUtil.getConnection();
+    List<Company> result = companyDAO.findAll(connection);
+    SQLUtil.closeConnection(connection);
+    return result;
   }
 
   @Override
   public Company getFromId(Long id) {
-    return companyDAO.getFromId(id);
+    Connection connection = SQLUtil.getConnection();
+    Company result = companyDAO.getFromId(connection, id);
+    SQLUtil.closeConnection(connection);
+    return result;
   }
 }
