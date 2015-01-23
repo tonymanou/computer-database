@@ -4,8 +4,8 @@ public class ComputerPage {
 
   private int currentPage;
   private int numPages;
-  private int numElementsPerPage;
-  private int numElements;
+  private long numElementsPerPage;
+  private long numElements;
   private String searchQuery;
   private ComputerOrder order;
   private OrderType orderType;
@@ -23,48 +23,42 @@ public class ComputerPage {
   }
 
   public void setCurrentPage(int page) {
-    if (page < 1) {
-      currentPage = 1;
-    } else if (page > numPages) {
-      currentPage = numPages;
-    } else {
-      currentPage = page;
-    }
+    currentPage = numPages;
   }
 
   public int getNumPages() {
     return numPages;
   }
 
-  public int getElementsOffset() {
+  public long getElementsOffset() {
     return (currentPage - 1) * numElementsPerPage;
   }
 
-  public int getNumElementsPerPage() {
+  public long getNumElementsPerPage() {
     return numElementsPerPage;
   }
 
-  public void setNumElementsPerPage(int elementsPerPage) {
-    numElementsPerPage = elementsPerPage;
-    numPages = elementsPerPage;
+  public void setNumElementsPerPage(long elements) {
+    numElementsPerPage = elements;
     currentPage = 1;
+    numPages = (int) Math.floor(0.5 + (double) elements / numElementsPerPage);
   }
 
-  public int getNumElements() {
+  public long getNumElements() {
     return numElements;
   }
 
-  public void setNumElements(int numElements) {
-    this.numElements = numElements;
-    numPages = (int) Math.floor(0.5 + (double) numElements / numElementsPerPage);
+  public void setNumElements(long elements) {
+    numElements = elements;
+    numPages = (int) Math.floor(0.5 + (double) elements / numElementsPerPage);
   }
 
   public String getSearchQuery() {
     return searchQuery;
   }
 
-  public void setSearchQuery(String searchQuery) {
-    this.searchQuery = searchQuery;
+  public void setSearchQuery(String search) {
+    searchQuery = search;
   }
 
   public ComputerOrder getOrder() {
@@ -79,9 +73,56 @@ public class ComputerPage {
     return orderType;
   }
 
-  public void setOrderType(OrderType orderType) {
-    this.orderType = orderType;
+  public void setOrderType(OrderType type) {
+    orderType = type;
   }
+
+//  public static Builder getBuilder() {
+//    return new Builder();
+//  }
+//
+//  public static class Builder {
+//
+//    private ComputerPage cPage;
+//
+//    public Builder() {
+//      cPage = new ComputerPage();
+//    }
+//
+//    public void setCurrentPage(int page) {
+//      cPage.currentPage = page;
+//    }
+//
+//    public void setNumElementsPerPage(int elementsPerPage) {
+//      numElementsPerPage = elementsPerPage;
+//      numPages = elementsPerPage;
+//      currentPage = 1;
+//    }
+//
+//    public void setNumElements(int numElements) {
+//      this.numElements = numElements;
+//      numPages = (int) Math.floor(0.5 + (double) numElements / numElementsPerPage);
+//    }
+//
+//    public void setSearchQuery(String searchQuery) {
+//      cPage.searchQuery = searchQuery;
+//    }
+//
+//    public void setOrder(ComputerOrder order) {
+//      cPage.order = order;
+//    }
+//
+//    public void setOrderType(OrderType orderType) {
+//      cPage.orderType = orderType;
+//    }
+//
+//    public ComputerPage build() {
+//      if (cPage.numElementsPerPage < -1) {
+//        cPage.numElementsPerPage = cPage.numElements;
+//      }
+//      return cPage;
+//    }
+//  }
 
   public enum OrderType {
     ASC, DESC

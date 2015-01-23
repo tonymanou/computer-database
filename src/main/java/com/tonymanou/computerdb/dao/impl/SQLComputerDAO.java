@@ -35,8 +35,16 @@ public class SQLComputerDAO implements IComputerDAO {
 
     try {
       connection = SQLUtil.getConnection();
-      statement = connection
-          .prepareStatement("SELECT c.id, c.name, c.introduced, c.discontinued, c.company_id, d.name FROM computer c LEFT JOIN company d ON c.company_id = d.id ORDER BY ? ? LIMIT ? OFFSET ?;");
+
+      StringBuilder query = new StringBuilder(
+          "SELECT c.id, c.name, c.introduced, c.discontinued, c.company_id, d.name FROM computer c LEFT JOIN company d ON c.company_id = d.id ORDER BY ? ?");
+      if (page.getNumElementsPerPage() > 0) {
+        query.append(" LIMIT ? OFFSET ?");
+      }
+      if (page.getSearchQuery() != null) {
+        query.append(" LIMIT ? OFFSET ?");
+      }
+      statement = connection.prepareStatement(query.append(";").toString());
 
       String order;
       switch (page.getOrder()) {
@@ -52,10 +60,25 @@ public class SQLComputerDAO implements IComputerDAO {
       }
       statement.setString(1, order);
       statement.setString(2, page.getOrderType().name());
-      statement.setInt(3, page.getNumElementsPerPage());
-      statement.setInt(4, page.getElementsOffset());
+      if (page.getNumElementsPerPage() > 0) {
+        statement.setLong(3, page.getNumElementsPerPage());
+        statement.setLong(4, page.getElementsOffset());
+        System.out.println("p" + page.getCurrentPage() + ", " + page.getElementsOffset() + "/"
+            + page.getNumPages() + " (" + page.getNumElements() + ", "
+            + page.getNumElementsPerPage() + ")");
+      }
 
       resultat = statement.executeQuery();
+      // Retrieve the number of elements if necessary, and only once
+      if (tmpPage != null) {
+        long items = resultat.getLong(7);
+        if (tmpPage.getNumElementsPerPage() < 0) {
+          tmpPage.setNumElementsPerPage(items);
+        }
+        tmpPage.setNumElements(items);
+        tmpPage = null;
+      }
+
       list = extractToList(resultat);
     } catch (SQLException e) {
       LOGGER.error("SQL exception", e);
@@ -170,30 +193,6 @@ public class SQLComputerDAO implements IComputerDAO {
     }
 
     return computer;
-  }
-
-  @Override
-  public int count() {
-    int result = 0;
-    Connection connection = null;
-    PreparedStatement statement = null;
-    ResultSet resultat = null;
-
-    try {
-      connection = SQLUtil.getConnection();
-      statement = connection.prepareStatement("SELECT COUNT(id) FROM computer;");
-      resultat = statement.executeQuery();
-
-      resultat.next(); // Do not check if it succeeded and let the next instruction crash
-      result = resultat.getInt(1);
-    } catch (SQLException e) {
-      LOGGER.error("SQL exception", e);
-      throw new PersistenceException(e);
-    } finally {
-      SQLUtil.close(statement, connection);
-    }
-
-    return result;
   }
 
   /**

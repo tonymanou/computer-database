@@ -43,15 +43,15 @@ public class DashboardController extends HttpServlet {
     HttpSession session = req.getSession();
     ComputerPage page = new ComputerPage();
 
-    Object elementsPerPage = session.getAttribute(ELEMENT_PER_PAGE);
-    if (elementsPerPage != null) {
-      page.setNumElementsPerPage((int) elementsPerPage);
-    }
+//    Object elementsPerPage = session.getAttribute(ELEMENT_PER_PAGE);
+//    if (elementsPerPage != null) {
+//      page.setNumElementsPerPage((int) elementsPerPage);
+//    }
 
-    String search = req.getParameter("search");
-    if (!Util.isStringEmpty(search)) {
-      page.setSearchQuery(search);
-    }
+//    String search = req.getParameter("search");
+//    if (!Util.isStringEmpty(search)) {
+//      page.setSearchQuery(search);
+//    }
 
     String pageNumber = req.getParameter("page");
     if (!Util.isStringEmpty(pageNumber)) {
@@ -60,6 +60,10 @@ public class DashboardController extends HttpServlet {
     }
 
     List<ComputerDTO> computers = computerMapper.mapToDTOList(computerService.findAll(page));
+
+    System.out.println("p" + page.getCurrentPage() + ", " + page.getElementsOffset() + "/"
+        + page.getNumPages() + " (" + page.getNumElements() + ", " + page.getNumElementsPerPage()
+        + ")");
 
     req.setAttribute("computers", computers);
     req.setAttribute("page", page);
