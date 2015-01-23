@@ -42,7 +42,7 @@ public class SQLCompanyDAO implements ICompanyDAO {
         // @formatter:on
       }
     } catch (SQLException e) {
-      LOGGER.error("SQL exception", e);
+      LOGGER.error("Unable to get all companies", e);
       throw new PersistenceException(e);
     } finally {
       SQLUtil.close(resultat, statement);
@@ -73,7 +73,7 @@ public class SQLCompanyDAO implements ICompanyDAO {
         LOGGER.warn(sb.toString());
       }
     } catch (SQLException e) {
-      LOGGER.error("SQL exception", e);
+      LOGGER.error("Unable to get company", e);
       throw new PersistenceException(e);
     } finally {
       SQLUtil.close(resultat, statement);

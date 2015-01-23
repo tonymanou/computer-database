@@ -56,7 +56,7 @@ public class SQLComputerDAO implements IComputerDAO {
       resultat = statement.executeQuery();
       list = extractToList(resultat);
     } catch (SQLException e) {
-      LOGGER.error("SQL exception", e);
+      LOGGER.error("Unable to get all computers", e);
       throw new PersistenceException(e);
     } finally {
       SQLUtil.close(resultat, statement);
@@ -84,7 +84,7 @@ public class SQLComputerDAO implements IComputerDAO {
       statement.executeUpdate();
       connection.commit();
     } catch (SQLException e) {
-      LOGGER.error("SQL exception", e);
+      LOGGER.error("Unable to create computer", e);
       throw new PersistenceException(e);
     } finally {
       SQLUtil.close(statement);
@@ -110,7 +110,7 @@ public class SQLComputerDAO implements IComputerDAO {
       statement.setLong(5, computer.getId());
       statement.executeUpdate();
     } catch (SQLException e) {
-      LOGGER.error("SQL exception", e);
+      LOGGER.error("Unable to update computer", e);
       throw new PersistenceException(e);
     } finally {
       SQLUtil.close(statement);
@@ -126,7 +126,7 @@ public class SQLComputerDAO implements IComputerDAO {
       statement.setLong(1, id);
       statement.executeUpdate();
     } catch (SQLException e) {
-      LOGGER.error("SQL exception", e);
+      LOGGER.error("Unable to delete computer", e);
       throw new PersistenceException(e);
     } finally {
       SQLUtil.close(statement);
@@ -142,7 +142,7 @@ public class SQLComputerDAO implements IComputerDAO {
       statement.setLong(1, companyId);
       statement.executeUpdate();
     } catch (SQLException e) {
-      LOGGER.error("Unable to delete", e);
+      LOGGER.error("Unable to delete all computers with the given company id", e);
       throw new PersistenceException(e);
     } finally {
       SQLUtil.close(statement);
@@ -170,7 +170,7 @@ public class SQLComputerDAO implements IComputerDAO {
         computer = list.get(0);
       }
     } catch (SQLException e) {
-      LOGGER.error("SQL exception", e);
+      LOGGER.error("Unable to get a computer from the given id", e);
       throw new PersistenceException(e);
     } finally {
       SQLUtil.close(resultat, statement);
@@ -192,7 +192,7 @@ public class SQLComputerDAO implements IComputerDAO {
       resultat.next(); // Do not check if it succeeded and let the next instruction crash
       result = resultat.getInt(1);
     } catch (SQLException e) {
-      LOGGER.error("SQL exception", e);
+      LOGGER.error("Unable to count all the computers", e);
       throw new PersistenceException(e);
     } finally {
       SQLUtil.close(statement);
