@@ -2,6 +2,7 @@ package com.tonymanou.computerdb.controller;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -16,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import com.tonymanou.computerdb.domain.Company;
 import com.tonymanou.computerdb.domain.Computer;
 import com.tonymanou.computerdb.dto.CompanyDTO;
+import com.tonymanou.computerdb.exception.PersistenceException;
 import com.tonymanou.computerdb.mapper.IEntityMapper;
 import com.tonymanou.computerdb.mapper.MapperManager;
 import com.tonymanou.computerdb.service.ICompanyService;
@@ -42,19 +44,17 @@ public class AddComputerController extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
       IOException {
-    List<CompanyDTO> companies = companyMapper.mapToDTOList(companyService.findAll());
-    req.setAttribute("companies", companies);
-    req.getRequestDispatcher("/WEB-INF/views/addComputer.jsp").forward(req, resp);
+    showAddComputerForm(req, resp, null, null);
   }
 
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
       IOException {
+    List<String> errors = new ArrayList<>();
+
     String name = req.getParameter("computerName");
     if (Util.isStringEmpty(name)) {
-      RuntimeException exception = new IllegalArgumentException("Computer name cannot be empty");
-      LOGGER.error(exception.getMessage(), exception);
-      throw exception;
+      errors.add("You must enter a computer name.");
     }
 
     String introducedDate = req.getParameter("introduced");
@@ -64,7 +64,7 @@ public class AddComputerController extends HttpServlet {
     } else {
       introduced = Util.parseLocalDate(introducedDate);
       if (introduced == null) {
-        // TODO Cannot parse date
+        errors.add("You must enter a valid introduced date (yyyy-MM-dd).");
       }
     }
 
@@ -75,20 +75,55 @@ public class AddComputerController extends HttpServlet {
     } else {
       discontinued = Util.parseLocalDate(discontinuedDate);
       if (discontinued == null) {
-        // TODO Cannot parse date
+        errors.add("You must enter a valid discontinued date (yyyy-MM-dd).");
       }
     }
 
-    Long companyId = Long.parseLong(req.getParameter("companyId"));
+    String companyId = req.getParameter("companyId");
+    Company company = null;
+    if (!Util.isStringEmpty(companyId)) {
+      Long id = Util.parseLong(companyId);
+      if (id == null) {
+        errors.add("You must choose a valid company.");
+      } else if (id != 0) {
+        company = companyService.getFromId(id);
+        if (company == null) {
+          // Company not found
+          errors.add("You must choose a valid company.");
+        }
+      }
+    }
 
     // @formatter:off
-    computerService.create(Computer.getBuilder(name)
+    Computer computer = Computer.getBuilder(name)
         .setIntroduced(introduced)
         .setDiscontinued(discontinued)
-        .setCompany((companyId != 0) ? companyService.getFromId(companyId) : null)
-        .build());
+        .setCompany(company)
+        .build();
     // @formatter:on
 
-    resp.sendRedirect("../dashboard");
+    if (errors.isEmpty()) {
+      try {
+        computerService.create(computer);
+      } catch (PersistenceException e) {
+        LOGGER.error("Unable to save the computer", e);
+        errors.add("Internal error: unable to save the computer.");
+      }
+    }
+
+    if (errors.isEmpty()) {
+      resp.sendRedirect("../dashboard");
+    } else {
+      showAddComputerForm(req, resp, computer, errors);
+    }
+  }
+
+  private void showAddComputerForm(HttpServletRequest req, HttpServletResponse resp,
+      Computer computer, List<String> errors) throws ServletException, IOException {
+    List<CompanyDTO> companies = companyMapper.mapToDTOList(companyService.findAll());
+    req.setAttribute("computer", computer);
+    req.setAttribute("companies", companies);
+    req.setAttribute("errors", errors);
+    req.getRequestDispatcher("/WEB-INF/views/addComputer.jsp").forward(req, resp);
   }
 }

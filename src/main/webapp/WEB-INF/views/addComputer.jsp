@@ -5,6 +5,13 @@
             <div class="row">
                 <div class="col-xs-8 col-xs-offset-2 box">
                     <h1>Add Computer</h1>
+                    <c:if test="${errors != null}">
+						<div class="alert alert-danger">
+							<c:forEach items="${errors}" var="text">
+								<p>${text}</p>
+							</c:forEach>
+						</div>
+                    </c:if>
                     <form action="<c:url value="/computer/add" />" method="POST">
                         <fieldset>
                             <div class="form-group">

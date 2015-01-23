@@ -8,6 +8,20 @@
                         id: ${computer.id}
                     </div>
                     <h1>Edit Computer</h1>
+                    <c:choose>
+                    <c:when test="${computer == null}">
+						<div class="alert alert-danger">
+							<h4>404: computer not found</h4>
+						</div>
+                    </c:when>
+                    <c:otherwise>
+                    <c:if test="${errors != null}">
+						<div class="alert alert-danger">
+							<c:forEach items="${errors}" var="text">
+								<p>${text}</p>
+							</c:forEach>
+						</div>
+                    </c:if>
                     <form action="<c:url value="/computer/edit" />" method="POST">
                         <input type="hidden" name="computerId" value="${computer.id}"/>
                         <fieldset>
@@ -39,6 +53,8 @@
                             <a href="<c:url value="/dashboard" />" class="btn btn-default">Cancel</a>
                         </div>
                     </form>
+                    </c:otherwise>
+                    </c:choose>
                 </div>
             </div>
         </div>
