@@ -134,6 +134,22 @@ public class SQLComputerDAO implements IComputerDAO {
   }
 
   @Override
+  public void deleteAllWithCompanyId(Connection connection, Long companyId) {
+    PreparedStatement statement = null;
+
+    try {
+      statement = connection.prepareStatement("DELETE FROM computer WHERE company_id=?;");
+      statement.setLong(1, companyId);
+      statement.executeUpdate();
+    } catch (SQLException e) {
+      LOGGER.error("Unable to delete", e);
+      throw new PersistenceException(e);
+    } finally {
+      SQLUtil.close(statement);
+    }
+  }
+
+  @Override
   public Computer getFromId(Connection connection, Long id) {
     Computer computer = null;
     PreparedStatement statement = null;

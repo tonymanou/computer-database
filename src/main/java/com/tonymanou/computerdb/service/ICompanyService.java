@@ -31,4 +31,15 @@ public interface ICompanyService {
    *           if an error occurred while processing the query.
    */
   Company getFromId(Long id);
+
+  /**
+   * Remove a company, and its computers, from the database.
+   * 
+   * @param connection
+   *          Active database connection.
+   * @param id
+   *          The id of the company.
+   * @param connection
+   */
+  void delete(Long id);
 }

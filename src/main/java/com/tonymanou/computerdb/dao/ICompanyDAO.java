@@ -36,4 +36,16 @@ public interface ICompanyDAO {
    *           if an error occurred while processing the query.
    */
   Company getFromId(Connection connection, Long id);
+
+  /**
+   * Remove a company, and its computers, from the database.
+   * 
+   * @param connection
+   *          Active database connection.
+   * @param id
+   *          The id of the company.
+   * @throws PersistenceException
+   *           if an error occurred while processing the query.
+   */
+  void delete(Connection connection, Long id);
 }

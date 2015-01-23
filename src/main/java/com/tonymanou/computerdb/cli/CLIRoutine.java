@@ -94,6 +94,9 @@ public class CLIRoutine {
       case "company":
         if (words.length > 1 && !"list".equals(words[1])) {
           switch (words[1]) {
+          case "remove":
+            doRemoveCompany();
+            break;
           default:
             System.out.println(UNRECOGNIZED);
           }
@@ -270,6 +273,21 @@ public class CLIRoutine {
       for (Company c : listCompany) {
         System.out.println(c);
       }
+    }
+  }
+
+  private void doRemoveCompany() {
+    if (isYesAnswer("[Remove company] Do you want to list all the company first?")) {
+      doListCompanies();
+      System.out.println();
+    }
+
+    Long id = getLongInput("[Remove company] Enter the id of the company you want to delete.",
+        EmptyType.CANCEL);
+
+    if (id != null) {
+      companyService.delete(id);
+      System.out.println("Deleting company [id=" + id + "] and its computers.");
     }
   }
 

@@ -64,6 +64,18 @@ public interface IComputerDAO {
   void delete(Connection connection, Long id);
 
   /**
+   * Delete all computers from the database that have the specified company id.
+   *
+   * @param connection
+   *          Active database connection.
+   * @param id
+   *          Id of the company.
+   * @throws PersistenceException
+   *           if an error occurred while processing the query.
+   */
+  void deleteAllWithCompanyId(Connection connection, Long companyId);
+
+  /**
    * Retrieve a computer from the database thanks to the given id.
    *
    * @param connection

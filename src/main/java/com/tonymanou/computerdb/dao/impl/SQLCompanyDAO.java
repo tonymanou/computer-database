@@ -81,4 +81,20 @@ public class SQLCompanyDAO implements ICompanyDAO {
 
     return company;
   }
+
+  @Override
+  public void delete(Connection connection, Long id) {
+    PreparedStatement statement = null;
+
+    try {
+      statement = connection.prepareStatement("DELETE FROM company WHERE id=?;");
+      statement.setLong(1, id);
+      statement.executeUpdate();
+    } catch (SQLException e) {
+      LOGGER.error("Unable to remove company", e);
+      throw new PersistenceException(e);
+    } finally {
+      SQLUtil.close(statement);
+    }
+  }
 }
