@@ -39,4 +39,6 @@
             </div>
         </div>
     </section>
-<jsp:include page="include/footer.jsp" />
+<jsp:include page="include/footer.jsp">
+    <jsp:param name="needValidation" value="true" />
+</jsp:include>
