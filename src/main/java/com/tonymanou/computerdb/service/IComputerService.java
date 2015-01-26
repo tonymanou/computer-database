@@ -31,7 +31,7 @@ public interface IComputerService {
    * @throws PersistenceException
    *           if an error occurred while processing the query.
    */
-  List<Computer> findAll(ComputerPage page);
+  List<Computer> findAll(ComputerPage.Builder page);
 
   /**
    * Create a new computer in the database.

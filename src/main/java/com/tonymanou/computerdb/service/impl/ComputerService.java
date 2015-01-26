@@ -29,11 +29,11 @@ public class ComputerService implements IComputerService {
 
   @Override
   public List<Computer> findAll() {
-    return findAll(new ComputerPage());
+    return findAll(ComputerPage.getBuilder());
   }
 
   @Override
-  public List<Computer> findAll(ComputerPage page) {
+  public List<Computer> findAll(ComputerPage.Builder page) {
     Connection connection = SQLUtil.getConnection();
     List<Computer> result = computerDAO.findAll(connection, page);
     SQLUtil.closeConnection(connection);

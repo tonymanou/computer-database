@@ -27,12 +27,25 @@ public class SQLComputerDAO implements IComputerDAO {
   private static final Logger LOGGER = LoggerFactory.getLogger(SQLComputerDAO.class);
 
   @Override
-  public List<Computer> findAll(Connection connection, ComputerPage page) {
+  public List<Computer> findAll(Connection connection, ComputerPage.Builder pageBuilder) {
     List<Computer> list = null;
     PreparedStatement statement = null;
     ResultSet resultat = null;
 
     try {
+      connection.setAutoCommit(false);
+
+      statement = connection.prepareStatement("SELECT COUNT(id) FROM computer;");
+      resultat = statement.executeQuery();
+
+      resultat.next(); // Do not check if it succeeded and let the next instruction crash
+      int count = resultat.getInt(1);
+      pageBuilder.setNumElements(count);
+
+      ComputerPage page = pageBuilder.build();
+
+      SQLUtil.close(resultat, statement);
+
       statement = connection
           .prepareStatement("SELECT c.id, c.name, c.introduced, c.discontinued, c.company_id, d.name FROM computer c LEFT JOIN company d ON c.company_id = d.id ORDER BY ? ? LIMIT ? OFFSET ?;");
 
@@ -55,6 +68,8 @@ public class SQLComputerDAO implements IComputerDAO {
 
       resultat = statement.executeQuery();
       list = extractToList(resultat);
+
+      connection.commit();
     } catch (SQLException e) {
       LOGGER.error("Unable to get all computers", e);
       throw new PersistenceException(e);

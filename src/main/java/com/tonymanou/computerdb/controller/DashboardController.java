@@ -41,13 +41,12 @@ public class DashboardController extends HttpServlet {
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
       IOException {
     HttpSession session = req.getSession();
-    ComputerPage page = new ComputerPage();
+    ComputerPage.Builder page = ComputerPage.getBuilder();
 
     Object elementsPerPage = session.getAttribute(ELEMENT_PER_PAGE);
     if (elementsPerPage != null) {
       page.setNumElementsPerPage((int) elementsPerPage);
     }
-    page.setNumElements(computerService.count());
 
     String search = req.getParameter("search");
     if (!Util.isStringEmpty(search)) {
@@ -62,7 +61,7 @@ public class DashboardController extends HttpServlet {
 
     List<ComputerDTO> computers = computerMapper.mapToDTOList(computerService.findAll(page));
     req.setAttribute("computers", computers);
-    req.setAttribute("page", page);
+    req.setAttribute("page", page.build());
     req.getRequestDispatcher("/WEB-INF/views/dashboard.jsp").forward(req, resp);
   }
 

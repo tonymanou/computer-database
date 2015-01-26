@@ -25,7 +25,7 @@ public interface IComputerDAO {
    * @throws PersistenceException
    *           if an error occurred while processing the query.
    */
-  List<Computer> findAll(Connection connection, ComputerPage page);
+  List<Computer> findAll(Connection connection, ComputerPage.Builder page);
 
   /**
    * Create a new computer in the database.
