@@ -44,7 +44,7 @@ public class EditComputerController extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
       IOException {
-    Long computerId = Util.parseLong(req.getParameter("id"));
+    Long computerId = Util.parsePositiveLong(req.getParameter("id"));
     Computer computer;
     if (computerId == null) {
       computer = null;
@@ -61,7 +61,7 @@ public class EditComputerController extends HttpServlet {
     List<String> errors = new ArrayList<>();
     Computer computer = null;
 
-    Long computerId = Util.parseLong(req.getParameter("computerId"));
+    Long computerId = Util.parsePositiveLong(req.getParameter("computerId"));
     if (computerId == null || (computer = computerService.getFromId(computerId)) == null) {
       showEditComputerForm(req, resp, null, errors);
       return;
@@ -97,7 +97,7 @@ public class EditComputerController extends HttpServlet {
     String companyId = req.getParameter("companyId");
     Company company = null;
     if (!Util.isStringEmpty(companyId)) {
-      Long id = Util.parseLong(companyId);
+      Long id = Util.parsePositiveLong(companyId);
       if (id == null) {
         errors.add("You must choose a valid company.");
       } else if (id != 0) {

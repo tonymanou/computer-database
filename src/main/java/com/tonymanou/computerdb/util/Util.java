@@ -13,6 +13,9 @@ public class Util {
 
   // @formatter:off
   private static final String REGEX_DELIMITER = "(\\.|-|\\/)";
+  /**
+   * Regex for English date format yyyy-MM-dd
+   */
   private static final String REGEX_DATE_EN = "("
       + "((\\d{4})" + REGEX_DELIMITER + "(0[13578]|10|12)" + REGEX_DELIMITER + "(0[1-9]|[12][0-9]|3[01]))"
       + "|((\\d{4})" + REGEX_DELIMITER + "(0[469]|11)" + REGEX_DELIMITER + "([0][1-9]|[12][0-9]|30))"
@@ -23,6 +26,9 @@ public class Util {
       + "|(([0-9][0-9][2468][048])" + REGEX_DELIMITER + "(02)" + REGEX_DELIMITER + "(29))"
       + "|(([0-9][0-9][13579][26])" + REGEX_DELIMITER + "(02)" + REGEX_DELIMITER + "(29))"
       + ")";
+  /**
+   * Regex for French date format dd-MM-yyyy
+   */
   private static final String REGEX_DATE_FR = "("
       + "((0[1-9]|[12][0-9]|3[01])" + REGEX_DELIMITER + "(0[13578]|10|12)" + REGEX_DELIMITER + "(\\d{4}))"
       + "|(([0][1-9]|[12][0-9]|30)" + REGEX_DELIMITER + "(0[469]|11)" + REGEX_DELIMITER + "(\\d{4}))"
@@ -33,15 +39,15 @@ public class Util {
       + "|((29)" + REGEX_DELIMITER + "(02)" + REGEX_DELIMITER + "([0-9][0-9][2468][048]))"
       + "|((29)" + REGEX_DELIMITER + "(02)" + REGEX_DELIMITER + "([0-9][0-9][13579][26]))"
       + ")";
-  private static final String REGEX_NUMBER = "[+-]?\\d{1,19}";
+  private static final String REGEX_POSITIVE_LONG = "\\d{1,19}";
   // @formatter:on
 
-  private static final Matcher NUMBER_MATCHER;
+  private static final Matcher POSITIVE_LONG_MATCHER;
   private static final Matcher DATE_MATCHER;
 
   static {
     DATE_MATCHER = Pattern.compile(REGEX_DATE_EN).matcher("");
-    NUMBER_MATCHER = Pattern.compile(REGEX_NUMBER).matcher("");
+    POSITIVE_LONG_MATCHER = Pattern.compile(REGEX_POSITIVE_LONG).matcher("");
   }
 
   /**
@@ -68,9 +74,9 @@ public class Util {
    *          The string to parse.
    * @return A Long instance, or null if it was not a valid number.
    */
-  public static Long parseLong(String str) {
+  public static Long parsePositiveLong(String str) {
     Long result;
-    if (str != null && NUMBER_MATCHER.reset(str).matches()) {
+    if (str != null && POSITIVE_LONG_MATCHER.reset(str).matches()) {
       result = Long.parseLong(str);
     } else {
       result = null;

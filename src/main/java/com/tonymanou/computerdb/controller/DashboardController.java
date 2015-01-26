@@ -55,7 +55,7 @@ public class DashboardController extends HttpServlet {
 
     String pageNumber = req.getParameter("page");
     if (!Util.isStringEmpty(pageNumber)) {
-      int number = Util.parseLong(pageNumber).intValue();
+      int number = Util.parsePositiveLong(pageNumber).intValue();
       page.setCurrentPage(number);
     }
 
@@ -74,7 +74,7 @@ public class DashboardController extends HttpServlet {
       String[] idsList = idList.split(",");
 
       for (String current : idsList) {
-        Long id = Util.parseLong(current);
+        Long id = Util.parsePositiveLong(current);
 
         if (id != null) {
           computerService.delete(id);

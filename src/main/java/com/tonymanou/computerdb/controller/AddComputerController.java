@@ -82,7 +82,7 @@ public class AddComputerController extends HttpServlet {
     String companyId = req.getParameter("companyId");
     Company company = null;
     if (!Util.isStringEmpty(companyId)) {
-      Long id = Util.parseLong(companyId);
+      Long id = Util.parsePositiveLong(companyId);
       if (id == null) {
         errors.add("You must choose a valid company.");
       } else if (id != 0) {
