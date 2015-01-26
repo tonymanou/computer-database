@@ -91,7 +91,9 @@ public class ComputerPage {
 
     public ComputerPage build() {
       page.numPages = (int) (page.numElements / page.numElementsPerPage);
-      if (page.numElements % page.numElementsPerPage != 0) {
+      if (page.numPages <= 0) {
+        page.numPages = 1;
+      } else if (page.numElements % page.numElementsPerPage != 0) {
         page.numPages++;
       }
 

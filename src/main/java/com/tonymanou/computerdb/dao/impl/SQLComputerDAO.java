@@ -40,7 +40,7 @@ public class SQLComputerDAO implements IComputerDAO {
       boolean searching = !Util.isStringEmpty(searchString);
       String search;
       if (searching) {
-        search = new StringBuilder('%').append(searchString).append('%').toString();
+        search = new StringBuilder("%").append(searchString).append("%").toString();
       } else {
         search = null;
       }
@@ -65,7 +65,8 @@ public class SQLComputerDAO implements IComputerDAO {
       resultat = statement.executeQuery();
 
       resultat.next(); // Do not check if it succeeded and let the next instruction crash
-      pageBuilder.setNumElements(resultat.getLong(1));
+      long count = resultat.getLong(1);
+      pageBuilder.setNumElements(count);
 
       SQLUtil.close(resultat, statement);
 

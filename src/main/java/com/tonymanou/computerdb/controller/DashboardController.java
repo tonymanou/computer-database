@@ -48,7 +48,7 @@ public class DashboardController extends HttpServlet {
 
     String search = req.getParameter("search");
     if (!Util.isStringEmpty(search)) {
-      page.setSearchQuery(search);
+      page.setSearchQuery(search.trim());
     }
 
     String pageNumber = req.getParameter("page");
