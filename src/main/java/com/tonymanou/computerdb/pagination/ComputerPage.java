@@ -5,7 +5,7 @@ public class ComputerPage {
   private int currentPage;
   private int numPages;
   private int numElementsPerPage;
-  private int numElements;
+  private long numElements;
   private String searchQuery;
   private ComputerOrder order;
   private OrderType orderType;
@@ -34,7 +34,7 @@ public class ComputerPage {
     return numElementsPerPage;
   }
 
-  public int getNumElements() {
+  public long getNumElements() {
     return numElements;
   }
 
@@ -69,12 +69,16 @@ public class ComputerPage {
       page.numElementsPerPage = elementsPerPage;
     }
 
-    public void setNumElements(int num) {
-      page.numElements = num;
+    public void setNumElements(long number) {
+      page.numElements = number;
     }
 
     public void setSearchQuery(String search) {
       page.searchQuery = search;
+    }
+
+    public String getSearchQuery() {
+      return page.searchQuery;
     }
 
     public void setOrder(ComputerOrder order) {
@@ -86,7 +90,7 @@ public class ComputerPage {
     }
 
     public ComputerPage build() {
-      page.numPages = page.numElements / page.numElementsPerPage;
+      page.numPages = (int) (page.numElements / page.numElementsPerPage);
       if (page.numElements % page.numElementsPerPage != 0) {
         page.numPages++;
       }

@@ -8,7 +8,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +26,6 @@ public class DashboardController extends HttpServlet {
 
   private static final long serialVersionUID = 1075773814185556399L;
   private static final Logger LOGGER = LoggerFactory.getLogger(DashboardController.class);
-  private static final String ELEMENT_PER_PAGE = "element_per_page";
 
   private IComputerService computerService;
   private IEntityMapper<Computer, ComputerDTO> computerMapper;
@@ -40,11 +38,11 @@ public class DashboardController extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
       IOException {
-    HttpSession session = req.getSession();
     ComputerPage.Builder page = ComputerPage.getBuilder();
 
-    Object elementsPerPage = session.getAttribute(ELEMENT_PER_PAGE);
-    if (elementsPerPage != null) {
+    String perPage = req.getParameter("elems");
+    if (!Util.isStringEmpty(perPage)) {
+      int elementsPerPage = Util.parsePositiveLong(perPage).intValue();
       page.setNumElementsPerPage((int) elementsPerPage);
     }
 

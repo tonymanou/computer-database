@@ -16,6 +16,7 @@ import com.tonymanou.computerdb.domain.Company;
 import com.tonymanou.computerdb.domain.Computer;
 import com.tonymanou.computerdb.exception.PersistenceException;
 import com.tonymanou.computerdb.pagination.ComputerPage;
+import com.tonymanou.computerdb.util.Util;
 
 /**
  * DAO implementation to manage computers in a SQL database.
@@ -35,20 +36,57 @@ public class SQLComputerDAO implements IComputerDAO {
     try {
       connection.setAutoCommit(false);
 
-      statement = connection.prepareStatement("SELECT COUNT(id) FROM computer;");
+      String searchString = pageBuilder.getSearchQuery();
+      boolean searching = !Util.isStringEmpty(searchString);
+      String search;
+      if (searching) {
+        search = new StringBuilder('%').append(searchString).append('%').toString();
+      } else {
+        search = null;
+      }
+
+      /* ========== First query: element count ========== */
+
+      // Create query
+      StringBuilder query1 = new StringBuilder("SELECT COUNT(c.id) FROM computer c");
+      if (searching) {
+        query1.append(" LEFT JOIN company d ON c.company_id = d.id WHERE c.name LIKE ? OR d.name LIKE ?");
+      }
+      query1.append(';');
+
+      statement = connection.prepareStatement(query1.toString());
+
+      // Fill-in parameters
+      if (searching) {
+        statement.setString(1, search);
+        statement.setString(2, search);
+      }
+
       resultat = statement.executeQuery();
 
       resultat.next(); // Do not check if it succeeded and let the next instruction crash
-      int count = resultat.getInt(1);
-      pageBuilder.setNumElements(count);
-
-      ComputerPage page = pageBuilder.build();
+      pageBuilder.setNumElements(resultat.getLong(1));
 
       SQLUtil.close(resultat, statement);
 
-      statement = connection
-          .prepareStatement("SELECT c.id, c.name, c.introduced, c.discontinued, c.company_id, d.name FROM computer c LEFT JOIN company d ON c.company_id = d.id ORDER BY ? ? LIMIT ? OFFSET ?;");
+      /* ========== Second query: computer list ========== */
 
+      ComputerPage page = pageBuilder.build();
+
+      // Create query
+      StringBuilder query2 = new StringBuilder(
+          "SELECT c.id, c.name, c.introduced, c.discontinued, c.company_id, d.name FROM computer c LEFT JOIN company d ON c.company_id = d.id");
+      if (searching) {
+        query2.append(" WHERE c.name LIKE ? OR d.name LIKE ?");
+      }
+      query2.append(" ORDER BY ? ? LIMIT ? OFFSET ?;");
+      statement = connection.prepareStatement(query2.toString());
+
+      // Fill-in parameters
+      if (searching) {
+        statement.setString(1, search);
+        statement.setString(2, search);
+      }
       String order;
       switch (page.getOrder()) {
       case NAME:
@@ -61,10 +99,11 @@ public class SQLComputerDAO implements IComputerDAO {
         order = "c.id";
         break;
       }
-      statement.setString(1, order);
-      statement.setString(2, page.getOrderType().name());
-      statement.setInt(3, page.getNumElementsPerPage());
-      statement.setInt(4, page.getElementsOffset());
+      int searchOffset = searching ? 2 : 0;
+      statement.setString(1 + searchOffset, order);
+      statement.setString(2 + searchOffset, page.getOrderType().name());
+      statement.setInt(3 + searchOffset, page.getNumElementsPerPage());
+      statement.setInt(4 + searchOffset, page.getElementsOffset());
 
       resultat = statement.executeQuery();
       list = extractToList(resultat);
