@@ -56,7 +56,7 @@
 
 	<footer class="navbar-fixed-bottom">
 		<div class="container text-center">
-			<tony:pagination pageCount="${page.numPages}" currentPage="${page.currentPage}"/>
+			<tony:pagination page="${page}"/>
 			<div class="btn-group btn-group-sm pull-right" role="group">
 				<button type="button" class="btn btn-default <c:if test="${page.numElementsPerPage == 10}">active</c:if>">10</button>
 				<button type="button" class="btn btn-default <c:if test="${page.numElementsPerPage == 50}">active</c:if>">50</button>
