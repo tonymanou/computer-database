@@ -121,7 +121,7 @@ public class SQLUtil {
    *
    * @param date
    *          The locale date time.
-   * @return a timestamp, or null if the date wass null.
+   * @return a timestamp, or null if the date was null.
    */
   public static Timestamp getTimestamp(LocalDate date) {
     return date == null ? null : Timestamp.valueOf(date.atStartOfDay());

@@ -5,10 +5,10 @@ import java.sql.SQLException;
 import java.sql.Savepoint;
 import java.util.List;
 
+import com.tonymanou.computerdb.dao.ConnectionManager;
 import com.tonymanou.computerdb.dao.DAOManager;
 import com.tonymanou.computerdb.dao.ICompanyDAO;
 import com.tonymanou.computerdb.dao.IComputerDAO;
-import com.tonymanou.computerdb.dao.impl.SQLUtil;
 import com.tonymanou.computerdb.domain.Company;
 import com.tonymanou.computerdb.exception.PersistenceException;
 import com.tonymanou.computerdb.service.ICompanyService;
@@ -35,29 +35,29 @@ public class CompanyService implements ICompanyService {
 
   @Override
   public List<Company> findAll() {
-    Connection connection = SQLUtil.getConnection();
-    List<Company> result = companyDAO.findAll(connection);
-    SQLUtil.closeConnection(connection);
+    ConnectionManager.INSTANCE.getConnection();
+    List<Company> result = companyDAO.findAll();
+    ConnectionManager.INSTANCE.closeConnection();
     return result;
   }
 
   @Override
   public Company getFromId(Long id) {
-    Connection connection = SQLUtil.getConnection();
-    Company result = companyDAO.getFromId(connection, id);
-    SQLUtil.closeConnection(connection);
+    ConnectionManager.INSTANCE.getConnection();
+    Company result = companyDAO.getFromId(id);
+    ConnectionManager.INSTANCE.closeConnection();
     return result;
   }
 
   @Override
   public void delete(Long id) {
-    Connection connection = SQLUtil.getConnection();
+    Connection connection = ConnectionManager.INSTANCE.getConnection();
     Savepoint savepoint = null;
     try {
       connection.setAutoCommit(false);
       savepoint = connection.setSavepoint();
-      computerDAO.deleteAllWithCompanyId(connection, id);
-      companyDAO.delete(connection, id);
+      computerDAO.deleteAllWithCompanyId(id);
+      companyDAO.delete(id);
       connection.commit();
     } catch (SQLException | PersistenceException e) {
       if (savepoint != null) {
@@ -69,7 +69,7 @@ public class CompanyService implements ICompanyService {
       }
       throw new PersistenceException(e);
     } finally {
-      SQLUtil.closeConnection(connection);
+      ConnectionManager.INSTANCE.closeConnection();
     }
   }
 }

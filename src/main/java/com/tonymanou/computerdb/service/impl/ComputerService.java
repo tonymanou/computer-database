@@ -1,11 +1,10 @@
 package com.tonymanou.computerdb.service.impl;
 
-import java.sql.Connection;
 import java.util.List;
 
+import com.tonymanou.computerdb.dao.ConnectionManager;
 import com.tonymanou.computerdb.dao.DAOManager;
 import com.tonymanou.computerdb.dao.IComputerDAO;
-import com.tonymanou.computerdb.dao.impl.SQLUtil;
 import com.tonymanou.computerdb.domain.Computer;
 import com.tonymanou.computerdb.pagination.ComputerPage;
 import com.tonymanou.computerdb.service.IComputerService;
@@ -34,46 +33,46 @@ public class ComputerService implements IComputerService {
 
   @Override
   public List<Computer> findAll(ComputerPage.Builder page) {
-    Connection connection = SQLUtil.getConnection();
-    List<Computer> result = computerDAO.findAll(connection, page);
-    SQLUtil.closeConnection(connection);
+    ConnectionManager.INSTANCE.getConnection();
+    List<Computer> result = computerDAO.findAll(page);
+    ConnectionManager.INSTANCE.closeConnection();
     return result;
   }
 
   @Override
   public void create(Computer computer) {
-    Connection connection = SQLUtil.getConnection();
-    computerDAO.create(connection, computer);
-    SQLUtil.closeConnection(connection);
+    ConnectionManager.INSTANCE.getConnection();
+    computerDAO.create(computer);
+    ConnectionManager.INSTANCE.closeConnection();
   }
 
   @Override
   public void update(Computer computer) {
-    Connection connection = SQLUtil.getConnection();
-    computerDAO.update(connection, computer);
-    SQLUtil.closeConnection(connection);
+    ConnectionManager.INSTANCE.getConnection();
+    computerDAO.update(computer);
+    ConnectionManager.INSTANCE.closeConnection();
   }
 
   @Override
   public void delete(Long id) {
-    Connection connection = SQLUtil.getConnection();
-    computerDAO.delete(connection, id);
-    SQLUtil.closeConnection(connection);
+    ConnectionManager.INSTANCE.getConnection();
+    computerDAO.delete(id);
+    ConnectionManager.INSTANCE.closeConnection();
   }
 
   @Override
   public Computer getFromId(Long id) {
-    Connection connection = SQLUtil.getConnection();
-    Computer result = computerDAO.getFromId(connection, id);
-    SQLUtil.closeConnection(connection);
+    ConnectionManager.INSTANCE.getConnection();
+    Computer result = computerDAO.getFromId(id);
+    ConnectionManager.INSTANCE.closeConnection();
     return result;
   }
 
   @Override
   public int count() {
-    Connection connection = SQLUtil.getConnection();
-    int result = computerDAO.count(connection);
-    SQLUtil.closeConnection(connection);
+    ConnectionManager.INSTANCE.getConnection();
+    int result = computerDAO.count();
+    ConnectionManager.INSTANCE.closeConnection();
     return result;
   }
 }
