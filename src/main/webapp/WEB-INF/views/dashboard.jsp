@@ -4,14 +4,13 @@
     <section id="main">
         <div class="container">
             <h1 id="homeTitle">
-                ${page.getNumElements()} Computers found
+                ${page.numElements} computers found
             </h1>
             <div id="actions" class="form-horizontal">
                 <div class="pull-left">
-                    <form id="searchForm" action="#" method="GET" class="form-inline">
-                        <input type="search" id="searchbox" name="search" class="form-control" placeholder="Search name" />
-                        <input type="submit" id="searchsubmit" value="Filter by name"
-                        class="btn btn-primary" />
+                    <form id="searchForm" action="" method="GET" class="form-inline">
+                        <input type="search" id="searchbox" name="search" class="form-control" placeholder="Search name" value="${page.searchQuery}" />
+                        <input type="submit" id="searchsubmit" value="Filter by name" class="btn btn-primary" />
                     </form>
                 </div>
                 <div class="pull-right">
@@ -21,7 +20,7 @@
             </div>
         </div>
 
-        <form id="deleteForm" action="#" method="POST">
+        <form id="deleteForm" action="" method="POST">
             <input type="hidden" name="selection" value="">
         </form>
 
@@ -57,11 +56,11 @@
 
 	<footer class="navbar-fixed-bottom">
 		<div class="container text-center">
-			<tony:pagination pageCount="${page.getNumPages()}" currentPage="${page.getCurrentPage()}"/>
+			<tony:pagination pageCount="${page.numPages}" currentPage="${page.currentPage}"/>
 			<div class="btn-group btn-group-sm pull-right" role="group">
-				<button type="button" class="btn btn-default <c:if test="${page.getNumElementsPerPage() == 10}">active</c:if>">10</button>
-				<button type="button" class="btn btn-default <c:if test="${page.getNumElementsPerPage() == 50}">active</c:if>">50</button>
-				<button type="button" class="btn btn-default <c:if test="${page.getNumElementsPerPage() == 100}">active</c:if>">100</button>
+				<button type="button" class="btn btn-default <c:if test="${page.numElementsPerPage == 10}">active</c:if>">10</button>
+				<button type="button" class="btn btn-default <c:if test="${page.numElementsPerPage == 50}">active</c:if>">50</button>
+				<button type="button" class="btn btn-default <c:if test="${page.numElementsPerPage == 100}">active</c:if>">100</button>
 			</div>
 		</div>
 	</footer>
