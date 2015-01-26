@@ -58,9 +58,9 @@
 		<div class="container text-center">
 			<tony:pagination page="${page}"/>
 			<div class="btn-group btn-group-sm pull-right" role="group">
-				<button type="button" class="btn btn-default <c:if test="${page.numElementsPerPage == 10}">active</c:if>">10</button>
-				<button type="button" class="btn btn-default <c:if test="${page.numElementsPerPage == 50}">active</c:if>">50</button>
-				<button type="button" class="btn btn-default <c:if test="${page.numElementsPerPage == 100}">active</c:if>">100</button>
+				<a href="<tony:link currentPage="1" elementsPerPage="10" page="${page}"/>" class="btn btn-default <c:if test="${page.numElementsPerPage == 10}">active</c:if>">10</a>
+				<a href="<tony:link currentPage="1" elementsPerPage="50" page="${page}"/>" class="btn btn-default <c:if test="${page.numElementsPerPage == 50}">active</c:if>">50</a>
+				<a href="<tony:link currentPage="1" elementsPerPage="100" page="${page}"/>" class="btn btn-default <c:if test="${page.numElementsPerPage == 100}">active</c:if>">100</a>
 			</div>
 		</div>
 	</footer>
