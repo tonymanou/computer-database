@@ -3,8 +3,13 @@ package com.tonymanou.computerdb.dao.impl;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import javax.annotation.PostConstruct;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import com.jolbox.bonecp.BoneCP;
@@ -13,23 +18,13 @@ import com.tonymanou.computerdb.dao.IConnectionPool;
 import com.tonymanou.computerdb.exception.PersistenceException;
 
 @Component
+@PropertySource("classpath:/database.properties")
 public class SQLConnectionPool implements IConnectionPool {
-
-  /**
-   * URL to the database server.
-   */
-  private static final String DB_URL = "jdbc:mysql://localhost:3306/computer-database-db?zeroDateTimeBehavior=convertToNull";
-  /**
-   * User name for the database.
-   */
-  private static final String DB_USR = "admincdb";
-  /**
-   * User password for the database.
-   */
-  private static final String DB_PW = "qwerty1234";
 
   private static final Logger LOGGER = LoggerFactory.getLogger(SQLConnectionPool.class);
   private BoneCP connectionPool;
+  @Autowired
+  private Environment env;
 
   static {
     try {
@@ -40,11 +35,12 @@ public class SQLConnectionPool implements IConnectionPool {
     }
   }
 
-  public SQLConnectionPool() {
+  @PostConstruct
+  private void init() {
     BoneCPConfig config = new BoneCPConfig();
-    config.setJdbcUrl(DB_URL);
-    config.setUsername(DB_USR);
-    config.setPassword(DB_PW);
+    config.setJdbcUrl(env.getProperty("db.url"));
+    config.setUsername(env.getProperty("db.user"));
+    config.setPassword(env.getProperty("db.pass"));
     try {
       connectionPool = new BoneCP(config);
     } catch (SQLException e) {
