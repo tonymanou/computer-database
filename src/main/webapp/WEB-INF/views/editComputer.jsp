@@ -28,22 +28,22 @@
                         <fieldset>
                             <div class="form-group">
                                 <label for="computerName">Computer name</label>
-                                <input type="text" class="form-control" id="computerName" name="computerName" placeholder="Computer name" value="${computer.name}">
+                                <input type="text" class="form-control" id="computerName" name="computerName" placeholder="Computer name" value="<c:out value="${computer.name}" />">
                             </div>
                             <div class="form-group">
                                 <label for="introduced">Introduced date</label>
-                                <input type="date" class="form-control" id="introduced" name="introduced" placeholder="Introduced date" value="${computer.introducedDate}">
+                                <input type="date" class="form-control" id="introduced" name="introduced" placeholder="Introduced date" value="<c:out value="${computer.introducedDate}" />">
                             </div>
                             <div class="form-group">
                                 <label for="discontinued">Discontinued date</label>
-                                <input type="date" class="form-control" id="discontinued" name="discontinued" placeholder="Discontinued date" value="${computer.discontinuedDate}">
+                                <input type="date" class="form-control" id="discontinued" name="discontinued" placeholder="Discontinued date" value="<c:out value="${computer.discontinuedDate}" />">
                             </div>
                             <div class="form-group">
                                 <label for="companyId">Company</label>
                                 <select class="form-control" id="companyId" name="companyId" >
                                     <option value="0">--</option>
                                     <c:forEach items="${companies}" var="company">
-                                        <option value="${company.id}"<c:if test="${company.id == computer.companyId}"> selected="selected"</c:if>>${company.name}</option>
+                                        <option value="${company.id}"<c:if test="${company.id == computer.companyId}"> selected="selected"</c:if>><c:out value="${company.name}" /></option>
                                     </c:forEach>
                                 </select>
                             </div>

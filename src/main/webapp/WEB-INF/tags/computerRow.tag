@@ -6,8 +6,8 @@
 	<td class="editMode"><input type="checkbox" name="cb" class="cb"
 		value="${computer.id}"></td>
 	<td><a href="<c:url value="/computer/edit?id=${computer.id}" />"
-		onclick="">${computer.name}</a></td>
+		onclick=""><c:out value="${computer.name}" /></a></td>
 	<td>${computer.introducedDate}</td>
 	<td>${computer.discontinuedDate}</td>
-	<td>${computer.companyName}</td>
+	<td><c:out value="${computer.companyName}" /></td>
 </tr>
