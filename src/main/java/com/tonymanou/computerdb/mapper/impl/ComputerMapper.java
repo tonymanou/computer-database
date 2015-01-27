@@ -45,7 +45,7 @@ public class ComputerMapper implements IEntityMapper<Computer, ComputerDTO> {
     return Computer.getBuilder(computerDTO.getName())
         .setId(computerDTO.getId())
         .setIntroduced(Util.parseLocalDate(computerDTO.getIntroducedDate()))
-        .setDiscontinued(Util.parseLocalDate(computerDTO.getIntroducedDate()))
+        .setDiscontinued(Util.parseLocalDate(computerDTO.getDiscontinuedDate()))
         .setCompany(company)
         .build();
     // @formatter:on
