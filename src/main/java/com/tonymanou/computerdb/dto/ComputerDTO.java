@@ -8,6 +8,7 @@ public class ComputerDTO {
   private String introducedDate;
   private String discontinuedDate;
   private String companyName;
+  private Long companyId;
 
   private ComputerDTO() {
   }
@@ -50,6 +51,14 @@ public class ComputerDTO {
 
   public void setCompanyName(String companyName_) {
     companyName = companyName_;
+  }
+
+  public Long getCompanyId() {
+    return companyId;
+  }
+
+  public void setCompanyId(Long pCompanyId) {
+    companyId = pCompanyId;
   }
 
   @Override
@@ -108,6 +117,15 @@ public class ComputerDTO {
     } else if (!introducedDate.equals(other.introducedDate)) {
       return false;
     }
+    if (EQUALS_WITH_ID) {
+      if (companyId == null) {
+        if (other.companyId != null) {
+          return false;
+        }
+      } else if (!companyId.equals(other.companyId)) {
+        return false;
+      }
+    }
     if (name == null) {
       if (other.name != null) {
         return false;
@@ -132,6 +150,10 @@ public class ComputerDTO {
     if (discontinuedDate != null) {
       builder.append(", discontinuedDate=");
       builder.append(discontinuedDate);
+    }
+    if (companyId != null) {
+      builder.append(", companyId=");
+      builder.append(companyId);
     }
     if (companyName != null) {
       builder.append(", companyName=");
@@ -176,6 +198,11 @@ public class ComputerDTO {
 
     public Builder setCompany(String pCompanyName) {
       computer.companyName = pCompanyName;
+      return this;
+    }
+
+    public Builder setCompanyId(Long pCompanyId) {
+      computer.companyId = pCompanyId;
       return this;
     }
 

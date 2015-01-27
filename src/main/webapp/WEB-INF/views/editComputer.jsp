@@ -4,9 +4,6 @@
         <div class="container">
             <div class="row">
                 <div class="col-xs-8 col-xs-offset-2 box">
-                    <div class="label label-default pull-right">
-                        id: ${computer.id}
-                    </div>
                     <h1>Edit Computer</h1>
                     <c:choose>
                     <c:when test="${computer == null}">
@@ -15,6 +12,10 @@
 						</div>
                     </c:when>
                     <c:otherwise>
+                    <div class="label label-default pull-right">
+                        id: ${computer.id}
+                    </div>
+                    <br>
                     <c:if test="${errors != null}">
 						<div class="alert alert-danger">
 							<c:forEach items="${errors}" var="text">
@@ -31,18 +32,18 @@
                             </div>
                             <div class="form-group">
                                 <label for="introduced">Introduced date</label>
-                                <input type="date" class="form-control" id="introduced" name="introduced" placeholder="Introduced date" value="${computer.introduced}">
+                                <input type="date" class="form-control" id="introduced" name="introduced" placeholder="Introduced date" value="${computer.introducedDate}">
                             </div>
                             <div class="form-group">
                                 <label for="discontinued">Discontinued date</label>
-                                <input type="date" class="form-control" id="discontinued" name="discontinued" placeholder="Discontinued date" value="${computer.discontinued}">
+                                <input type="date" class="form-control" id="discontinued" name="discontinued" placeholder="Discontinued date" value="${computer.discontinuedDate}">
                             </div>
                             <div class="form-group">
                                 <label for="companyId">Company</label>
                                 <select class="form-control" id="companyId" name="companyId" >
                                     <option value="0">--</option>
                                     <c:forEach items="${companies}" var="company">
-                                        <option value="${company.id}"<c:if test="${company.id == computer.company.id}"> selected="selected"</c:if>>${company.name}</option>
+                                        <option value="${company.id}"<c:if test="${company.id == computer.companyId}"> selected="selected"</c:if>>${company.name}</option>
                                     </c:forEach>
                                 </select>
                             </div>

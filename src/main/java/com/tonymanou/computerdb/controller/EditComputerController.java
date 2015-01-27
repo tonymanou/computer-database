@@ -1,9 +1,9 @@
 package com.tonymanou.computerdb.controller;
 
 import java.io.IOException;
-import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import com.tonymanou.computerdb.domain.Company;
 import com.tonymanou.computerdb.domain.Computer;
 import com.tonymanou.computerdb.dto.CompanyDTO;
+import com.tonymanou.computerdb.dto.ComputerDTO;
 import com.tonymanou.computerdb.exception.PersistenceException;
 import com.tonymanou.computerdb.mapper.IEntityMapper;
 import com.tonymanou.computerdb.mapper.MapperManager;
@@ -24,6 +25,8 @@ import com.tonymanou.computerdb.service.ICompanyService;
 import com.tonymanou.computerdb.service.IComputerService;
 import com.tonymanou.computerdb.service.ServiceManager;
 import com.tonymanou.computerdb.util.Util;
+import com.tonymanou.computerdb.validator.IEntityValidator;
+import com.tonymanou.computerdb.validator.ValidatorManager;
 
 @WebServlet("/computer/edit")
 public class EditComputerController extends HttpServlet {
@@ -34,103 +37,72 @@ public class EditComputerController extends HttpServlet {
   private ICompanyService companyService;
   private IComputerService computerService;
   private IEntityMapper<Company, CompanyDTO> companyMapper;
+  private IEntityMapper<Computer, ComputerDTO> computerMapper;
+  private IEntityValidator<ComputerDTO> computerDTOValidator;
 
   public EditComputerController() {
     companyService = ServiceManager.INSTANCE.getCompanyService();
     computerService = ServiceManager.INSTANCE.getComputerService();
     companyMapper = MapperManager.INSTANCE.getCompanyMapper();
+    computerMapper = MapperManager.INSTANCE.getComputerMapper();
+    computerDTOValidator = ValidatorManager.INSTANCE.getComputerDTOValidator();
   }
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
       IOException {
     Long computerId = Util.parsePositiveLong(req.getParameter("id"));
-    Computer computer;
+    ComputerDTO computerDTO;
     if (computerId == null) {
-      computer = null;
+      computerDTO = null;
     } else {
-      computer = computerService.getFromId(computerId);
+      Computer computer = computerService.getFromId(computerId);
+      computerDTO = computerMapper.mapToDTO(computer);
     }
 
-    showEditComputerForm(req, resp, computer, null);
+    showEditComputerForm(req, resp, computerDTO, null);
   }
 
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
       IOException {
-    List<String> errors = new ArrayList<>();
-    Computer computer = null;
+    Map<String, String> errors = new HashMap<>();
 
     Long computerId = Util.parsePositiveLong(req.getParameter("computerId"));
-    if (computerId == null || (computer = computerService.getFromId(computerId)) == null) {
+    if (computerId == null || computerService.getFromId(computerId) == null) {
       showEditComputerForm(req, resp, null, errors);
       return;
     }
 
-    String name = req.getParameter("computerName");
-    if (Util.isStringEmpty(name)) {
-      errors.add("You must enter a computer name.");
-    }
+    // @formatter:off
+    ComputerDTO computerDTO = ComputerDTO
+        .getBuilder(req.getParameter("computerName"))
+        .setId(computerId)
+        .setIntroduced(req.getParameter("introduced"))
+        .setDiscontinued(req.getParameter("discontinued"))
+        .setCompanyId(Util.parsePositiveLong(req.getParameter("companyId")))
+        .build();
+    // @formatter:on
 
-    String introducedDate = req.getParameter("introduced");
-    LocalDate introduced;
-    if (Util.isStringEmpty(introducedDate)) {
-      introduced = null;
-    } else {
-      introduced = Util.parseLocalDate(introducedDate);
-      if (introduced == null) {
-        errors.add("You must enter a valid introduced date (yyyy-MM-dd).");
-      }
-    }
-
-    String discontinuedDate = req.getParameter("discontinued");
-    LocalDate discontinued;
-    if (Util.isStringEmpty(discontinuedDate)) {
-      discontinued = null;
-    } else {
-      discontinued = Util.parseLocalDate(discontinuedDate);
-      if (discontinued == null) {
-        errors.add("You must enter a valid discontinued date (yyyy-MM-dd).");
-      }
-    }
-
-    String companyId = req.getParameter("companyId");
-    Company company = null;
-    if (!Util.isStringEmpty(companyId)) {
-      Long id = Util.parsePositiveLong(companyId);
-      if (id == null) {
-        errors.add("You must choose a valid company.");
-      } else if (id != 0) {
-        company = companyService.getFromId(id);
-        if (company == null) {
-          // Company not found
-          errors.add("You must choose a valid company.");
-        }
-      }
-    }
-
-    computer.setIntroduced(introduced);
-    computer.setDiscontinued(discontinued);
-    computer.setCompany(company);
-
-    if (errors.isEmpty()) {
+    if (computerDTOValidator.validate(computerDTO, errors)) {
+      Computer computer = computerMapper.mapFromDTO(computerDTO);
       try {
         computerService.update(computer);
       } catch (PersistenceException e) {
         LOGGER.error("Unable to save the computer", e);
-        errors.add("Internal error: unable to save the computer.");
+        errors.put("bug", "Internal error: unable to save the computer.");
       }
     }
 
     if (errors.isEmpty()) {
       resp.sendRedirect("../dashboard");
     } else {
-      showEditComputerForm(req, resp, computer, errors);
+      showEditComputerForm(req, resp, computerDTO, errors);
     }
   }
 
   private void showEditComputerForm(HttpServletRequest req, HttpServletResponse resp,
-      Computer computer, List<String> errors) throws ServletException, IOException {
+      ComputerDTO computer, Map<String, String> errors) throws ServletException, IOException {
     List<CompanyDTO> companies = companyMapper.mapToDTOList(companyService.findAll());
     req.setAttribute("computer", computer);
     req.setAttribute("companies", companies);
