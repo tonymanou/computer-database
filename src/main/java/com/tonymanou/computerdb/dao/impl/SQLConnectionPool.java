@@ -5,12 +5,14 @@ import java.sql.SQLException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import com.jolbox.bonecp.BoneCP;
 import com.jolbox.bonecp.BoneCPConfig;
 import com.tonymanou.computerdb.dao.IConnectionPool;
 import com.tonymanou.computerdb.exception.PersistenceException;
 
+@Component
 public class SQLConnectionPool implements IConnectionPool {
 
   /**

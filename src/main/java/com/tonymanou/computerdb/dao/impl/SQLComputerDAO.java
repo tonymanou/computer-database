@@ -10,9 +10,11 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import com.tonymanou.computerdb.dao.ConnectionManager;
 import com.tonymanou.computerdb.dao.IComputerDAO;
+import com.tonymanou.computerdb.dao.IConnectionManager;
 import com.tonymanou.computerdb.domain.Company;
 import com.tonymanou.computerdb.domain.Computer;
 import com.tonymanou.computerdb.exception.PersistenceException;
@@ -24,16 +26,20 @@ import com.tonymanou.computerdb.util.Util;
  *
  * @author tonymanou
  */
+@Component
 public class SQLComputerDAO implements IComputerDAO {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(SQLComputerDAO.class);
+
+  @Autowired
+  private IConnectionManager connectionManager;
 
   @Override
   public List<Computer> findAll(ComputerPage.Builder pageBuilder) {
     List<Computer> list = null;
     PreparedStatement statement = null;
     ResultSet resultat = null;
-    Connection connection = ConnectionManager.INSTANCE.getConnection();
+    Connection connection = connectionManager.getConnection();
 
     try {
       connection.setAutoCommit(false);
@@ -125,7 +131,7 @@ public class SQLComputerDAO implements IComputerDAO {
   @Override
   public void create(Computer computer) {
     PreparedStatement statement = null;
-    Connection connection = ConnectionManager.INSTANCE.getConnection();
+    Connection connection = connectionManager.getConnection();
 
     try {
       statement = connection
@@ -151,7 +157,7 @@ public class SQLComputerDAO implements IComputerDAO {
   @Override
   public void update(Computer computer) {
     PreparedStatement statement = null;
-    Connection connection = ConnectionManager.INSTANCE.getConnection();
+    Connection connection = connectionManager.getConnection();
 
     try {
       statement = connection
@@ -178,7 +184,7 @@ public class SQLComputerDAO implements IComputerDAO {
   @Override
   public void delete(Long id) {
     PreparedStatement statement = null;
-    Connection connection = ConnectionManager.INSTANCE.getConnection();
+    Connection connection = connectionManager.getConnection();
 
     try {
       statement = connection.prepareStatement("DELETE FROM computer WHERE id=?;");
@@ -195,7 +201,7 @@ public class SQLComputerDAO implements IComputerDAO {
   @Override
   public void deleteAllWithCompanyId(Long companyId) {
     PreparedStatement statement = null;
-    Connection connection = ConnectionManager.INSTANCE.getConnection();
+    Connection connection = connectionManager.getConnection();
 
     try {
       statement = connection.prepareStatement("DELETE FROM computer WHERE company_id=?;");
@@ -214,7 +220,7 @@ public class SQLComputerDAO implements IComputerDAO {
     Computer computer = null;
     PreparedStatement statement = null;
     ResultSet resultat = null;
-    Connection connection = ConnectionManager.INSTANCE.getConnection();
+    Connection connection = connectionManager.getConnection();
 
     try {
       statement = connection
@@ -245,7 +251,7 @@ public class SQLComputerDAO implements IComputerDAO {
     int result = 0;
     PreparedStatement statement = null;
     ResultSet resultat = null;
-    Connection connection = ConnectionManager.INSTANCE.getConnection();
+    Connection connection = connectionManager.getConnection();
 
     try {
       statement = connection.prepareStatement("SELECT COUNT(id) FROM computer;");

@@ -2,12 +2,15 @@ package com.tonymanou.computerdb.mapper.impl;
 
 import java.time.LocalDate;
 
+import org.springframework.stereotype.Component;
+
 import com.tonymanou.computerdb.domain.Company;
 import com.tonymanou.computerdb.domain.Computer;
 import com.tonymanou.computerdb.dto.ComputerDTO;
 import com.tonymanou.computerdb.mapper.IEntityMapper;
 import com.tonymanou.computerdb.util.Util;
 
+@Component
 public class ComputerMapper implements IEntityMapper<Computer, ComputerDTO> {
 
   @Override

@@ -2,9 +2,11 @@ package com.tonymanou.computerdb.service.impl;
 
 import java.util.List;
 
-import com.tonymanou.computerdb.dao.ConnectionManager;
-import com.tonymanou.computerdb.dao.DAOManager;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.tonymanou.computerdb.dao.IComputerDAO;
+import com.tonymanou.computerdb.dao.IConnectionManager;
 import com.tonymanou.computerdb.domain.Computer;
 import com.tonymanou.computerdb.pagination.ComputerPage;
 import com.tonymanou.computerdb.service.IComputerService;
@@ -14,12 +16,15 @@ import com.tonymanou.computerdb.service.IComputerService;
  *
  * @author tonymanou
  */
+@Component
 public class ComputerService implements IComputerService {
 
+  @Autowired
+  private IConnectionManager connectionManager;
+  @Autowired
   private IComputerDAO computerDAO;
 
   public ComputerService() {
-    computerDAO = DAOManager.INSTANCE.getComputerDAO();
   }
 
   public ComputerService(IComputerDAO dao) {
@@ -33,46 +38,46 @@ public class ComputerService implements IComputerService {
 
   @Override
   public List<Computer> findAll(ComputerPage.Builder page) {
-    ConnectionManager.INSTANCE.getConnection();
+    connectionManager.getConnection();
     List<Computer> result = computerDAO.findAll(page);
-    ConnectionManager.INSTANCE.closeConnection();
+    connectionManager.closeConnection();
     return result;
   }
 
   @Override
   public void create(Computer computer) {
-    ConnectionManager.INSTANCE.getConnection();
+    connectionManager.getConnection();
     computerDAO.create(computer);
-    ConnectionManager.INSTANCE.closeConnection();
+    connectionManager.closeConnection();
   }
 
   @Override
   public void update(Computer computer) {
-    ConnectionManager.INSTANCE.getConnection();
+    connectionManager.getConnection();
     computerDAO.update(computer);
-    ConnectionManager.INSTANCE.closeConnection();
+    connectionManager.closeConnection();
   }
 
   @Override
   public void delete(Long id) {
-    ConnectionManager.INSTANCE.getConnection();
+    connectionManager.getConnection();
     computerDAO.delete(id);
-    ConnectionManager.INSTANCE.closeConnection();
+    connectionManager.closeConnection();
   }
 
   @Override
   public Computer getFromId(Long id) {
-    ConnectionManager.INSTANCE.getConnection();
+    connectionManager.getConnection();
     Computer result = computerDAO.getFromId(id);
-    ConnectionManager.INSTANCE.closeConnection();
+    connectionManager.closeConnection();
     return result;
   }
 
   @Override
   public int count() {
-    ConnectionManager.INSTANCE.getConnection();
+    connectionManager.getConnection();
     int result = computerDAO.count();
-    ConnectionManager.INSTANCE.closeConnection();
+    connectionManager.closeConnection();
     return result;
   }
 }

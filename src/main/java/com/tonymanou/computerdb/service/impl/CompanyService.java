@@ -5,10 +5,12 @@ import java.sql.SQLException;
 import java.sql.Savepoint;
 import java.util.List;
 
-import com.tonymanou.computerdb.dao.ConnectionManager;
-import com.tonymanou.computerdb.dao.DAOManager;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.tonymanou.computerdb.dao.ICompanyDAO;
 import com.tonymanou.computerdb.dao.IComputerDAO;
+import com.tonymanou.computerdb.dao.IConnectionManager;
 import com.tonymanou.computerdb.domain.Company;
 import com.tonymanou.computerdb.exception.PersistenceException;
 import com.tonymanou.computerdb.service.ICompanyService;
@@ -18,14 +20,17 @@ import com.tonymanou.computerdb.service.ICompanyService;
  *
  * @author tonymanou
  */
+@Component
 public class CompanyService implements ICompanyService {
 
+  @Autowired
+  private IConnectionManager connectionManager;
+  @Autowired
   private ICompanyDAO companyDAO;
+  @Autowired
   private IComputerDAO computerDAO;
 
   public CompanyService() {
-    companyDAO = DAOManager.INSTANCE.getCompanyDAO();
-    computerDAO = DAOManager.INSTANCE.getComputerDAO();
   }
 
   public CompanyService(ICompanyDAO dao, IComputerDAO computer) {
@@ -35,23 +40,23 @@ public class CompanyService implements ICompanyService {
 
   @Override
   public List<Company> findAll() {
-    ConnectionManager.INSTANCE.getConnection();
+    connectionManager.getConnection();
     List<Company> result = companyDAO.findAll();
-    ConnectionManager.INSTANCE.closeConnection();
+    connectionManager.closeConnection();
     return result;
   }
 
   @Override
   public Company getFromId(Long id) {
-    ConnectionManager.INSTANCE.getConnection();
+    connectionManager.getConnection();
     Company result = companyDAO.getFromId(id);
-    ConnectionManager.INSTANCE.closeConnection();
+    connectionManager.closeConnection();
     return result;
   }
 
   @Override
   public void delete(Long id) {
-    Connection connection = ConnectionManager.INSTANCE.getConnection();
+    Connection connection = connectionManager.getConnection();
     Savepoint savepoint = null;
     try {
       connection.setAutoCommit(false);
@@ -69,7 +74,7 @@ public class CompanyService implements ICompanyService {
       }
       throw new PersistenceException(e);
     } finally {
-      ConnectionManager.INSTANCE.closeConnection();
+      connectionManager.closeConnection();
     }
   }
 }

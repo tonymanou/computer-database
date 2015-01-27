@@ -10,9 +10,11 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import com.tonymanou.computerdb.dao.ConnectionManager;
 import com.tonymanou.computerdb.dao.ICompanyDAO;
+import com.tonymanou.computerdb.dao.IConnectionManager;
 import com.tonymanou.computerdb.domain.Company;
 import com.tonymanou.computerdb.exception.PersistenceException;
 
@@ -21,16 +23,20 @@ import com.tonymanou.computerdb.exception.PersistenceException;
  *
  * @author tonymanou
  */
+@Component
 public class SQLCompanyDAO implements ICompanyDAO {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(SQLCompanyDAO.class);
+
+  @Autowired
+  private IConnectionManager connectionManager;
 
   @Override
   public List<Company> findAll() {
     List<Company> list = new ArrayList<Company>();
     Statement statement = null;
     ResultSet resultat = null;
-    Connection connection = ConnectionManager.INSTANCE.getConnection();
+    Connection connection = connectionManager.getConnection();
 
     try {
       statement = connection.createStatement();
@@ -58,7 +64,7 @@ public class SQLCompanyDAO implements ICompanyDAO {
     Company company = null;
     PreparedStatement statement = null;
     ResultSet resultat = null;
-    Connection connection = ConnectionManager.INSTANCE.getConnection();
+    Connection connection = connectionManager.getConnection();
 
     try {
       statement = connection.prepareStatement("SELECT id, name FROM company WHERE id=?;");
@@ -88,7 +94,7 @@ public class SQLCompanyDAO implements ICompanyDAO {
   @Override
   public void delete(Long id) {
     PreparedStatement statement = null;
-    Connection connection = ConnectionManager.INSTANCE.getConnection();
+    Connection connection = connectionManager.getConnection();
 
     try {
       statement = connection.prepareStatement("DELETE FROM company WHERE id=?;");

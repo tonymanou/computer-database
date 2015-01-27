@@ -5,35 +5,30 @@ import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tonymanou.computerdb.domain.Computer;
 import com.tonymanou.computerdb.dto.ComputerDTO;
 import com.tonymanou.computerdb.mapper.IEntityMapper;
-import com.tonymanou.computerdb.mapper.MapperManager;
 import com.tonymanou.computerdb.pagination.ComputerPage;
 import com.tonymanou.computerdb.service.IComputerService;
-import com.tonymanou.computerdb.service.ServiceManager;
 import com.tonymanou.computerdb.util.Util;
 
 @WebServlet("/dashboard")
-public class DashboardController extends HttpServlet {
+public class DashboardController extends BaseSpringServlet {
 
   private static final long serialVersionUID = 1075773814185556399L;
   private static final Logger LOGGER = LoggerFactory.getLogger(DashboardController.class);
 
+  @Autowired
   private IComputerService computerService;
+  @Autowired
   private IEntityMapper<Computer, ComputerDTO> computerMapper;
-
-  public DashboardController() {
-    computerService = ServiceManager.INSTANCE.getComputerService();
-    computerMapper = MapperManager.INSTANCE.getComputerMapper();
-  }
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,

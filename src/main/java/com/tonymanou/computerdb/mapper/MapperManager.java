@@ -1,19 +1,16 @@
 package com.tonymanou.computerdb.mapper;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.tonymanou.computerdb.mapper.impl.CompanyMapper;
 import com.tonymanou.computerdb.mapper.impl.ComputerMapper;
 
-public enum MapperManager {
+public class MapperManager {
 
-  INSTANCE;
-
+  @Autowired
   private ComputerMapper computerMapper;
+  @Autowired
   private CompanyMapper companyMapper;
-
-  private MapperManager() {
-    computerMapper = new ComputerMapper();
-    companyMapper = new CompanyMapper();
-  }
 
   public ComputerMapper getComputerMapper() {
     return computerMapper;

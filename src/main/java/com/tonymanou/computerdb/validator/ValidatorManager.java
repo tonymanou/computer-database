@@ -1,17 +1,13 @@
 package com.tonymanou.computerdb.validator;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.tonymanou.computerdb.dto.ComputerDTO;
-import com.tonymanou.computerdb.validator.impl.ComputerDTOValidator;
 
-public enum ValidatorManager {
+public class ValidatorManager {
 
-  INSTANCE;
-
+  @Autowired
   private IEntityValidator<ComputerDTO> computerDTOValidator;
-
-  private ValidatorManager() {
-    computerDTOValidator = new ComputerDTOValidator();
-  }
 
   public IEntityValidator<ComputerDTO> getComputerDTOValidator() {
     return computerDTOValidator;

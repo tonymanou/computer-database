@@ -7,12 +7,12 @@ import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tonymanou.computerdb.domain.Company;
 import com.tonymanou.computerdb.domain.Computer;
@@ -20,33 +20,27 @@ import com.tonymanou.computerdb.dto.CompanyDTO;
 import com.tonymanou.computerdb.dto.ComputerDTO;
 import com.tonymanou.computerdb.exception.PersistenceException;
 import com.tonymanou.computerdb.mapper.IEntityMapper;
-import com.tonymanou.computerdb.mapper.MapperManager;
 import com.tonymanou.computerdb.service.ICompanyService;
 import com.tonymanou.computerdb.service.IComputerService;
-import com.tonymanou.computerdb.service.ServiceManager;
 import com.tonymanou.computerdb.util.Util;
 import com.tonymanou.computerdb.validator.IEntityValidator;
-import com.tonymanou.computerdb.validator.ValidatorManager;
 
 @WebServlet("/computer/add")
-public class AddComputerController extends HttpServlet {
+public class AddComputerController extends BaseSpringServlet {
 
   private static final long serialVersionUID = -4711445570099851743L;
   private static final Logger LOGGER = LoggerFactory.getLogger(AddComputerController.class);
 
+  @Autowired
   private ICompanyService companyService;
+  @Autowired
   private IComputerService computerService;
+  @Autowired
   private IEntityMapper<Company, CompanyDTO> companyMapper;
+  @Autowired
   private IEntityMapper<Computer, ComputerDTO> computerMapper;
+  @Autowired
   private IEntityValidator<ComputerDTO> computerDTOValidator;
-
-  public AddComputerController() {
-    companyService = ServiceManager.INSTANCE.getCompanyService();
-    computerService = ServiceManager.INSTANCE.getComputerService();
-    companyMapper = MapperManager.INSTANCE.getCompanyMapper();
-    computerMapper = MapperManager.INSTANCE.getComputerMapper();
-    computerDTOValidator = ValidatorManager.INSTANCE.getComputerDTOValidator();
-  }
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,

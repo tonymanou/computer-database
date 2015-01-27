@@ -1,24 +1,18 @@
 package com.tonymanou.computerdb.service;
 
-import com.tonymanou.computerdb.service.impl.CompanyService;
-import com.tonymanou.computerdb.service.impl.ComputerService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Singleton managing services instances.
  *
  * @author tonymanou
  */
-public enum ServiceManager {
+public class ServiceManager {
 
-  INSTANCE;
-
+  @Autowired
   private IComputerService computerService;
+  @Autowired
   private ICompanyService companyService;
-
-  private ServiceManager() {
-    computerService = new ComputerService();
-    companyService = new CompanyService();
-  }
 
   public IComputerService getComputerService() {
     return computerService;

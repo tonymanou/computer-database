@@ -3,10 +3,13 @@ package com.tonymanou.computerdb.validator.impl;
 import java.time.LocalDate;
 import java.util.Map;
 
+import org.springframework.stereotype.Component;
+
 import com.tonymanou.computerdb.dto.ComputerDTO;
 import com.tonymanou.computerdb.util.Util;
 import com.tonymanou.computerdb.validator.IEntityValidator;
 
+@Component
 public class ComputerDTOValidator implements IEntityValidator<ComputerDTO> {
 
   @Override
