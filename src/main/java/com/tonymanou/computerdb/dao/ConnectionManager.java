@@ -17,9 +17,12 @@ public enum ConnectionManager {
   }
 
   /**
-   * Retrieve a new connection.
+   * Retrieve the current active database connection of this thread or create a new one if none was
+   * active.
    *
-   * @return The current active connection to the database or a new one.
+   * @return A connection to the database.
+   * @throws PersistenceException
+   *           if a database access error occurs
    */
   public Connection getConnection() {
     Connection c = threadLocal.get();
@@ -32,6 +35,9 @@ public enum ConnectionManager {
 
   /**
    * Close the current connection to the database.
+   * 
+   * @throws PersistenceException
+   *           if a database access error occurs
    */
   public void closeConnection() {
     Connection c = threadLocal.get();

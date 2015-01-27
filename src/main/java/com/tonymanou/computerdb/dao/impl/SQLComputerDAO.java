@@ -140,7 +140,6 @@ public class SQLComputerDAO implements IComputerDAO {
         statement.setLong(4, company.getId());
       }
       statement.executeUpdate();
-      connection.commit();
     } catch (SQLException e) {
       LOGGER.error("Unable to create computer", e);
       throw new PersistenceException(e);
