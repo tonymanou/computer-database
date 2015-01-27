@@ -13,13 +13,13 @@ public interface IEntityMapper<U, V> {
    *          The list of objects to map.
    * @return A list of DTO corresponding to the provided objects.
    */
-  default List<V> mapToDTOList(List<U> listObject) {
+  default List<V> toDTOList(List<U> listObject) {
     if (listObject == null) {
       return null;
     }
 
     Stream<U> s = listObject.stream();
-    Stream<V> x = s.map(e -> mapToDTO(e));
+    Stream<V> x = s.map(e -> toDTO(e));
     return x.collect(Collectors.toList());
   }
 
@@ -30,13 +30,13 @@ public interface IEntityMapper<U, V> {
    *          The list of DTO to map.
    * @return A list of objects corresponding to the provided DTOs.
    */
-  default List<U> mapFromDTOList(List<V> listDTO) {
+  default List<U> fromDTOList(List<V> listDTO) {
     if (listDTO == null) {
       return null;
     }
 
     Stream<V> s = listDTO.stream();
-    Stream<U> x = s.map(e -> mapFromDTO(e));
+    Stream<U> x = s.map(e -> fromDTO(e));
     return x.collect(Collectors.toList());
   }
 
@@ -47,7 +47,7 @@ public interface IEntityMapper<U, V> {
    *          The object to map.
    * @return A DTO instance corresponding to the provided object.
    */
-  V mapToDTO(U object);
+  V toDTO(U object);
 
   /**
    * Map a DTO object to its original object representation.
@@ -56,5 +56,5 @@ public interface IEntityMapper<U, V> {
    *          The DTO object to map.
    * @return An object instance corresponding to the provided DTO.
    */
-  U mapFromDTO(V dto);
+  U fromDTO(V dto);
 }

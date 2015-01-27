@@ -10,7 +10,7 @@ import com.tonymanou.computerdb.mapper.IEntityMapper;
 public class CompanyMapper implements IEntityMapper<Company, CompanyDTO> {
 
   @Override
-  public CompanyDTO mapToDTO(Company company) {
+  public CompanyDTO toDTO(Company company) {
     if (company == null) {
       return null;
     }
@@ -23,7 +23,7 @@ public class CompanyMapper implements IEntityMapper<Company, CompanyDTO> {
   }
 
   @Override
-  public Company mapFromDTO(CompanyDTO companyDTO) {
+  public Company fromDTO(CompanyDTO companyDTO) {
     if (companyDTO == null) {
       return null;
     }

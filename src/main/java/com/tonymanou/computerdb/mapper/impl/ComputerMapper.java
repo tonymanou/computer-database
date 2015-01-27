@@ -14,7 +14,7 @@ import com.tonymanou.computerdb.util.Util;
 public class ComputerMapper implements IEntityMapper<Computer, ComputerDTO> {
 
   @Override
-  public ComputerDTO mapToDTO(Computer computer) {
+  public ComputerDTO toDTO(Computer computer) {
     if (computer == null) {
       return null;
     }
@@ -33,7 +33,7 @@ public class ComputerMapper implements IEntityMapper<Computer, ComputerDTO> {
   }
 
   @Override
-  public Computer mapFromDTO(ComputerDTO computerDTO) {
+  public Computer fromDTO(ComputerDTO computerDTO) {
     if (computerDTO == null) {
       return null;
     }

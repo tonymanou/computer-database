@@ -52,7 +52,7 @@ public class DashboardController extends BaseSpringServlet {
       page.setCurrentPage(number);
     }
 
-    List<ComputerDTO> computers = computerMapper.mapToDTOList(computerService.findAll(page));
+    List<ComputerDTO> computers = computerMapper.toDTOList(computerService.findAll(page));
     req.setAttribute("computers", computers);
     req.setAttribute("page", page.build());
     req.getRequestDispatcher("/WEB-INF/views/dashboard.jsp").forward(req, resp);

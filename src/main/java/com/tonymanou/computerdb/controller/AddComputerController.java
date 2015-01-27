@@ -64,7 +64,7 @@ public class AddComputerController extends BaseSpringServlet {
 
     if (computerDTOValidator.validate(computerDTO, errors)) {
       try {
-        Computer computer = computerMapper.mapFromDTO(computerDTO);
+        Computer computer = computerMapper.fromDTO(computerDTO);
         computerService.create(computer);
       } catch (PersistenceException e) {
         LOGGER.error("Unable to save the computer", e);
@@ -81,7 +81,7 @@ public class AddComputerController extends BaseSpringServlet {
 
   private void showAddComputerForm(HttpServletRequest req, HttpServletResponse resp,
       ComputerDTO computer, Map<String, String> errors) throws ServletException, IOException {
-    List<CompanyDTO> companies = companyMapper.mapToDTOList(companyService.findAll());
+    List<CompanyDTO> companies = companyMapper.toDTOList(companyService.findAll());
     req.setAttribute("computer", computer);
     req.setAttribute("companies", companies);
     req.setAttribute("errors", errors);

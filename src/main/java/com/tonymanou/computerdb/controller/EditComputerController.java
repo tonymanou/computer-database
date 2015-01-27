@@ -51,7 +51,7 @@ public class EditComputerController extends BaseSpringServlet {
       computerDTO = null;
     } else {
       Computer computer = computerService.getFromId(computerId);
-      computerDTO = computerMapper.mapToDTO(computer);
+      computerDTO = computerMapper.toDTO(computer);
     }
 
     showEditComputerForm(req, resp, computerDTO, null);
@@ -79,7 +79,7 @@ public class EditComputerController extends BaseSpringServlet {
     // @formatter:on
 
     if (computerDTOValidator.validate(computerDTO, errors)) {
-      Computer computer = computerMapper.mapFromDTO(computerDTO);
+      Computer computer = computerMapper.fromDTO(computerDTO);
       try {
         computerService.update(computer);
       } catch (PersistenceException e) {
@@ -97,7 +97,7 @@ public class EditComputerController extends BaseSpringServlet {
 
   private void showEditComputerForm(HttpServletRequest req, HttpServletResponse resp,
       ComputerDTO computer, Map<String, String> errors) throws ServletException, IOException {
-    List<CompanyDTO> companies = companyMapper.mapToDTOList(companyService.findAll());
+    List<CompanyDTO> companies = companyMapper.toDTOList(companyService.findAll());
     req.setAttribute("computer", computer);
     req.setAttribute("companies", companies);
     req.setAttribute("errors", errors);
