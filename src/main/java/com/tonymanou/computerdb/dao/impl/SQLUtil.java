@@ -1,7 +1,5 @@
 package com.tonymanou.computerdb.dao.impl;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -12,8 +10,6 @@ import java.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.tonymanou.computerdb.exception.PersistenceException;
-
 /**
  * Helper class to create database connections.
  *
@@ -21,68 +17,7 @@ import com.tonymanou.computerdb.exception.PersistenceException;
  */
 public class SQLUtil {
 
-  // ========== Database ==========
-
-  /**
-   * URL to the database server.
-   */
-  private static final String DB_URL = "jdbc:mysql://localhost:3306/computer-database-db?zeroDateTimeBehavior=convertToNull";
-  /**
-   * User name for the database.
-   */
-  private static final String DB_USR = "admincdb";
-  /**
-   * User password for the database.
-   */
-  private static final String DB_PW = "qwerty1234";
-
   private static final Logger LOGGER = LoggerFactory.getLogger(SQLUtil.class);
-
-  static {
-    try {
-      // Load the driver for mysql database
-      Class.forName("com.mysql.jdbc.Driver");
-    } catch (ClassNotFoundException e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  /**
-   * Retrieve a connection to the database.
-   *
-   * @return The {@link Connection} instance.
-   * @throws PersistenceException
-   *           if a database access error occurs
-   */
-  public static Connection getConnection() {
-    try {
-      Connection connection = DriverManager.getConnection(DB_URL, DB_USR, DB_PW);
-      // Isolate connections
-      connection.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
-      return connection;
-    } catch (SQLException e) {
-      LOGGER.error("Unable to get connection", e);
-      throw new PersistenceException(e);
-    }
-  }
-
-  /**
-   * Close a connection.
-   * 
-   * @param connection
-   *          The connection to close.
-   */
-  public static void closeConnection(Connection connection) {
-    if (connection != null) {
-      try {
-        connection.close();
-      } catch (SQLException e) {
-        LOGGER.warn("Unable to close connection", e);
-      }
-    }
-  }
-
-  // ========== Utility ==========
 
   /**
    * Close elements if they are not null.
