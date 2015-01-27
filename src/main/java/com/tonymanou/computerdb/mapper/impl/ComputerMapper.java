@@ -12,6 +12,10 @@ public class ComputerMapper implements IEntityMapper<Computer, ComputerDTO> {
 
   @Override
   public ComputerDTO mapToDTO(Computer computer) {
+    if (computer == null) {
+      return null;
+    }
+
     LocalDate introduced = computer.getIntroduced();
     LocalDate discontinued = computer.getDiscontinued();
     Company company = computer.getCompany();
@@ -27,6 +31,10 @@ public class ComputerMapper implements IEntityMapper<Computer, ComputerDTO> {
 
   @Override
   public Computer mapFromDTO(ComputerDTO computerDTO) {
+    if (computerDTO == null) {
+      return null;
+    }
+
     String companyName = computerDTO.getCompanyName();
     Company company = companyName == null ? null : Company.getBuilder(companyName).build();
 
