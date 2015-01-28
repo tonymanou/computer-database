@@ -42,6 +42,17 @@
 		</plugins>
 	</build>
 
+	<dependencyManagement>
+		<dependencies>
+			<!-- Logging - Force the use of the empty common-logging package -->
+			<dependency>
+				<groupId>commons-logging</groupId>
+				<artifactId>commons-logging</artifactId>
+				<version>99-empty</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
 	<dependencies>
 		<!-- MySQL driver -->
 
@@ -66,6 +77,12 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>${slf4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jcl-over-slf4j</artifactId>
+			<version>${slf4j.version}</version>
+			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
@@ -123,4 +140,12 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+
+	<repositories>
+		<!-- Repository serving empty artifacts -->
+		<repository>
+			<id>version99</id>
+			<url>http://version99.qos.ch/</url>
+		</repository>
+	</repositories>
 </project>
