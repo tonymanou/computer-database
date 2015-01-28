@@ -23,11 +23,13 @@ public class ComputerMapper implements IEntityMapper<Computer, ComputerDTO> {
     LocalDate discontinued = computer.getDiscontinued();
     Company company = computer.getCompany();
     // @formatter:off
-    return ComputerDTO.getBuilder(computer.getName())
+    return ComputerDTO
+        .getBuilder(computer.getName())
         .setId(computer.getId())
         .setIntroduced(introduced == null ? null : introduced.toString())
         .setDiscontinued(discontinued == null ? null : discontinued.toString())
         .setCompany(company == null ? null : company.getName())
+        .setCompanyId(company == null ? null : company.getId())
         .build();
     // @formatter:on
   }
@@ -38,11 +40,23 @@ public class ComputerMapper implements IEntityMapper<Computer, ComputerDTO> {
       return null;
     }
 
+    Long companyId = computerDTO.getCompanyId();
     String companyName = computerDTO.getCompanyName();
-    Company company = companyName == null ? null : Company.getBuilder(companyName).build();
+    Company company;
+    if (companyId == null && companyName == null) {
+      company = null;
+    } else {
+      // @formatter:off
+      company = Company
+          .getBuilder(companyName)
+          .setId(companyId)
+          .build();
+      // @formatter:on
+    }
 
     // @formatter:off
-    return Computer.getBuilder(computerDTO.getName())
+    return Computer
+        .getBuilder(computerDTO.getName())
         .setId(computerDTO.getId())
         .setIntroduced(Util.parseLocalDate(computerDTO.getIntroducedDate()))
         .setDiscontinued(Util.parseLocalDate(computerDTO.getDiscontinuedDate()))

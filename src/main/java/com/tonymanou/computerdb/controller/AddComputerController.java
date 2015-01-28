@@ -68,7 +68,7 @@ public class AddComputerController extends BaseSpringServlet {
         computerService.create(computer);
       } catch (PersistenceException e) {
         LOGGER.error("Unable to save the computer", e);
-        errors.put("bug", "Internal error: unable to save the computer.");
+        errors.put("bug", "Unable to save the computer.");
       }
     }
 

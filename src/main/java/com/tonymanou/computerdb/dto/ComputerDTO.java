@@ -72,6 +72,9 @@ public class ComputerDTO {
     }
     result = prime * result + ((introducedDate == null) ? 0 : introducedDate.hashCode());
     result = prime * result + ((name == null) ? 0 : name.hashCode());
+    if (EQUALS_WITH_ID) {
+      result = prime * result + ((companyId == null) ? 0 : companyId.hashCode());
+    }
     return result;
   }
 
