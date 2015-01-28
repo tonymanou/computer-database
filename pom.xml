@@ -8,7 +8,6 @@
 
 	<properties>
 		<mysql.version>5.1.34</mysql.version>
-		<bonecp.version>0.8.0.RELEASE</bonecp.version>
 		<slf4j.version>1.7.10</slf4j.version>
 		<logback.version>1.1.2</logback.version>
 		<spring.version>4.1.4.RELEASE</spring.version>
@@ -63,12 +62,12 @@
 			<scope>runtime</scope>
 		</dependency>
 
-		<!-- JDBC connection pool -->
+		<!-- JDBC -->
 
 		<dependency>
-			<groupId>com.jolbox</groupId>
-			<artifactId>bonecp</artifactId>
-			<version>${bonecp.version}</version>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+			<version>${spring.version}</version>
 		</dependency>
 
 		<!-- Logging -->

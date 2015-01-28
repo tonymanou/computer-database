@@ -8,6 +8,18 @@
 	<!-- Enable annotations -->
 	<context:annotation-config />
 
+	<!-- Load database properties -->
+	<context:property-placeholder location="classpath:/database.properties" />
+
+	<!-- Datasource -->
+	<bean name="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="${datasource.driver}" />
+		<property name="url" value="${datasource.url}" />
+		<property name="username" value="${datasource.user}" />
+		<property name="password" value="${datasource.pass}" />
+	</bean>
+
 	<!-- Application configuration class -->
 	<bean class="com.tonymanou.computerdb.config.Application" />
 </beans>
