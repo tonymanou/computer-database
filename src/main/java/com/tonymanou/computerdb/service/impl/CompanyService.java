@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.tonymanou.computerdb.dao.ICompanyDAO;
 import com.tonymanou.computerdb.dao.IComputerDAO;
 import com.tonymanou.computerdb.domain.Company;
-import com.tonymanou.computerdb.exception.PersistenceException;
 import com.tonymanou.computerdb.service.ICompanyService;
 
 /**
@@ -47,7 +46,7 @@ public class CompanyService implements ICompanyService {
     return result;
   }
 
-  @Transactional(rollbackFor = { PersistenceException.class })
+  @Transactional(rollbackFor = { Exception.class })
   @Override
   public void delete(Long id) {
     computerDAO.deleteAllWithCompanyId(id);
