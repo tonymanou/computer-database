@@ -1,12 +1,10 @@
 package com.tonymanou.computerdb.service.impl;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Savepoint;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.tonymanou.computerdb.dao.ICompanyDAO;
 import com.tonymanou.computerdb.dao.IComputerDAO;
@@ -38,6 +36,7 @@ public class CompanyService implements ICompanyService {
     computerDAO = computer;
   }
 
+  @Transactional(readOnly = true)
   @Override
   public List<Company> findAll() {
     connectionManager.getConnection();
@@ -46,6 +45,7 @@ public class CompanyService implements ICompanyService {
     return result;
   }
 
+  @Transactional(readOnly = true)
   @Override
   public Company getFromId(Long id) {
     connectionManager.getConnection();
@@ -54,27 +54,12 @@ public class CompanyService implements ICompanyService {
     return result;
   }
 
+  @Transactional(rollbackFor = { PersistenceException.class })
   @Override
   public void delete(Long id) {
-    Connection connection = connectionManager.getConnection();
-    Savepoint savepoint = null;
-    try {
-      connection.setAutoCommit(false);
-      savepoint = connection.setSavepoint();
-      computerDAO.deleteAllWithCompanyId(id);
-      companyDAO.delete(id);
-      connection.commit();
-    } catch (SQLException | PersistenceException e) {
-      if (savepoint != null) {
-        try {
-          connection.rollback(savepoint);
-        } catch (SQLException e1) {
-          throw new PersistenceException(e1);
-        }
-      }
-      throw new PersistenceException(e);
-    } finally {
-      connectionManager.closeConnection();
-    }
+    connectionManager.getConnection();
+    computerDAO.deleteAllWithCompanyId(id);
+    companyDAO.delete(id);
+    connectionManager.closeConnection();
   }
 }

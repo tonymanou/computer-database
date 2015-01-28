@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.tonymanou.computerdb.dao.IComputerDAO;
 import com.tonymanou.computerdb.dao.IConnectionManager;
@@ -31,11 +32,13 @@ public class ComputerService implements IComputerService {
     computerDAO = dao;
   }
 
+  @Transactional(readOnly = true)
   @Override
   public List<Computer> findAll() {
     return findAll(ComputerPage.getBuilder());
   }
 
+  @Transactional(readOnly = true)
   @Override
   public List<Computer> findAll(ComputerPage.Builder page) {
     connectionManager.getConnection();
@@ -44,6 +47,7 @@ public class ComputerService implements IComputerService {
     return result;
   }
 
+  @Transactional
   @Override
   public void create(Computer computer) {
     connectionManager.getConnection();
@@ -51,6 +55,7 @@ public class ComputerService implements IComputerService {
     connectionManager.closeConnection();
   }
 
+  @Transactional
   @Override
   public void update(Computer computer) {
     connectionManager.getConnection();
@@ -58,6 +63,7 @@ public class ComputerService implements IComputerService {
     connectionManager.closeConnection();
   }
 
+  @Transactional
   @Override
   public void delete(Long id) {
     connectionManager.getConnection();
@@ -65,6 +71,7 @@ public class ComputerService implements IComputerService {
     connectionManager.closeConnection();
   }
 
+  @Transactional(readOnly = true)
   @Override
   public Computer getFromId(Long id) {
     connectionManager.getConnection();
@@ -73,6 +80,7 @@ public class ComputerService implements IComputerService {
     return result;
   }
 
+  @Transactional(readOnly = true)
   @Override
   public int count() {
     connectionManager.getConnection();
