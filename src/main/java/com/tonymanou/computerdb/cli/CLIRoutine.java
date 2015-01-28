@@ -4,9 +4,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Scanner;
 
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.tonymanou.computerdb.config.Application;
 import com.tonymanou.computerdb.domain.Company;
 import com.tonymanou.computerdb.domain.Computer;
 import com.tonymanou.computerdb.service.ICompanyService;
@@ -22,7 +21,7 @@ public class CLIRoutine {
 
   private static final String UNRECOGNIZED = "Unrecognized action.";
   private static final String CANCELED = "Input canceled...";
-  private AnnotationConfigApplicationContext context;
+  private ClassPathXmlApplicationContext context;
   private Scanner scanner;
   private IComputerService computerService;
   private ICompanyService companyService;
@@ -47,7 +46,7 @@ public class CLIRoutine {
 
   public CLIRoutine() {
     scanner = new Scanner(System.in);
-    context = new AnnotationConfigApplicationContext(Application.class);
+    context = new ClassPathXmlApplicationContext("applicationContext.xml");
 
     computerService = context.getBean(IComputerService.class);
     companyService = context.getBean(ICompanyService.class);
