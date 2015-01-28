@@ -6,10 +6,8 @@ import org.springframework.context.annotation.Configuration;
 
 import com.tonymanou.computerdb.dao.ICompanyDAO;
 import com.tonymanou.computerdb.dao.IComputerDAO;
-import com.tonymanou.computerdb.dao.IConnectionManager;
 import com.tonymanou.computerdb.dao.impl.SQLCompanyDAO;
 import com.tonymanou.computerdb.dao.impl.SQLComputerDAO;
-import com.tonymanou.computerdb.dao.impl.SQLConnectionManager;
 import com.tonymanou.computerdb.domain.Company;
 import com.tonymanou.computerdb.domain.Computer;
 import com.tonymanou.computerdb.dto.CompanyDTO;
@@ -38,11 +36,6 @@ public class Application {
   @Bean
   public ICompanyDAO companyDAO() {
     return new SQLCompanyDAO();
-  }
-
-  @Bean
-  public IConnectionManager connectionManager() {
-    return new SQLConnectionManager();
   }
 
   @Bean

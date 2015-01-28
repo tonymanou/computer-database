@@ -1,20 +1,18 @@
 package com.tonymanou.computerdb.dao.impl;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Types;
-import java.util.ArrayList;
 import java.util.List;
+
+import javax.sql.DataSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 import com.tonymanou.computerdb.dao.IComputerDAO;
-import com.tonymanou.computerdb.dao.IConnectionManager;
 import com.tonymanou.computerdb.domain.Company;
 import com.tonymanou.computerdb.domain.Computer;
 import com.tonymanou.computerdb.exception.PersistenceException;
@@ -32,279 +30,207 @@ public class SQLComputerDAO implements IComputerDAO {
   private static final Logger LOGGER = LoggerFactory.getLogger(SQLComputerDAO.class);
 
   @Autowired
-  private IConnectionManager connectionManager;
+  private DataSource dataSource;
+  @Autowired
+  private RowMapper<Computer> computerRowMapper;
 
   @Override
   public List<Computer> findAll(ComputerPage.Builder pageBuilder) {
-    List<Computer> list = null;
-    PreparedStatement statement = null;
-    ResultSet resultat = null;
-    Connection connection = connectionManager.getConnection();
+    JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 
-    try {
-      connection.setAutoCommit(false);
+    /* ========== First query: element count ========== */
 
-      String searchString = pageBuilder.getSearchQuery();
-      boolean searching = !Util.isStringEmpty(searchString);
-      String search;
-      if (searching) {
-        search = new StringBuilder("%").append(searchString).append("%").toString();
-      } else {
-        search = null;
-      }
-
-      /* ========== First query: element count ========== */
-
-      // Create query
-      StringBuilder query1 = new StringBuilder("SELECT COUNT(c.id) FROM computer c");
-      if (searching) {
-        query1.append(" LEFT JOIN company d ON c.company_id = d.id WHERE c.name LIKE ? OR d.name LIKE ?");
-      }
-      query1.append(';');
-
-      statement = connection.prepareStatement(query1.toString());
-
-      // Fill-in parameters
-      if (searching) {
-        statement.setString(1, search);
-        statement.setString(2, search);
-      }
-
-      resultat = statement.executeQuery();
-
-      resultat.next(); // Do not check if it succeeded and let the next instruction crash
-      long count = resultat.getLong(1);
-      pageBuilder.setNumElements(count);
-
-      SQLUtil.close(resultat, statement);
-
-      /* ========== Second query: computer list ========== */
-
-      ComputerPage page = pageBuilder.build();
-
-      // Create query
-      StringBuilder query2 = new StringBuilder(
-          "SELECT c.id, c.name, c.introduced, c.discontinued, c.company_id, d.name FROM computer c LEFT JOIN company d ON c.company_id = d.id");
-      if (searching) {
-        query2.append(" WHERE c.name LIKE ? OR d.name LIKE ?");
-      }
-      query2.append(" ORDER BY ? ? LIMIT ? OFFSET ?;");
-      statement = connection.prepareStatement(query2.toString());
-
-      // Fill-in parameters
-      if (searching) {
-        statement.setString(1, search);
-        statement.setString(2, search);
-      }
-      String order;
-      switch (page.getOrder()) {
-      case NAME:
-        order = "c.name";
-        break;
-      case COMPANY:
-        order = "d.name";
-        break;
-      default:
-        order = "c.id";
-        break;
-      }
-      int searchOffset = searching ? 2 : 0;
-      statement.setString(1 + searchOffset, order);
-      statement.setString(2 + searchOffset, page.getOrderType().name());
-      statement.setInt(3 + searchOffset, page.getNumElementsPerPage());
-      statement.setInt(4 + searchOffset, page.getElementsOffset());
-
-      resultat = statement.executeQuery();
-      list = extractToList(resultat);
-
-      connection.commit();
-    } catch (SQLException e) {
-      LOGGER.error("Unable to get all computers", e);
-      throw new PersistenceException(e);
-    } finally {
-      SQLUtil.close(resultat, statement);
+    String searchString = pageBuilder.getSearchQuery();
+    boolean searching = !Util.isStringEmpty(searchString);
+    String search;
+    if (searching) {
+      search = new StringBuilder("%").append(searchString).append("%").toString();
+    } else {
+      search = null;
     }
 
-    return list;
+    // Create query
+    StringBuilder query1 = new StringBuilder("SELECT COUNT(c.id) FROM computer c");
+    if (searching) {
+      query1
+          .append(" LEFT JOIN company d ON c.company_id = d.id WHERE c.name LIKE ? OR d.name LIKE ?");
+    }
+    query1.append(';');
+
+    // Fill-in parameters
+    Object[] args1;
+    int[] types1;
+
+    // Fill-in parameters
+    if (searching) {
+      args1 = new Object[] { search, search };
+      types1 = new int[] { Types.VARCHAR, Types.VARCHAR };
+    } else {
+      args1 = new Object[0];
+      types1 = new int[0];
+    }
+
+    Long count = jdbcTemplate.queryForObject(query1.toString(), args1, types1, Long.class);
+    if (count == null) {
+      RuntimeException e = new PersistenceException("Computer count is null");
+      LOGGER.error("Error while getting the number of computers matching the search query", e);
+      throw e;
+    } else {
+      pageBuilder.setNumElements(count);
+    }
+
+    /* ========== Second query: computer list ========== */
+
+    // Create query
+    StringBuilder query2 = new StringBuilder(
+        "SELECT c.id, c.name, c.introduced, c.discontinued, c.company_id, d.name FROM computer c LEFT JOIN company d ON c.company_id = d.id");
+    if (searching) {
+      query2.append(" WHERE c.name LIKE ? OR d.name LIKE ?");
+    }
+    query2.append(" ORDER BY ? ? LIMIT ? OFFSET ?;");
+
+    // Fill-in parameters
+    Object[] args2;
+    int[] types2;
+
+    ComputerPage page = pageBuilder.build();
+    String order;
+    switch (page.getOrder()) {
+    case NAME:
+      order = "c.name";
+      break;
+    case COMPANY:
+      order = "d.name";
+      break;
+    default:
+      order = "c.id";
+      break;
+    }
+
+    if (searching) {
+      // @formatter:off
+      args2 = new Object[]{
+          search,
+          search,
+          order,
+          page.getOrderType().name(),
+          page.getNumElementsPerPage(),
+          page.getElementsOffset()
+      };
+      types2 = new int[]{
+          Types.VARCHAR,
+          Types.VARCHAR,
+          Types.VARCHAR,
+          Types.VARCHAR,
+          Types.BIGINT,
+          Types.BIGINT
+      };
+      // @formatter:on
+    } else {
+      // @formatter:off
+      args2 = new Object[]{
+          order,
+          page.getOrderType().name(),
+          page.getNumElementsPerPage(),
+          page.getElementsOffset()
+      };
+      types2 = new int[]{
+          Types.VARCHAR,
+          Types.VARCHAR,
+          Types.BIGINT,
+          Types.BIGINT
+      };
+      // @formatter:on
+    }
+
+    return jdbcTemplate.query(query2.toString(), args2, types2, computerRowMapper);
   }
 
   @Override
   public void create(Computer computer) {
-    PreparedStatement statement = null;
-    Connection connection = connectionManager.getConnection();
+    JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+    Company company = computer.getCompany();
+    // @formatter:off
+    Object[] args = {
+        computer.getName(),
+        SQLUtil.getTimestamp(computer.getIntroduced()),
+        SQLUtil.getTimestamp(computer.getDiscontinued()),
+        company == null ? null : company.getId()
+    };
+    int[] types = {
+        Types.VARCHAR,
+        Types.TIMESTAMP,
+        Types.TIMESTAMP,
+        Types.BIGINT
+    };
+    // @formatter:on
 
-    try {
-      statement = connection
-          .prepareStatement("INSERT INTO computer (name, introduced, discontinued, company_id) VALUES (?, ?, ?, ?);");
-      statement.setString(1, computer.getName());
-      statement.setTimestamp(2, SQLUtil.getTimestamp(computer.getIntroduced()));
-      statement.setTimestamp(3, SQLUtil.getTimestamp(computer.getDiscontinued()));
-      Company company = computer.getCompany();
-      if (company == null) {
-        statement.setNull(4, Types.BIGINT);
-      } else {
-        statement.setLong(4, company.getId());
-      }
-      statement.executeUpdate();
-    } catch (SQLException e) {
-      LOGGER.error("Unable to create computer", e);
-      throw new PersistenceException(e);
-    } finally {
-      SQLUtil.close(statement);
-    }
+    jdbcTemplate.update(
+        "INSERT INTO computer (name, introduced, discontinued, company_id) VALUES (?, ?, ?, ?);",
+        args, types);
   }
 
   @Override
   public void update(Computer computer) {
-    PreparedStatement statement = null;
-    Connection connection = connectionManager.getConnection();
+    JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+    Company company = computer.getCompany();
+    // @formatter:off
+    Object[] args = {
+        computer.getName(),
+        SQLUtil.getTimestamp(computer.getIntroduced()),
+        SQLUtil.getTimestamp(computer.getDiscontinued()),
+        company == null ? null : company.getId(),
+        computer.getId()
+    };
+    int[] types = {
+        Types.VARCHAR,
+        Types.TIMESTAMP,
+        Types.TIMESTAMP,
+        Types.BIGINT,
+        Types.BIGINT
+    };
+    // @formatter:on
 
-    try {
-      statement = connection
-          .prepareStatement("UPDATE computer SET name=?, introduced=?, discontinued=?, company_id=? WHERE id=?;");
-      statement.setString(1, computer.getName());
-      statement.setTimestamp(2, SQLUtil.getTimestamp(computer.getIntroduced()));
-      statement.setTimestamp(3, SQLUtil.getTimestamp(computer.getDiscontinued()));
-      Company company = computer.getCompany();
-      if (company == null) {
-        statement.setNull(4, Types.BIGINT);
-      } else {
-        statement.setLong(4, company.getId());
-      }
-      statement.setLong(5, computer.getId());
-      statement.executeUpdate();
-    } catch (SQLException e) {
-      LOGGER.error("Unable to update computer", e);
-      throw new PersistenceException(e);
-    } finally {
-      SQLUtil.close(statement);
-    }
+    jdbcTemplate.update(
+        "UPDATE computer SET name=?, introduced=?, discontinued=?, company_id=? WHERE id=?;", args,
+        types);
   }
 
   @Override
   public void delete(Long id) {
-    PreparedStatement statement = null;
-    Connection connection = connectionManager.getConnection();
+    JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+    Object[] args = { id };
+    int[] types = { Types.BIGINT };
 
-    try {
-      statement = connection.prepareStatement("DELETE FROM computer WHERE id=?;");
-      statement.setLong(1, id);
-      statement.executeUpdate();
-    } catch (SQLException e) {
-      LOGGER.error("Unable to delete computer", e);
-      throw new PersistenceException(e);
-    } finally {
-      SQLUtil.close(statement);
-    }
+    jdbcTemplate.update("DELETE FROM computer WHERE id=?;", args, types);
   }
 
   @Override
   public void deleteAllWithCompanyId(Long companyId) {
-    PreparedStatement statement = null;
-    Connection connection = connectionManager.getConnection();
+    JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+    Object[] args = { companyId };
+    int[] types = { Types.BIGINT };
 
-    try {
-      statement = connection.prepareStatement("DELETE FROM computer WHERE company_id=?;");
-      statement.setLong(1, companyId);
-      statement.executeUpdate();
-    } catch (SQLException e) {
-      LOGGER.error("Unable to delete all computers with the given company id", e);
-      throw new PersistenceException(e);
-    } finally {
-      SQLUtil.close(statement);
-    }
+    jdbcTemplate.update("DELETE FROM computer WHERE company_id=?;", args, types);
   }
 
   @Override
   public Computer getFromId(Long id) {
-    Computer computer = null;
-    PreparedStatement statement = null;
-    ResultSet resultat = null;
-    Connection connection = connectionManager.getConnection();
+    JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+    Object[] args = { id };
+    int[] types = { Types.BIGINT };
 
-    try {
-      statement = connection
-          .prepareStatement("SELECT c.id, c.name, c.introduced, c.discontinued, c.company_id, d.name FROM computer c LEFT JOIN company d ON c.company_id = d.id WHERE c.id=?;");
-      statement.setLong(1, id);
-      resultat = statement.executeQuery();
+    List<Computer> list = jdbcTemplate
+        .query(
+            "SELECT c.id, c.name, c.introduced, c.discontinued, c.company_id, d.name FROM computer c LEFT JOIN company d ON c.company_id = d.id WHERE c.id=?;",
+            args, types, computerRowMapper);
 
-      List<Computer> list = extractToList(resultat);
-      if (list.size() == 0) {
-        StringBuilder sb = new StringBuilder("No computer found with the id ").append(id);
-        LOGGER.warn(sb.toString());
-        computer = null;
-      } else {
-        computer = list.get(0);
-      }
-    } catch (SQLException e) {
-      LOGGER.error("Unable to get a computer from the given id", e);
-      throw new PersistenceException(e);
-    } finally {
-      SQLUtil.close(resultat, statement);
+    Computer computer;
+    if (list.size() <= 0) {
+      computer = null;
+    } else {
+      computer = list.get(0);
     }
-
     return computer;
-  }
-
-  @Override
-  public int count() {
-    int result = 0;
-    PreparedStatement statement = null;
-    ResultSet resultat = null;
-    Connection connection = connectionManager.getConnection();
-
-    try {
-      statement = connection.prepareStatement("SELECT COUNT(id) FROM computer;");
-      resultat = statement.executeQuery();
-
-      resultat.next(); // Do not check if it succeeded and let the next instruction crash
-      result = resultat.getInt(1);
-    } catch (SQLException e) {
-      LOGGER.error("Unable to count all the computers", e);
-      throw new PersistenceException(e);
-    } finally {
-      SQLUtil.close(statement);
-    }
-
-    return result;
-  }
-
-  /**
-   * Parse a {@link ResultSet} and populate a list of {@link Computer}s.
-   *
-   * @param resultat
-   *          The result set to parse.
-   * @return a list of computers.
-   * @throws SQLException
-   *           if an error occurred while parsing the result set.
-   */
-  private static List<Computer> extractToList(ResultSet resultat) throws SQLException {
-    List<Computer> list = new ArrayList<Computer>();
-
-    while (resultat.next()) {
-      // @formatter:off
-      Computer.Builder builderComputer = Computer.getBuilder(resultat.getString(2))
-          .setId(resultat.getLong(1))
-          .setIntroduced(SQLUtil.getLocalDate(resultat.getTimestamp(3)))
-          .setDiscontinued(SQLUtil.getLocalDate(resultat.getTimestamp(4)));
-      // @formatter:on
-
-      Long companyId = resultat.getLong(5);
-      Company company;
-      if (companyId != 0) {
-        // @formatter:off
-        company = Company.getBuilder(resultat.getString(6))
-            .setId(companyId)
-            .build();
-        // @formatter:on
-      } else {
-        company = null;
-      }
-      builderComputer.setCompany(company);
-
-      list.add(builderComputer.build());
-    }
-
-    return list;
   }
 }
