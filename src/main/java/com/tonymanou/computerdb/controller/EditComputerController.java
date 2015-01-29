@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -40,9 +41,9 @@ public class EditComputerController {
   @Autowired
   private IEntityValidator<ComputerDTO> computerDTOValidator;
 
-  @RequestMapping(value = "/computer/edit", method = RequestMethod.GET)
-  protected String editComputerGet(HttpServletRequest req, Model model) {
-    Long computerId = Util.parsePositiveLong(req.getParameter("id"));
+  @RequestMapping(value = "/computer/edit/{id}", method = RequestMethod.GET)
+  protected String editComputerGet(@PathVariable String id, Model model) {
+    Long computerId = Util.parsePositiveLong(id);
     ComputerDTO computerDTO;
     if (computerId == null) {
       computerDTO = null;
@@ -54,11 +55,11 @@ public class EditComputerController {
     return showEditComputerForm(model, computerDTO, null);
   }
 
-  @RequestMapping(value = "/computer/edit", method = RequestMethod.POST)
-  protected String editComputerPost(HttpServletRequest req, Model model) {
+  @RequestMapping(value = "/computer/edit/{id}", method = RequestMethod.POST)
+  protected String editComputerPost(@PathVariable String id, HttpServletRequest req, Model model) {
     Map<String, String> errors = new HashMap<>();
 
-    Long computerId = Util.parsePositiveLong(req.getParameter("computerId"));
+    Long computerId = Util.parsePositiveLong(id);
     if (computerId == null || computerService.getFromId(computerId) == null) {
       return showEditComputerForm(model, null, errors);
     }

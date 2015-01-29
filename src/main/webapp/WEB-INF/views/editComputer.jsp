@@ -23,8 +23,7 @@
 							</c:forEach>
 						</div>
                     </c:if>
-                    <form action="<c:url value="/computer/edit" />" method="POST">
-                        <input type="hidden" name="computerId" value="${computer.id}"/>
+                    <form action="<c:url value="/computer/edit/${computer.id}" />" method="POST">
                         <fieldset>
                             <div class="form-group">
                                 <label for="computerName">Computer name</label>
