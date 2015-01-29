@@ -41,7 +41,7 @@ public class ComputerDTOValidator implements IEntityValidator<ComputerDTO> {
     }
 
     Long companyId = entity.getCompanyId();
-    if (companyId == null || companyId < 0) {
+    if (companyId != null && companyId <= 0) {
       valid = false;
       errors.put("companyId", "You must choose a valid company.");
     }

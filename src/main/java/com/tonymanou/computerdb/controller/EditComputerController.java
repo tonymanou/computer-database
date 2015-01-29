@@ -64,13 +64,18 @@ public class EditComputerController {
       return showEditComputerForm(model, null, errors);
     }
 
+    Long companyId = Util.parsePositiveLong(req.getParameter("companyId"));
+    if (companyId == 0) {
+      companyId = null;
+    }
+
     // @formatter:off
     ComputerDTO computerDTO = ComputerDTO
         .getBuilder(req.getParameter("computerName"))
         .setId(computerId)
         .setIntroduced(req.getParameter("introduced"))
         .setDiscontinued(req.getParameter("discontinued"))
-        .setCompanyId(Util.parsePositiveLong(req.getParameter("companyId")))
+        .setCompanyId(companyId)
         .build();
     // @formatter:on
 

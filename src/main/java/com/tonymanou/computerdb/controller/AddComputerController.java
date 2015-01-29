@@ -51,12 +51,17 @@ public class AddComputerController {
   protected String addComputerPost(HttpServletRequest req, Model model) {
     Map<String, String> errors = new HashMap<>();
 
+    Long companyId = Util.parsePositiveLong(req.getParameter("companyId"));
+    if (companyId == 0) {
+      companyId = null;
+    }
+
     // @formatter:off
     ComputerDTO computerDTO = ComputerDTO
         .getBuilder(req.getParameter("computerName"))
         .setIntroduced(req.getParameter("introduced"))
         .setDiscontinued(req.getParameter("discontinued"))
-        .setCompanyId(Util.parsePositiveLong(req.getParameter("companyId")))
+        .setCompanyId(companyId)
         .build();
     // @formatter:on
 
