@@ -4,13 +4,15 @@ import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.tonymanou.computerdb.domain.Computer;
 import com.tonymanou.computerdb.dto.ComputerDTO;
@@ -19,10 +21,9 @@ import com.tonymanou.computerdb.pagination.ComputerPage;
 import com.tonymanou.computerdb.service.IComputerService;
 import com.tonymanou.computerdb.util.Util;
 
-@WebServlet("/dashboard")
-public class DashboardController extends BaseSpringServlet {
+@Controller
+public class DashboardController {
 
-  private static final long serialVersionUID = 1075773814185556399L;
   private static final Logger LOGGER = LoggerFactory.getLogger(DashboardController.class);
 
   @Autowired
@@ -30,9 +31,8 @@ public class DashboardController extends BaseSpringServlet {
   @Autowired
   private IEntityMapper<Computer, ComputerDTO> computerMapper;
 
-  @Override
-  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
-      IOException {
+  @RequestMapping(value = "/dashboard", method = RequestMethod.GET)
+  protected String doGet(HttpServletRequest req, HttpServletResponse resp) {
     ComputerPage.Builder page = ComputerPage.getBuilder();
 
     String perPage = req.getParameter("elems");
@@ -55,10 +55,11 @@ public class DashboardController extends BaseSpringServlet {
     List<ComputerDTO> computers = computerMapper.toDTOList(computerService.findAll(page));
     req.setAttribute("computers", computers);
     req.setAttribute("page", page.build());
-    req.getRequestDispatcher("/WEB-INF/views/dashboard.jsp").forward(req, resp);
+
+    return "dashboard";
   }
 
-  @Override
+  @RequestMapping(value = "/dashboard", method = RequestMethod.POST)
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
       IOException {
     String idList = req.getParameter("selection");

@@ -6,13 +6,15 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.tonymanou.computerdb.domain.Company;
 import com.tonymanou.computerdb.domain.Computer;
@@ -25,10 +27,9 @@ import com.tonymanou.computerdb.service.IComputerService;
 import com.tonymanou.computerdb.util.Util;
 import com.tonymanou.computerdb.validator.IEntityValidator;
 
-@WebServlet("/computer/edit")
-public class EditComputerController extends BaseSpringServlet {
+@Controller
+public class EditComputerController {
 
-  private static final long serialVersionUID = 1704952071605732498L;
   private static final Logger LOGGER = LoggerFactory.getLogger(EditComputerController.class);
 
   @Autowired
@@ -42,7 +43,7 @@ public class EditComputerController extends BaseSpringServlet {
   @Autowired
   private IEntityValidator<ComputerDTO> computerDTOValidator;
 
-  @Override
+  @RequestMapping(value = "/computer/edit", method = RequestMethod.GET)
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
       IOException {
     Long computerId = Util.parsePositiveLong(req.getParameter("id"));
@@ -57,7 +58,7 @@ public class EditComputerController extends BaseSpringServlet {
     showEditComputerForm(req, resp, computerDTO, null);
   }
 
-  @Override
+  @RequestMapping(value = "/computer/edit", method = RequestMethod.POST)
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
       IOException {
     Map<String, String> errors = new HashMap<>();

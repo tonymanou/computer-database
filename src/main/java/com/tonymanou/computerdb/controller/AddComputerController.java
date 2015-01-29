@@ -6,13 +6,15 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.tonymanou.computerdb.domain.Company;
 import com.tonymanou.computerdb.domain.Computer;
@@ -25,10 +27,9 @@ import com.tonymanou.computerdb.service.IComputerService;
 import com.tonymanou.computerdb.util.Util;
 import com.tonymanou.computerdb.validator.IEntityValidator;
 
-@WebServlet("/computer/add")
-public class AddComputerController extends BaseSpringServlet {
+@Controller
+public class AddComputerController {
 
-  private static final long serialVersionUID = -4711445570099851743L;
   private static final Logger LOGGER = LoggerFactory.getLogger(AddComputerController.class);
 
   @Autowired
@@ -42,14 +43,14 @@ public class AddComputerController extends BaseSpringServlet {
   @Autowired
   private IEntityValidator<ComputerDTO> computerDTOValidator;
 
-  @Override
-  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
+  @RequestMapping(value="/computer/add", method=RequestMethod.GET)
+  protected void addComputerGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
       IOException {
     showAddComputerForm(req, resp, null, null);
   }
 
-  @Override
-  protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
+  @RequestMapping(value="/computer/add", method=RequestMethod.POST)
+  protected void addComputerPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
       IOException {
     Map<String, String> errors = new HashMap<>();
 
