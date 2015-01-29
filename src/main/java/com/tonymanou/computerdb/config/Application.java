@@ -19,8 +19,6 @@ import com.tonymanou.computerdb.service.ICompanyService;
 import com.tonymanou.computerdb.service.IComputerService;
 import com.tonymanou.computerdb.service.impl.CompanyService;
 import com.tonymanou.computerdb.service.impl.ComputerService;
-import com.tonymanou.computerdb.validator.IEntityValidator;
-import com.tonymanou.computerdb.validator.impl.ComputerDTOValidator;
 
 @Configuration
 @ComponentScan(basePackages = { "com.tonymanou.computerdb.dao",
@@ -56,10 +54,5 @@ public class Application {
   @Bean
   public IComputerService computerService() {
     return new ComputerService();
-  }
-
-  @Bean
-  public IEntityValidator<ComputerDTO> computerDTOValidator() {
-    return new ComputerDTOValidator();
   }
 }

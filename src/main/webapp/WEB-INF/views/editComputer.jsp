@@ -1,4 +1,5 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <jsp:include page="include/header.jsp" />
     <section id="main">
         <div class="container">
@@ -16,29 +17,33 @@
                         id: ${computer.id}
                     </div>
                     <br>
-                    <c:if test="${errors != null}">
+                    <c:if test="${errorhs != null}">
 						<div class="alert alert-danger">
-							<c:forEach items="${errors}" var="text">
+							<c:forEach items="${errorhs}" var="text">
 								<p>${text}</p>
 							</c:forEach>
 						</div>
                     </c:if>
-                    <form action="<c:url value="/computer/edit/${computer.id}" />" method="POST">
+                    <form:form action="" method="POST" modelAttribute="computer">
                         <fieldset>
                             <div class="form-group">
-                                <label for="computerName">Computer name</label>
-                                <input type="text" class="form-control" id="computerName" name="computerName" placeholder="Computer name" value="<c:out value="${computer.name}" />">
+                                <label for="name">Computer name</label>
+                                <form:errors path="name" />
+                                <form:input path="name" class="form-control" placeholder="Computer name" />
                             </div>
                             <div class="form-group">
-                                <label for="introduced">Introduced date</label>
-                                <input type="date" class="form-control" id="introduced" name="introduced" placeholder="Introduced date" value="<c:out value="${computer.introducedDate}" />">
+                                <label for="introducedDate">Introduced date</label>
+                                <form:errors path="introducedDate" />
+                                <form:input path="introducedDate" type="date" class="form-control" placeholder="Introduced date" />
                             </div>
                             <div class="form-group">
-                                <label for="discontinued">Discontinued date</label>
-                                <input type="date" class="form-control" id="discontinued" name="discontinued" placeholder="Discontinued date" value="<c:out value="${computer.discontinuedDate}" />">
+                                <label for="discontinuedDate">Discontinued date</label>
+                                <form:errors path="discontinuedDate" />
+                                <form:input path="discontinuedDate" type="date" class="form-control" placeholder="Discontinued date" />
                             </div>
                             <div class="form-group">
                                 <label for="companyId">Company</label>
+                                <form:errors path="companyId" />
                                 <select class="form-control" id="companyId" name="companyId" >
                                     <option value="0">--</option>
                                     <c:forEach items="${companies}" var="company">
@@ -48,11 +53,11 @@
                             </div>
                         </fieldset>
                         <div class="actions pull-right">
-                            <input type="submit" value="Edit" class="btn btn-primary">
+                            <input type="submit" value="Edit" class="btn btn-primary" />
                             or
                             <a href="<c:url value="/dashboard" />" class="btn btn-default">Cancel</a>
                         </div>
-                    </form>
+                    </form:form>
                     </c:otherwise>
                     </c:choose>
                 </div>

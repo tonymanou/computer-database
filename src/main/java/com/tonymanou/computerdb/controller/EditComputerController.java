@@ -4,13 +4,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,7 +28,6 @@ import com.tonymanou.computerdb.mapper.IEntityMapper;
 import com.tonymanou.computerdb.service.ICompanyService;
 import com.tonymanou.computerdb.service.IComputerService;
 import com.tonymanou.computerdb.util.Util;
-import com.tonymanou.computerdb.validator.IEntityValidator;
 
 @Controller
 public class EditComputerController {
@@ -38,8 +42,15 @@ public class EditComputerController {
   private IEntityMapper<Company, CompanyDTO> companyMapper;
   @Autowired
   private IEntityMapper<Computer, ComputerDTO> computerMapper;
+
   @Autowired
-  private IEntityValidator<ComputerDTO> computerDTOValidator;
+  @Qualifier("computerDTOValidator")
+  private Validator computerValidator;
+
+  @InitBinder
+  private void initBinder(WebDataBinder binder) {
+    binder.setValidator(computerValidator);
+  }
 
   @RequestMapping(value = "/computer/edit/{id}", method = RequestMethod.GET)
   protected String editComputerGet(@PathVariable String id, Model model) {
@@ -56,43 +67,27 @@ public class EditComputerController {
   }
 
   @RequestMapping(value = "/computer/edit/{id}", method = RequestMethod.POST)
-  protected String editComputerPost(@PathVariable String id, HttpServletRequest req, Model model) {
-    Map<String, String> errors = new HashMap<>();
+  protected String editComputerPost(Model model, @Validated @ModelAttribute ComputerDTO computerDTO,
+      BindingResult result) {
 
-    Long computerId = Util.parsePositiveLong(id);
-    if (computerId == null || computerService.getFromId(computerId) == null) {
-      return showEditComputerForm(model, null, errors);
-    }
-
-    Long companyId = Util.parsePositiveLong(req.getParameter("companyId"));
-    if (companyId == 0) {
-      companyId = null;
-    }
-
-    // @formatter:off
-    ComputerDTO computerDTO = ComputerDTO
-        .getBuilder(req.getParameter("computerName"))
-        .setId(computerId)
-        .setIntroduced(req.getParameter("introduced"))
-        .setDiscontinued(req.getParameter("discontinued"))
-        .setCompanyId(companyId)
-        .build();
-    // @formatter:on
-
-    if (computerDTOValidator.validate(computerDTO, errors)) {
+    if (result.hasErrors()) {
+      System.out.println("Invalid, bitch... " + computerDTO);
+      return showEditComputerForm(model, computerDTO, null);
+    } else {
       Computer computer = computerMapper.fromDTO(computerDTO);
       try {
         computerService.update(computer);
       } catch (Exception e) {
         LOGGER.error("Unable to save the computer", e);
-        errors.put("bug", "Internal error: unable to save the computer.");
+        result.reject("error.save-computer");
       }
-    }
 
-    if (errors.isEmpty()) {
-      return "redirect:/dashboard";
-    } else {
-      return showEditComputerForm(model, computerDTO, errors);
+      System.out.println("apporved: " + computerDTO);
+//      if (errors.isEmpty()) {
+//        return "redirect:/dashboard";
+//      } else {
+        return showEditComputerForm(model, computerDTO, null);
+//      }
     }
   }
 
@@ -100,7 +95,6 @@ public class EditComputerController {
     List<CompanyDTO> companies = companyMapper.toDTOList(companyService.findAll());
     model.addAttribute("computer", computer);
     model.addAttribute("companies", companies);
-    model.addAttribute("errors", errors);
     return "editComputer";
   }
 }

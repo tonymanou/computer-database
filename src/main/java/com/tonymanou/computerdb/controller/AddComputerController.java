@@ -22,7 +22,6 @@ import com.tonymanou.computerdb.mapper.IEntityMapper;
 import com.tonymanou.computerdb.service.ICompanyService;
 import com.tonymanou.computerdb.service.IComputerService;
 import com.tonymanou.computerdb.util.Util;
-import com.tonymanou.computerdb.validator.IEntityValidator;
 
 @Controller
 public class AddComputerController {
@@ -37,8 +36,6 @@ public class AddComputerController {
   private IEntityMapper<Company, CompanyDTO> companyMapper;
   @Autowired
   private IEntityMapper<Computer, ComputerDTO> computerMapper;
-  @Autowired
-  private IEntityValidator<ComputerDTO> computerDTOValidator;
 
   @RequestMapping(value = "/computer/add", method = RequestMethod.GET)
   protected String addComputerGet(Model model) {
@@ -65,15 +62,15 @@ public class AddComputerController {
         .build();
     // @formatter:on
 
-    if (computerDTOValidator.validate(computerDTO, errors)) {
-      try {
-        Computer computer = computerMapper.fromDTO(computerDTO);
-        computerService.create(computer);
-      } catch (Exception e) {
-        LOGGER.error("Unable to save the computer", e);
-        errors.put("bug", "Unable to save the computer.");
-      }
-    }
+//    if (computerDTOValidator.validate(computerDTO, errors)) {
+//      try {
+//        Computer computer = computerMapper.fromDTO(computerDTO);
+//        computerService.create(computer);
+//      } catch (Exception e) {
+//        LOGGER.error("Unable to save the computer", e);
+//        errors.put("bug", "Unable to save the computer.");
+//      }
+//    }
 
     if (errors.isEmpty()) {
       return "redirect:/dashboard";
