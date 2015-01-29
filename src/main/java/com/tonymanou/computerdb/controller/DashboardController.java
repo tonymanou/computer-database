@@ -1,11 +1,8 @@
 package com.tonymanou.computerdb.controller;
 
-import java.io.IOException;
 import java.util.List;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +29,7 @@ public class DashboardController {
   private IEntityMapper<Computer, ComputerDTO> computerMapper;
 
   @RequestMapping(value = "/dashboard", method = RequestMethod.GET)
-  protected String doGet(HttpServletRequest req, HttpServletResponse resp) {
+  protected String dashboardGet(HttpServletRequest req) {
     ComputerPage.Builder page = ComputerPage.getBuilder();
 
     String perPage = req.getParameter("elems");
@@ -60,8 +57,7 @@ public class DashboardController {
   }
 
   @RequestMapping(value = "/dashboard", method = RequestMethod.POST)
-  protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
-      IOException {
+  protected String dashboardPost(HttpServletRequest req) {
     String idList = req.getParameter("selection");
 
     if (idList != null) {
@@ -80,6 +76,6 @@ public class DashboardController {
       LOGGER.error("Empty selection list");
     }
 
-    doGet(req, resp);
+    return dashboardGet(req);
   }
 }

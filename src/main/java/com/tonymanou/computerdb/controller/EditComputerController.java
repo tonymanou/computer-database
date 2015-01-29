@@ -1,18 +1,16 @@
 package com.tonymanou.computerdb.controller;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -20,7 +18,6 @@ import com.tonymanou.computerdb.domain.Company;
 import com.tonymanou.computerdb.domain.Computer;
 import com.tonymanou.computerdb.dto.CompanyDTO;
 import com.tonymanou.computerdb.dto.ComputerDTO;
-import com.tonymanou.computerdb.exception.PersistenceException;
 import com.tonymanou.computerdb.mapper.IEntityMapper;
 import com.tonymanou.computerdb.service.ICompanyService;
 import com.tonymanou.computerdb.service.IComputerService;
@@ -44,8 +41,7 @@ public class EditComputerController {
   private IEntityValidator<ComputerDTO> computerDTOValidator;
 
   @RequestMapping(value = "/computer/edit", method = RequestMethod.GET)
-  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
-      IOException {
+  protected String editComputerGet(HttpServletRequest req, Model model) {
     Long computerId = Util.parsePositiveLong(req.getParameter("id"));
     ComputerDTO computerDTO;
     if (computerId == null) {
@@ -55,18 +51,16 @@ public class EditComputerController {
       computerDTO = computerMapper.toDTO(computer);
     }
 
-    showEditComputerForm(req, resp, computerDTO, null);
+    return showEditComputerForm(model, computerDTO, null);
   }
 
   @RequestMapping(value = "/computer/edit", method = RequestMethod.POST)
-  protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
-      IOException {
+  protected String editComputerPost(HttpServletRequest req, Model model) {
     Map<String, String> errors = new HashMap<>();
 
     Long computerId = Util.parsePositiveLong(req.getParameter("computerId"));
     if (computerId == null || computerService.getFromId(computerId) == null) {
-      showEditComputerForm(req, resp, null, errors);
-      return;
+      return showEditComputerForm(model, null, errors);
     }
 
     // @formatter:off
@@ -83,25 +77,24 @@ public class EditComputerController {
       Computer computer = computerMapper.fromDTO(computerDTO);
       try {
         computerService.update(computer);
-      } catch (PersistenceException e) {
+      } catch (Exception e) {
         LOGGER.error("Unable to save the computer", e);
         errors.put("bug", "Internal error: unable to save the computer.");
       }
     }
 
     if (errors.isEmpty()) {
-      resp.sendRedirect("../dashboard");
+      return "redirect:/dashboard";
     } else {
-      showEditComputerForm(req, resp, computerDTO, errors);
+      return showEditComputerForm(model, computerDTO, errors);
     }
   }
 
-  private void showEditComputerForm(HttpServletRequest req, HttpServletResponse resp,
-      ComputerDTO computer, Map<String, String> errors) throws ServletException, IOException {
+  private String showEditComputerForm(Model model, ComputerDTO computer, Map<String, String> errors) {
     List<CompanyDTO> companies = companyMapper.toDTOList(companyService.findAll());
-    req.setAttribute("computer", computer);
-    req.setAttribute("companies", companies);
-    req.setAttribute("errors", errors);
-    req.getRequestDispatcher("/WEB-INF/views/editComputer.jsp").forward(req, resp);
+    model.addAttribute("computer", computer);
+    model.addAttribute("companies", companies);
+    model.addAttribute("errors", errors);
+    return "editComputer";
   }
 }
