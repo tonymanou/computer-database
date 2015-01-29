@@ -60,7 +60,7 @@ public class DashboardController {
   protected String dashboardPost(HttpServletRequest req) {
     String idList = req.getParameter("selection");
 
-    if (idList != null) {
+    if (!Util.isStringEmpty(idList)) {
       String[] idsList = idList.split(",");
 
       for (String current : idsList) {
@@ -73,7 +73,7 @@ public class DashboardController {
         }
       }
     } else {
-      LOGGER.error("Empty selection list");
+      LOGGER.info("Empty selection list");
     }
 
     return dashboardGet(req);
