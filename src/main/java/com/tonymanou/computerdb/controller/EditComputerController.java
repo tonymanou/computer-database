@@ -37,7 +37,6 @@ public class EditComputerController {
   private IEntityMapper<Company, CompanyDTO> companyMapper;
   @Autowired
   private IEntityMapper<Computer, ComputerDTO> computerMapper;
-
   @Autowired
   @Qualifier("computerDTOValidator")
   private Validator computerValidator;
