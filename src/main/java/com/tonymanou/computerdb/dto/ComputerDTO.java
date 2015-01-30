@@ -1,13 +1,27 @@
 package com.tonymanou.computerdb.dto;
 
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
+import com.tonymanou.computerdb.util.Util;
+
 public class ComputerDTO {
 
-  private static final boolean EQUALS_WITH_ID = false;
+  @DecimalMin("1")
   private Long id;
+  @NotNull
+  @Size(min = 1, max = 255)
   private String name;
+  @Pattern(regexp = Util.REGEX_DATE_EN)
   private String introducedDate;
+  @Pattern(regexp = Util.REGEX_DATE_EN)
   private String discontinuedDate;
+  @Size(min = 1, max = 255)
   private String companyName;
+  @Min(1)
   private Long companyId;
 
   private ComputerDTO() {
@@ -61,82 +75,22 @@ public class ComputerDTO {
     companyId = pCompanyId;
   }
 
-  @Override
-  public int hashCode() {
-    final int prime = 31;
-    int result = 1;
-    result = prime * result + ((companyName == null) ? 0 : companyName.hashCode());
-    result = prime * result + ((discontinuedDate == null) ? 0 : discontinuedDate.hashCode());
-    if (EQUALS_WITH_ID) {
-      result = prime * result + ((id == null) ? 0 : id.hashCode());
+  public void copy(ComputerDTO computerDTO) {
+    if (computerDTO == null) {
+      id = null;
+      name = null;
+      introducedDate = null;
+      discontinuedDate = null;
+      companyName = null;
+      companyId = null;
+    } else {
+      id = computerDTO.id;
+      name = computerDTO.name;
+      introducedDate = computerDTO.introducedDate;
+      discontinuedDate = computerDTO.discontinuedDate;
+      companyName = computerDTO.companyName;
+      companyId = computerDTO.companyId;
     }
-    result = prime * result + ((introducedDate == null) ? 0 : introducedDate.hashCode());
-    result = prime * result + ((name == null) ? 0 : name.hashCode());
-    if (EQUALS_WITH_ID) {
-      result = prime * result + ((companyId == null) ? 0 : companyId.hashCode());
-    }
-    return result;
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    if (this == obj) {
-      return true;
-    }
-    if (obj == null) {
-      return false;
-    }
-    if (getClass() != obj.getClass()) {
-      return false;
-    }
-    ComputerDTO other = (ComputerDTO) obj;
-    if (companyName == null) {
-      if (other.companyName != null) {
-        return false;
-      }
-    } else if (!companyName.equals(other.companyName)) {
-      return false;
-    }
-    if (discontinuedDate == null) {
-      if (other.discontinuedDate != null) {
-        return false;
-      }
-    } else if (!discontinuedDate.equals(other.discontinuedDate)) {
-      return false;
-    }
-    if (EQUALS_WITH_ID) {
-      if (id == null) {
-        if (other.id != null) {
-          return false;
-        }
-      } else if (!id.equals(other.id)) {
-        return false;
-      }
-    }
-    if (introducedDate == null) {
-      if (other.introducedDate != null) {
-        return false;
-      }
-    } else if (!introducedDate.equals(other.introducedDate)) {
-      return false;
-    }
-    if (EQUALS_WITH_ID) {
-      if (companyId == null) {
-        if (other.companyId != null) {
-          return false;
-        }
-      } else if (!companyId.equals(other.companyId)) {
-        return false;
-      }
-    }
-    if (name == null) {
-      if (other.name != null) {
-        return false;
-      }
-    } else if (!name.equals(other.name)) {
-      return false;
-    }
-    return true;
   }
 
   @Override

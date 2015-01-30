@@ -7,14 +7,14 @@
                 <div class="col-xs-8 col-xs-offset-2 box">
                     <h1>Edit Computer</h1>
                     <c:choose>
-                    <c:when test="${computer == null}">
+                    <c:when test="${computerDTO.name == null}">
 						<div class="alert alert-danger">
 							<h4>404: computer not found</h4>
 						</div>
                     </c:when>
                     <c:otherwise>
                     <div class="label label-default pull-right">
-                        id: ${computer.id}
+                        id: ${computerDTO.id}
                     </div>
                     <br>
                     <c:if test="${errorhs != null}">
@@ -24,7 +24,7 @@
 							</c:forEach>
 						</div>
                     </c:if>
-                    <form:form action="" method="POST" modelAttribute="computer">
+                    <form:form action="" method="POST" modelAttribute="computerDTO">
                         <fieldset>
                             <div class="form-group">
                                 <label for="name">Computer name</label>
@@ -47,7 +47,7 @@
                                 <select class="form-control" id="companyId" name="companyId" >
                                     <option value="0">--</option>
                                     <c:forEach items="${companies}" var="company">
-                                        <option value="${company.id}"<c:if test="${company.id == computer.companyId}"> selected="selected"</c:if>><c:out value="${company.name}" /></option>
+                                        <option value="${company.id}"<c:if test="${company.id == computerDTO.companyId}"> selected="selected"</c:if>><c:out value="${company.name}" /></option>
                                     </c:forEach>
                                 </select>
                             </div>

@@ -34,4 +34,10 @@ public class CompanyMapper implements IEntityMapper<Company, CompanyDTO> {
         .build();
     // @formatter:on
   }
+
+  @Override
+  public void updateDTO(CompanyDTO companyDTO, Company company) {
+    CompanyDTO tmp = toDTO(company);
+    companyDTO.copy(tmp);
+  }
 }

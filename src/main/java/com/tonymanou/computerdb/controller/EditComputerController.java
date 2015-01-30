@@ -1,20 +1,17 @@
 package com.tonymanou.computerdb.controller;
 
-import java.util.HashMap;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+
+import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Validator;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,51 +40,44 @@ public class EditComputerController {
   @Autowired
   private IEntityMapper<Computer, ComputerDTO> computerMapper;
 
-  @Autowired
-  @Qualifier("computerDTOValidator")
-  private Validator computerValidator;
-
-  @InitBinder
-  private void initBinder(WebDataBinder binder) {
-    binder.setValidator(computerValidator);
-  }
-
   @RequestMapping(value = "/computer/edit/{id}", method = RequestMethod.GET)
-  protected String editComputerGet(@PathVariable String id, Model model) {
-    Long computerId = Util.parsePositiveLong(id);
-    ComputerDTO computerDTO;
-    if (computerId == null) {
-      computerDTO = null;
-    } else {
-      Computer computer = computerService.getFromId(computerId);
-      computerDTO = computerMapper.toDTO(computer);
-    }
+  protected String editComputerGet(ComputerDTO computerDTO) {
+    // Long computerId = Util.parsePositiveLong(id);
+    // ComputerDTO computerDTO;
+    System.out.println(computerDTO);
 
-    return showEditComputerForm(model, computerDTO, null);
+    Computer computer = computerService.getFromId(computerDTO.getId());
+    computerMapper.updateDTO(computerDTO, computer);
+
+    // return showEditComputerForm(model, computerDTO, null);
+    return "editComputer";
   }
 
   @RequestMapping(value = "/computer/edit/{id}", method = RequestMethod.POST)
-  protected String editComputerPost(Model model, @Validated @ModelAttribute ComputerDTO computerDTO,
+  protected String editComputerPost(@Valid ComputerDTO computerDTO,
       BindingResult result) {
-
+    System.out.println(result);
     if (result.hasErrors()) {
       System.out.println("Invalid, bitch... " + computerDTO);
-      return showEditComputerForm(model, computerDTO, null);
+//      return showEditComputerForm(model, computerDTO, null);
+      return "editComputer";
     } else {
-      Computer computer = computerMapper.fromDTO(computerDTO);
-      try {
-        computerService.update(computer);
-      } catch (Exception e) {
-        LOGGER.error("Unable to save the computer", e);
-        result.reject("error.save-computer");
-      }
-
       System.out.println("apporved: " + computerDTO);
-//      if (errors.isEmpty()) {
-//        return "redirect:/dashboard";
-//      } else {
-        return showEditComputerForm(model, computerDTO, null);
+
+//      Computer computer = computerMapper.fromDTO(computerDTO);
+//      try {
+//        computerService.update(computer);
+//      } catch (Exception e) {
+//        LOGGER.error("Unable to save the computer", e);
+//        result.reject("error.save-computer");
 //      }
+
+      // if (errors.isEmpty()) {
+      // return "redirect:/dashboard";
+      // } else {
+//      return showEditComputerForm(model, computerDTO, null);
+      return "editComputer";
+      // }
     }
   }
 

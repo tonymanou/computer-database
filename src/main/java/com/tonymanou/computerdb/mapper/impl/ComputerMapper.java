@@ -64,4 +64,10 @@ public class ComputerMapper implements IEntityMapper<Computer, ComputerDTO> {
         .build();
     // @formatter:on
   }
+
+  @Override
+  public void updateDTO(ComputerDTO computerDTO, Computer computer) {
+    ComputerDTO tmp = toDTO(computer);
+    computerDTO.copy(tmp);
+  }
 }

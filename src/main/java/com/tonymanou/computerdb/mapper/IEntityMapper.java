@@ -50,6 +50,16 @@ public interface IEntityMapper<U, V> {
   V toDTO(U object);
 
   /**
+   * Map an object to its DTO representation and update the given DTO.
+   * 
+   * @param dto
+   *          The DTO to update.
+   * @param object
+   *          The object to map.
+   */
+  void updateDTO(V dto, U object);
+
+  /**
    * Map a DTO object to its original object representation.
    * 
    * @param dto
