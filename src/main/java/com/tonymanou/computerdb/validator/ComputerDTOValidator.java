@@ -1,4 +1,4 @@
-package com.tonymanou.computerdb.validator.impl;
+package com.tonymanou.computerdb.validator;
 
 import java.time.LocalDate;
 
