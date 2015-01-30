@@ -1,21 +1,22 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="tony" tagdir="/WEB-INF/tags"%>
 <jsp:include page="include/header.jsp" />
     <section id="main">
         <div class="container">
             <h1 id="homeTitle">
-                ${page.numElements} computers found
+                ${page.numElements} <fmt:message key="text.computers-found" />
             </h1>
             <div id="actions" class="form-horizontal">
                 <div class="pull-left">
                     <form id="searchForm" action="" method="GET" class="form-inline">
-                        <input type="search" id="searchbox" name="search" class="form-control" placeholder="Search name" value="${page.searchQuery}" />
-                        <input type="submit" id="searchsubmit" value="Filter by name" class="btn btn-primary" />
+                        <input type="search" id="searchbox" name="search" class="form-control" placeholder="<fmt:message key="text.search-name" />" value="${page.searchQuery}" />
+                        <input type="submit" id="searchsubmit" value="<fmt:message key="button.filter-by-name" />" class="btn btn-primary" />
                     </form>
                 </div>
                 <div class="pull-right">
-                    <a class="btn btn-success" id="addComputer" href="<c:url value="/computer/add" />">Add Computer</a> 
-                    <a class="btn btn-default" id="editComputer" href="#" onclick="$.fn.toggleEditMode();">Edit</a>
+                    <a class="btn btn-success" id="addComputer" href="<c:url value="/computer/add" />"><fmt:message key="button.add-computer" /></a> 
+                    <a class="btn btn-default" id="editComputer" href="#" onclick="$.fn.toggleEditMode();"><fmt:message key="button.edit" /></a>
                 </div>
             </div>
         </div>
@@ -38,10 +39,10 @@
                                     </a>
                             </span>
                         </th>
-                        <th>Computer name</th>
-                        <th>Introduced date</th>
-                        <th>Discontinued date</th>
-                        <th>Company</th>
+                        <th><fmt:message key="text.computer-name" /></th>
+                        <th><fmt:message key="text.introduced-date" /></th>
+                        <th><fmt:message key="text.discontinued-date" /></th>
+                        <th><fmt:message key="text.company" /></th>
                     </tr>
                 </thead>
                 <!-- Browse attribute computers -->

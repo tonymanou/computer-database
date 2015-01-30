@@ -21,11 +21,11 @@ public class ComputerDTOValidator implements Validator {
   @Override
   public void validate(Object target, Errors errors) {
     if (target == null) {
-      errors.reject("null-object");
+      errors.reject("error.null-object");
       return;
     }
     if (!(target instanceof ComputerDTO)) {
-      errors.reject("wrong-type");
+      errors.reject("error.wrong-type");
       return;
     }
 

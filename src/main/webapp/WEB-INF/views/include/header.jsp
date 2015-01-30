@@ -1,5 +1,6 @@
 <%@ page contentType="text/html"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -14,6 +15,6 @@
 <body>
 	<header class="navbar navbar-inverse navbar-fixed-top">
 		<div class="container">
-			<a class="navbar-brand" href="<c:url value="/" />"> Application - Computer Database </a>
+			<a class="navbar-brand" href="<c:url value="/" />"><fmt:message key="title.home" /></a>
 		</div>
 	</header>
