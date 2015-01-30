@@ -1,8 +1,6 @@
 package com.tonymanou.computerdb.controller;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,8 +13,6 @@ import org.springframework.validation.Validator;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -27,7 +23,6 @@ import com.tonymanou.computerdb.dto.ComputerDTO;
 import com.tonymanou.computerdb.mapper.IEntityMapper;
 import com.tonymanou.computerdb.service.ICompanyService;
 import com.tonymanou.computerdb.service.IComputerService;
-import com.tonymanou.computerdb.util.Util;
 
 @Controller
 public class EditComputerController {
@@ -53,27 +48,20 @@ public class EditComputerController {
   }
 
   @RequestMapping(value = "/computer/edit/{id}", method = RequestMethod.GET)
-  protected String editComputerGet(@PathVariable String id, Model model) {
-    Long computerId = Util.parsePositiveLong(id);
-    ComputerDTO computerDTO;
-    if (computerId == null) {
-      computerDTO = null;
-    } else {
-      Computer computer = computerService.getFromId(computerId);
-      computerDTO = computerMapper.toDTO(computer);
-    }
+  protected String editComputerGet(ComputerDTO computerDTO, Model model) {
+    Computer computer = computerService.getFromId(computerDTO.getId());
+    ComputerDTO dto = computerMapper.toDTO(computer);
+    computerDTO.copy(dto);
 
-    return showEditComputerForm(model, computerDTO, null);
+    List<CompanyDTO> companies = companyMapper.toDTOList(companyService.findAll());
+    model.addAttribute("companies", companies);
+    return "editComputer";
   }
 
   @RequestMapping(value = "/computer/edit/{id}", method = RequestMethod.POST)
-  protected String editComputerPost(Model model, @Validated @ModelAttribute ComputerDTO computerDTO,
+  protected String editComputerPost(Model model, @Validated ComputerDTO computerDTO,
       BindingResult result) {
-
-    if (result.hasErrors()) {
-      System.out.println("Invalid, bitch... " + computerDTO);
-      return showEditComputerForm(model, computerDTO, null);
-    } else {
+    if (!result.hasErrors()) {
       Computer computer = computerMapper.fromDTO(computerDTO);
       try {
         computerService.update(computer);
@@ -82,18 +70,12 @@ public class EditComputerController {
         result.reject("error.save-computer");
       }
 
-      System.out.println("apporved: " + computerDTO);
-//      if (errors.isEmpty()) {
-//        return "redirect:/dashboard";
-//      } else {
-        return showEditComputerForm(model, computerDTO, null);
-//      }
+      if (!result.hasErrors()) {
+        return "redirect:/dashboard";
+      }
     }
-  }
 
-  private String showEditComputerForm(Model model, ComputerDTO computer, Map<String, String> errors) {
     List<CompanyDTO> companies = companyMapper.toDTOList(companyService.findAll());
-    model.addAttribute("computer", computer);
     model.addAttribute("companies", companies);
     return "editComputer";
   }

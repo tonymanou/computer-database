@@ -61,6 +61,24 @@ public class ComputerDTO {
     companyId = pCompanyId;
   }
 
+  public void copy(ComputerDTO computerDTO) {
+    if (computerDTO == null) {
+      id = null;
+      name = null;
+      introducedDate = null;
+      discontinuedDate = null;
+      companyName = null;
+      companyId = null;
+    } else {
+      id = computerDTO.id;
+      name = computerDTO.name;
+      introducedDate = computerDTO.introducedDate;
+      discontinuedDate = computerDTO.discontinuedDate;
+      companyName = computerDTO.companyName;
+      companyId = computerDTO.companyId;
+    }
+  }
+
   @Override
   public int hashCode() {
     final int prime = 31;
