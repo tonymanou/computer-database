@@ -3,7 +3,7 @@
 <%@ attribute name="currentPage" required="true"%>
 <%@ attribute name="elementsPerPage"%>
 <%@ attribute name="page" required="true" type="com.tonymanou.computerdb.pagination.ComputerPage"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <c:set var="elems" value="${elementsPerPage == null ? page.numElementsPerPage : elementsPerPage}" />
 <c:url value="${target}">
 	<c:param name="page">${currentPage}</c:param>
