@@ -16,5 +16,11 @@
 	<header class="navbar navbar-inverse navbar-fixed-top">
 		<div class="container">
 			<a class="navbar-brand" href="<c:url value="/" />"><fmt:message key="title.home" /></a>
+			<a class="pull-right locale-flag" href="<c:url value="?lang=en" />">
+				<img alt="en" src="<c:url value="/images/flag-en.png" />">
+			</a>
+			<a class="pull-right locale-flag" href="<c:url value="?lang=fr" />">
+				<img alt="fr" src="<c:url value="/images/flag-fr.png" />">
+			</a>
 		</div>
 	</header>
