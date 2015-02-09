@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.validator.routines.DateValidator;
+
 /**
  * Utility class.
  * 
@@ -11,42 +13,10 @@ import java.util.regex.Pattern;
  */
 public class Util {
 
-  // @formatter:off
-  private static final String REGEX_DELIMITER = "(\\.|-|\\/)";
-  /**
-   * Regex for English date format yyyy-MM-dd
-   */
-  private static final String REGEX_DATE_EN = "("
-      + "((\\d{4})" + REGEX_DELIMITER + "(0[13578]|10|12)" + REGEX_DELIMITER + "(0[1-9]|[12][0-9]|3[01]))"
-      + "|((\\d{4})" + REGEX_DELIMITER + "(0[469]|11)" + REGEX_DELIMITER + "([0][1-9]|[12][0-9]|30))"
-      + "|((\\d{4})" + REGEX_DELIMITER + "(02)" + REGEX_DELIMITER  + "(0[1-9]|1[0-9]|2[0-8]))"
-      + "|(([02468][048]00)" + REGEX_DELIMITER + "(02)" + REGEX_DELIMITER + "(29))"
-      + "|(([13579][26]00)" + REGEX_DELIMITER + "(02)" + REGEX_DELIMITER + "(29))"
-      + "|(([0-9][0-9][0][48])" + REGEX_DELIMITER + "(02)" + REGEX_DELIMITER + "(29))"
-      + "|(([0-9][0-9][2468][048])" + REGEX_DELIMITER + "(02)" + REGEX_DELIMITER + "(29))"
-      + "|(([0-9][0-9][13579][26])" + REGEX_DELIMITER + "(02)" + REGEX_DELIMITER + "(29))"
-      + ")";
-  /**
-   * Regex for French date format dd-MM-yyyy
-   */
-  private static final String REGEX_DATE_FR = "("
-      + "((0[1-9]|[12][0-9]|3[01])" + REGEX_DELIMITER + "(0[13578]|10|12)" + REGEX_DELIMITER + "(\\d{4}))"
-      + "|(([0][1-9]|[12][0-9]|30)" + REGEX_DELIMITER + "(0[469]|11)" + REGEX_DELIMITER + "(\\d{4}))"
-      + "|((0[1-9]|1[0-9]|2[0-8])" + REGEX_DELIMITER + "(02)" + REGEX_DELIMITER + "(\\d{4}))"
-      + "|((29)" + REGEX_DELIMITER + "(02)" + REGEX_DELIMITER + "([02468][048]00))"
-      + "|((29)" + REGEX_DELIMITER + "(02)" + REGEX_DELIMITER + "([13579][26]00))"
-      + "|((29)" + REGEX_DELIMITER + "(02)" + REGEX_DELIMITER + "([0-9][0-9][0][48]))"
-      + "|((29)" + REGEX_DELIMITER + "(02)" + REGEX_DELIMITER + "([0-9][0-9][2468][048]))"
-      + "|((29)" + REGEX_DELIMITER + "(02)" + REGEX_DELIMITER + "([0-9][0-9][13579][26]))"
-      + ")";
   private static final String REGEX_POSITIVE_LONG = "\\d{1,19}";
-  // @formatter:on
-
   private static final Matcher POSITIVE_LONG_MATCHER;
-  private static final Matcher DATE_MATCHER;
 
   static {
-    DATE_MATCHER = Pattern.compile(REGEX_DATE_EN).matcher("");
     POSITIVE_LONG_MATCHER = Pattern.compile(REGEX_POSITIVE_LONG).matcher("");
   }
 
@@ -59,7 +29,7 @@ public class Util {
    */
   public static LocalDate parseLocalDate(String str) {
     LocalDate localDate;
-    if (str != null && DATE_MATCHER.reset(str).matches()) {
+    if (str != null && DateValidator.getInstance().validate(str, "yyyy-MM-dd") != null) {
       localDate = LocalDate.parse(str);
     } else {
       localDate = null;
