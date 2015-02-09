@@ -21,6 +21,10 @@ import com.tonymanou.computerdb.domain.Company;
 @Component
 public class SQLCompanyDAO implements ICompanyDAO {
 
+  private static final String FIND_ALL_QUERY = "SELECT id, name FROM company;";
+  private static final String FIND_BY_ID_QUERY = "SELECT id, name FROM company company WHERE id=?;";
+  private static final String DELETE_BY_ID_QUERY = "DELETE FROM company WHERE id=?;";
+
   @Autowired
   private DataSource dataSource;
   @Autowired
@@ -30,7 +34,7 @@ public class SQLCompanyDAO implements ICompanyDAO {
   public List<Company> findAll() {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 
-    return jdbcTemplate.query("SELECT id, name FROM company;", companyRowMapper);
+    return jdbcTemplate.query(FIND_ALL_QUERY, companyRowMapper);
   }
 
   @Override
@@ -39,8 +43,7 @@ public class SQLCompanyDAO implements ICompanyDAO {
     Object[] args = { id };
     int[] types = { Types.BIGINT };
 
-    List<Company> list = jdbcTemplate.query("SELECT id, name FROM company WHERE id=?;", args,
-        types, companyRowMapper);
+    List<Company> list = jdbcTemplate.query(FIND_BY_ID_QUERY, args, types, companyRowMapper);
 
     Company company;
     if (list.size() == 0) {
@@ -57,6 +60,6 @@ public class SQLCompanyDAO implements ICompanyDAO {
     Object[] args = { id };
     int[] types = { Types.BIGINT };
 
-    jdbcTemplate.update("DELETE FROM company WHERE id=?;", args, types);
+    jdbcTemplate.update(DELETE_BY_ID_QUERY, args, types);
   }
 }

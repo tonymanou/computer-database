@@ -27,6 +27,22 @@ import com.tonymanou.computerdb.util.Util;
 @Component
 public class SQLComputerDAO implements IComputerDAO {
 
+  private static final String COUNT_QUERY_PART = "SELECT COUNT(c.id) FROM computer c";
+  private static final String FIND_ALL_QUERY_PART = "SELECT c.id, c.name, c.introduced, c.discontinued, c.company_id, d.name FROM computer c";
+  private static final String FIND_ALL_JOIN_QUERY_PART = " LEFT JOIN company d ON c.company_id = d.id";
+  private static final String FIND_ALL_FILTER_QUERY_PART = " WHERE c.name LIKE ? OR d.name LIKE ?";
+  private static final String FIND_ALL_ORDER_QUERY_END = " ORDER BY ? ? LIMIT ? OFFSET ?;";
+
+  private static final String ORDER_BY_NAME_FIELD = "c.name";
+  private static final String ORDER_BY_COMPANY_FIELD = "d.name";
+  private static final String ORDER_BY_ID_FIELD = "c.id";
+
+  private static final String CREATE_QUERY = "INSERT INTO computer (name, introduced, discontinued, company_id) VALUES (?, ?, ?, ?);";
+  private static final String UPDATE_QUERY = "UPDATE computer SET name=?, introduced=?, discontinued=?, company_id=? WHERE id=?;";
+  private static final String DELETE_BY_ID_QUERY = "DELETE FROM computer WHERE id=?;";
+  private static final String DELETE_BY_COMPANY_QUERY = "DELETE FROM computer WHERE company_id=?;";
+  private static final String GET_BY_ID_QUERY = "SELECT c.id, c.name, c.introduced, c.discontinued, c.company_id, d.name FROM computer c LEFT JOIN company d ON c.company_id = d.id WHERE c.id=?;";
+
   private static final Logger LOGGER = LoggerFactory.getLogger(SQLComputerDAO.class);
 
   @Autowired
@@ -50,10 +66,10 @@ public class SQLComputerDAO implements IComputerDAO {
     }
 
     // Create query
-    StringBuilder query1 = new StringBuilder("SELECT COUNT(c.id) FROM computer c");
+    StringBuilder query1 = new StringBuilder(COUNT_QUERY_PART);
     if (searching) {
-      query1
-          .append(" LEFT JOIN company d ON c.company_id = d.id WHERE c.name LIKE ? OR d.name LIKE ?");
+      query1.append(FIND_ALL_JOIN_QUERY_PART);
+      query1.append(FIND_ALL_FILTER_QUERY_PART);
     }
     query1.append(';');
 
@@ -82,12 +98,12 @@ public class SQLComputerDAO implements IComputerDAO {
     /* ========== Second query: computer list ========== */
 
     // Create query
-    StringBuilder query2 = new StringBuilder(
-        "SELECT c.id, c.name, c.introduced, c.discontinued, c.company_id, d.name FROM computer c LEFT JOIN company d ON c.company_id = d.id");
+    StringBuilder query2 = new StringBuilder(FIND_ALL_QUERY_PART);
+    query2.append(FIND_ALL_JOIN_QUERY_PART);
     if (searching) {
-      query2.append(" WHERE c.name LIKE ? OR d.name LIKE ?");
+      query2.append(FIND_ALL_FILTER_QUERY_PART);
     }
-    query2.append(" ORDER BY ? ? LIMIT ? OFFSET ?;");
+    query2.append(FIND_ALL_ORDER_QUERY_END);
 
     // Fill-in parameters
     Object[] args2;
@@ -97,13 +113,13 @@ public class SQLComputerDAO implements IComputerDAO {
     String order;
     switch (page.getOrder()) {
     case NAME:
-      order = "c.name";
+      order = ORDER_BY_NAME_FIELD;
       break;
     case COMPANY:
-      order = "d.name";
+      order = ORDER_BY_COMPANY_FIELD;
       break;
     default:
-      order = "c.id";
+      order = ORDER_BY_ID_FIELD;
       break;
     }
 
@@ -165,9 +181,7 @@ public class SQLComputerDAO implements IComputerDAO {
     };
     // @formatter:on
 
-    jdbcTemplate.update(
-        "INSERT INTO computer (name, introduced, discontinued, company_id) VALUES (?, ?, ?, ?);",
-        args, types);
+    jdbcTemplate.update(CREATE_QUERY, args, types);
   }
 
   @Override
@@ -191,9 +205,7 @@ public class SQLComputerDAO implements IComputerDAO {
     };
     // @formatter:on
 
-    jdbcTemplate.update(
-        "UPDATE computer SET name=?, introduced=?, discontinued=?, company_id=? WHERE id=?;", args,
-        types);
+    jdbcTemplate.update(UPDATE_QUERY, args, types);
   }
 
   @Override
@@ -202,7 +214,7 @@ public class SQLComputerDAO implements IComputerDAO {
     Object[] args = { id };
     int[] types = { Types.BIGINT };
 
-    jdbcTemplate.update("DELETE FROM computer WHERE id=?;", args, types);
+    jdbcTemplate.update(DELETE_BY_ID_QUERY, args, types);
   }
 
   @Override
@@ -211,7 +223,7 @@ public class SQLComputerDAO implements IComputerDAO {
     Object[] args = { companyId };
     int[] types = { Types.BIGINT };
 
-    jdbcTemplate.update("DELETE FROM computer WHERE company_id=?;", args, types);
+    jdbcTemplate.update(DELETE_BY_COMPANY_QUERY, args, types);
   }
 
   @Override
@@ -220,10 +232,7 @@ public class SQLComputerDAO implements IComputerDAO {
     Object[] args = { id };
     int[] types = { Types.BIGINT };
 
-    List<Computer> list = jdbcTemplate
-        .query(
-            "SELECT c.id, c.name, c.introduced, c.discontinued, c.company_id, d.name FROM computer c LEFT JOIN company d ON c.company_id = d.id WHERE c.id=?;",
-            args, types, computerRowMapper);
+    List<Computer> list = jdbcTemplate.query(GET_BY_ID_QUERY, args, types, computerRowMapper);
 
     Computer computer;
     if (list.size() <= 0) {
