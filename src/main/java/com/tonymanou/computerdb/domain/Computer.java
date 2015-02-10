@@ -2,21 +2,45 @@ package com.tonymanou.computerdb.domain;
 
 import java.time.LocalDate;
 
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import com.tonymanou.computerdb.converter.LocalDatePersistenceConverter;
+
 /**
  * Describe a computer.
  *
  * @author tonymanou
  */
+@Entity
+@Table(name = "computer")
 public class Computer {
 
   private static final boolean EQUALS_WITH_ID = false;
+
+  @Id
+  @GeneratedValue
+  @Column(name = "id")
   private Long id;
+  @Column(name = "name", nullable = false)
   private String name;
+  @Column(name = "introduced")
+  @Convert(converter = LocalDatePersistenceConverter.class)
   private LocalDate introduced;
+  @Column(name = "discontinued")
+  @Convert(converter = LocalDatePersistenceConverter.class)
   private LocalDate discontinued;
+  @ManyToOne
+  @JoinColumn(name = "company_id")
   private Company company;
 
-  private Computer() {
+  public Computer() {
   }
 
   public Long getId() {

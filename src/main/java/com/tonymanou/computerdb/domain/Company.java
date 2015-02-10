@@ -1,17 +1,30 @@
 package com.tonymanou.computerdb.domain;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 /**
  * Describe a company.
  *
  * @author tonymanou
  */
+@Entity
+@Table(name = "company")
 public class Company {
 
   private static final boolean EQUALS_WITH_ID = false;
+
+  @Id
+  @GeneratedValue
+  @Column(name = "id")
   private Long id;
+  @Column(name = "name", nullable = false)
   private String name;
 
-  private Company() {
+  public Company() {
   }
 
   public Long getId() {
