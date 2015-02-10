@@ -19,9 +19,6 @@ public class ComputerDTOValidator implements Validator {
   private static final String ERROR_ID_NAME = "name";
   private static final String ERROR_MSG_NAME = "required.computer-name";
 
-  private static final String ERROR_ID_ID = "id";
-  private static final String ERROR_MSG_ID = "required.computer-id";
-
   private static final String ERROR_ID_IDATE = "introducedDate";
   private static final String ERROR_MSG_IDATE = "format.date-introduced";
 
@@ -50,10 +47,6 @@ public class ComputerDTOValidator implements Validator {
     ComputerDTO entity = (ComputerDTO) target;
 
     ValidationUtils.rejectIfEmptyOrWhitespace(errors, ERROR_ID_NAME, ERROR_MSG_NAME);
-
-    if (entity.getId() == null) {
-      errors.rejectValue(ERROR_ID_ID, ERROR_MSG_ID);
-    }
 
     String introducedDate = entity.getIntroducedDate();
     if (!Util.isStringEmpty(introducedDate)) {
