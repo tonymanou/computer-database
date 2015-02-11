@@ -54,19 +54,21 @@ public class SQLComputerDAO extends SQLBaseDAO implements IComputerDAO {
 
     /* ========== First query: element count ========== */
 
-    // Create query
-    Criteria c1 = session.createCriteria(Computer.class, "c").setProjection(Projections.rowCount());
+    // @formatter:off
+    Criteria computerCount = session.createCriteria(Computer.class, COMPUTER_ALIAS)
+        .setProjection(Projections.rowCount());
+    // @formatter:on
 
     if (searching) {
       // @formatter:off
-      c1.createCriteria("company", COMPANY_ALIAS, JoinType.LEFT_OUTER_JOIN)
+      computerCount.createCriteria("company", COMPANY_ALIAS, JoinType.LEFT_OUTER_JOIN)
           .add(Restrictions.or(
               Restrictions.like(COMPUTER_NAME_FIELD, search),
               Restrictions.like(COMPANY_NAME_FIELD, search)));
       // @formatter:on
     }
 
-    Long count = (Long) c1.uniqueResult();
+    Long count = (Long) computerCount.uniqueResult();
     if (count == null) {
       RuntimeException e = new PersistenceException("Computer count is null");
       LOGGER.error("Error while getting the number of computers matching the search query", e);
@@ -103,11 +105,11 @@ public class SQLComputerDAO extends SQLBaseDAO implements IComputerDAO {
     }
 
     // Create query
-    Criteria c2 = session.createCriteria(Computer.class, COMPUTER_ALIAS);
+    Criteria computerList = session.createCriteria(Computer.class, COMPUTER_ALIAS);
 
     if (searching) {
       // @formatter:off
-      c2.createCriteria("company", COMPANY_ALIAS, JoinType.LEFT_OUTER_JOIN)
+      computerList.createCriteria("company", COMPANY_ALIAS, JoinType.LEFT_OUTER_JOIN)
           .add(Restrictions.or(
               Restrictions.like(COMPUTER_NAME_FIELD, search),
               Restrictions.like(COMPANY_NAME_FIELD, search)));
@@ -115,7 +117,7 @@ public class SQLComputerDAO extends SQLBaseDAO implements IComputerDAO {
     }
 
     // @formatter:off
-    return c2.addOrder(orderType)
+    return computerList.addOrder(orderType)
         .setFirstResult(page.getElementsOffset())
         .setMaxResults(page.getNumElementsPerPage())
         .list();
