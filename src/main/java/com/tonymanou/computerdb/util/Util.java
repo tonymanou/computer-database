@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.validator.routines.DateValidator;
+import org.apache.commons.validator.GenericValidator;
 
 /**
  * Utility class.
@@ -29,7 +29,7 @@ public class Util {
    */
   public static LocalDate parseLocalDate(String str) {
     LocalDate localDate;
-    if (str != null && DateValidator.getInstance().validate(str, "yyyy-MM-dd") != null) {
+    if (str != null && GenericValidator.isDate(str, "yyyy-MM-dd", true)) {
       localDate = LocalDate.parse(str);
     } else {
       localDate = null;
