@@ -10,12 +10,6 @@
 	<artifactId>computerdb-core</artifactId>
 	<packaging>jar</packaging>
 
-	<properties>
-		<spring.version>4.1.4.RELEASE</spring.version>
-		<hibernate-jpa.version>1.0.0.Final</hibernate-jpa.version>
-		<commons-validator.version>1.4.1</commons-validator.version>
-	</properties>
-
 	<build>
 		<sourceDirectory>src/main/java</sourceDirectory>
 		<testSourceDirectory>src/test/java</testSourceDirectory>

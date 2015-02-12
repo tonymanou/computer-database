@@ -10,12 +10,6 @@
 	<artifactId>computerdb-persistence</artifactId>
 	<packaging>jar</packaging>
 
-	<properties>
-		<mysql.version>5.1.34</mysql.version>
-		<spring.version>4.1.4.RELEASE</spring.version>
-		<hibernate-core.version>4.3.5.Final</hibernate-core.version>
-	</properties>
-
 	<build>
 		<sourceDirectory>src/main/java</sourceDirectory>
 		<testSourceDirectory>src/test/java</testSourceDirectory>
@@ -27,7 +21,7 @@
 		<dependency>
 			<groupId>computer-database</groupId>
 			<artifactId>computerdb-core</artifactId>
-			<version>0.8.0-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 
 		<!-- MySQL driver -->
