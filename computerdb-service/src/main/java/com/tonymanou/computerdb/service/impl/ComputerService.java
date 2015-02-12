@@ -3,7 +3,7 @@ package com.tonymanou.computerdb.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.tonymanou.computerdb.dao.IComputerDAO;
@@ -16,18 +16,11 @@ import com.tonymanou.computerdb.service.IComputerService;
  *
  * @author tonymanou
  */
-@Component
+@Service
 public class ComputerService implements IComputerService {
 
   @Autowired
   private IComputerDAO computerDAO;
-
-  public ComputerService() {
-  }
-
-  public ComputerService(IComputerDAO dao) {
-    computerDAO = dao;
-  }
 
   @Transactional(readOnly = true)
   @Override
