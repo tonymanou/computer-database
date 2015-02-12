@@ -59,9 +59,19 @@ public class Util {
    * 
    * @param str
    *          The string to test.
-   * @return true if the string is empty, false otherwise.
+   * @return true if the string is empty or contains only spaces, false otherwise.
    */
   public static boolean isStringEmpty(String str) {
-    return str == null || str.trim().isEmpty();
+    boolean error = true;
+    if (str != null) {
+      int strLen = str.length();
+      for (int i = 0; i < strLen; i++) {
+        if (!Character.isWhitespace(str.charAt(i))) {
+          error = false;
+          break;
+        }
+      }
+    }
+    return error;
   }
 }
