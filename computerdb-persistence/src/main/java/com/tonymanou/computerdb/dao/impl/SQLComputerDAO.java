@@ -2,8 +2,11 @@ package com.tonymanou.computerdb.dao.impl;
 
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -24,7 +27,7 @@ import com.tonymanou.computerdb.util.Util;
  * @author tonymanou
  */
 @Repository
-public class SQLComputerDAO extends SQLBaseDAO implements IComputerDAO {
+public class SQLComputerDAO implements IComputerDAO {
 
   private static final String COMPUTER_ALIAS = "c";
   private static final String COMPANY_ALIAS = "d";
@@ -37,6 +40,13 @@ public class SQLComputerDAO extends SQLBaseDAO implements IComputerDAO {
   private static final String DELETE_BY_COMPANY_QUERY = "DELETE FROM computer WHERE company_id=?;";
 
   private static final Logger LOGGER = LoggerFactory.getLogger(SQLComputerDAO.class);
+
+  @Resource(name = "sessionFactory")
+  private SessionFactory sessionFactory;
+
+  protected Session getSession() {
+    return sessionFactory.getCurrentSession();
+  }
 
   @SuppressWarnings("unchecked")
   @Override
