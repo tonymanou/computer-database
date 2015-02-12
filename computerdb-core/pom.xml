@@ -10,11 +10,6 @@
 	<artifactId>computerdb-core</artifactId>
 	<packaging>jar</packaging>
 
-	<build>
-		<sourceDirectory>src/main/java</sourceDirectory>
-		<testSourceDirectory>src/test/java</testSourceDirectory>
-	</build>
-
 	<dependencies>
 		<!-- JDBC -->
 
