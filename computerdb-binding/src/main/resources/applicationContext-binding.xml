@@ -8,6 +8,7 @@
 	<!-- Enable annotations -->
 	<context:annotation-config />
 
-	<!-- Application configuration class -->
-	<bean class="com.tonymanou.computerdb.config.Application" />
+	<!-- Add classes to the Spring context -->
+	<context:component-scan
+		base-package="com.tonymanou.computerdb.mapper, com.tonymanou.computerdb.validator" />
 </beans>

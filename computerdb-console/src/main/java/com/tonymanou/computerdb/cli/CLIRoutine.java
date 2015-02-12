@@ -46,7 +46,9 @@ public class CLIRoutine {
 
   public CLIRoutine() {
     scanner = new Scanner(System.in);
-    context = new ClassPathXmlApplicationContext("applicationContext.xml");
+    context = new ClassPathXmlApplicationContext(
+        new String[] { "classpath:applicationContext-persistence.xml",
+            "classpath:applicationContext-service.xml" });
 
     computerService = context.getBean(IComputerService.class);
     companyService = context.getBean(ICompanyService.class);

@@ -13,7 +13,11 @@
 
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
-		<param-value>classpath:/applicationContext.xml</param-value>
+		<param-value>
+			classpath:/applicationContext-binding.xml
+			classpath:/applicationContext-persistence.xml
+			classpath:/applicationContext-service.xml
+		</param-value>
 	</context-param>
 
 	<servlet>

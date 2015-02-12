@@ -12,6 +12,9 @@
 	<tx:annotation-driven proxy-target-class="true"
 		transaction-manager="transactionManager" />
 
+	<!-- Add classes to the Spring context -->
+	<context:component-scan base-package="com.tonymanou.computerdb.dao" />
+
 	<!-- Transaction manager -->
 	<bean id="transactionManager"
 		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
@@ -47,7 +50,4 @@
 		<property name="username" value="${datasource.user}" />
 		<property name="password" value="${datasource.pass}" />
 	</bean>
-
-	<!-- Application configuration class -->
-	<bean class="com.tonymanou.computerdb.config.Application" />
 </beans>
