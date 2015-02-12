@@ -4,7 +4,6 @@ import java.time.LocalDate;
 
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
-import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
 import com.tonymanou.computerdb.dto.ComputerDTO;
@@ -46,7 +45,9 @@ public class ComputerDTOValidator implements Validator {
 
     ComputerDTO entity = (ComputerDTO) target;
 
-    ValidationUtils.rejectIfEmptyOrWhitespace(errors, ERROR_ID_NAME, ERROR_MSG_NAME);
+    if (Util.isStringEmpty(entity.getName())) {
+      errors.rejectValue(ERROR_ID_NAME, ERROR_MSG_NAME);
+    }
 
     String introducedDate = entity.getIntroducedDate();
     if (!Util.isStringEmpty(introducedDate)) {
