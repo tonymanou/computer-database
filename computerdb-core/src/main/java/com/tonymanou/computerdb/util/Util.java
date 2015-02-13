@@ -1,6 +1,7 @@
 package com.tonymanou.computerdb.util;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,12 +26,15 @@ public class Util {
    * 
    * @param str
    *          The string to parse.
+   * @param pattern
+   *          The date pattern to use.
    * @return A LocalDate instance, or null if it was not a valid date string.
    */
-  public static LocalDate parseLocalDate(String str) {
+  public static LocalDate parseLocalDate(String str, String pattern) {
     LocalDate localDate;
-    if (str != null && GenericValidator.isDate(str, "yyyy-MM-dd", true)) {
-      localDate = LocalDate.parse(str);
+    if (str != null && GenericValidator.isDate(str, pattern, true)) {
+      DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+      localDate = formatter.parse(str, LocalDate::from);
     } else {
       localDate = null;
     }

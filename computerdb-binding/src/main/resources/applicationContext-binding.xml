@@ -8,4 +8,11 @@
 	<!-- Add classes to the Spring context -->
 	<context:component-scan
 		base-package="com.tonymanou.computerdb.mapper, com.tonymanou.computerdb.validator" />
+
+	<!-- Localized text -->
+	<bean id="formatMessageSource"
+		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="basename" value="classpath:formatmessages" />
+		<property name="defaultEncoding" value="UTF-8" />
+	</bean>
 </beans>

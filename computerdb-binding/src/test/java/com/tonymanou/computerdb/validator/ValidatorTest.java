@@ -1,8 +1,16 @@
 package com.tonymanou.computerdb.validator;
 
+import java.util.Locale;
+
 import org.junit.Assert;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.springframework.context.MessageSource;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.validation.AbstractBindingResult;
 import org.springframework.validation.Errors;
 
@@ -10,11 +18,33 @@ import com.tonymanou.computerdb.dto.ComputerDTO;
 
 public class ValidatorTest {
 
-  private ComputerDTOValidator computerValidator;
+  private static AnnotationConfigApplicationContext context;
+  private static ComputerDTOValidator computerValidator;
 
-  @Before
-  public void initTest() {
-    computerValidator = new ComputerDTOValidator();
+  /**
+   * Spring context configuration class.
+   */
+  @Configuration
+  public static class ValidatorTestConfig {
+    @Bean
+    public ComputerDTOValidator computerDTOValidator() {
+      return new ComputerDTOValidator();
+    }
+
+    @Bean
+    public MessageSource formatMessageSource() {
+      ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+      messageSource.setBasename("formatmessages");
+      messageSource.setDefaultEncoding("UTF-8");
+      LocaleContextHolder.setLocale(Locale.ENGLISH);
+      return messageSource;
+    }
+  }
+
+  @BeforeClass
+  public static void setUp() {
+    context = new AnnotationConfigApplicationContext(ValidatorTestConfig.class);
+    computerValidator = context.getBean(ComputerDTOValidator.class);
   }
 
   @Test
@@ -29,6 +59,26 @@ public class ValidatorTest {
 
     Errors errorMap = new EmptyBindingResult("testObject");
     computerValidator.validate(target, errorMap);
+
+    Assert.assertFalse(errorMap.toString(), errorMap.hasErrors());
+  }
+
+  @Test
+  public void checkValidComputerDTO1Fr() {
+    ComputerDTO target = ComputerDTO.getBuilder("Computer 1")
+        .setId(10L)
+        .setIntroduced("31/12/2012")
+        .setDiscontinued("29/02/2020")
+        .setCompany("Company 1")
+        .setCompanyId(2L)
+        .build();
+
+    LocaleContextHolder.setLocale(Locale.FRENCH);
+
+    Errors errorMap = new EmptyBindingResult("testObject");
+    computerValidator.validate(target, errorMap);
+
+    LocaleContextHolder.setLocale(Locale.ENGLISH);
 
     Assert.assertFalse(errorMap.toString(), errorMap.hasErrors());
   }

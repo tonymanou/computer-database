@@ -437,7 +437,7 @@ public class CLIRoutine {
       } else {
         boolean bad = true;
 
-        date = Util.parseLocalDate(string);
+        date = Util.parseLocalDate(string, "yyyy-MM-dd");
         if (date == null) {
           bad = false;
           System.out.println();

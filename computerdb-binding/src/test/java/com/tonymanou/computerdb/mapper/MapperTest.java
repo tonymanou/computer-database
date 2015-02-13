@@ -2,8 +2,16 @@ package com.tonymanou.computerdb.mapper;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Before;
+import java.util.Locale;
+
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.springframework.context.MessageSource;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.context.support.ResourceBundleMessageSource;
 
 import com.tonymanou.computerdb.domain.Company;
 import com.tonymanou.computerdb.domain.Computer;
@@ -14,13 +22,40 @@ import com.tonymanou.computerdb.mapper.impl.ComputerMapper;
 
 public class MapperTest {
 
-  private IEntityMapper<Computer, ComputerDTO> computerMapper;
-  private IEntityMapper<Company, CompanyDTO> companyMapper;
+  private static AnnotationConfigApplicationContext context;
+  private static IEntityMapper<Computer, ComputerDTO> computerMapper;
+  private static IEntityMapper<Company, CompanyDTO> companyMapper;
 
-  @Before
-  public void initTest() {
-    computerMapper = new ComputerMapper();
-    companyMapper = new CompanyMapper();
+  /**
+   * Spring context configuration class.
+   */
+  @Configuration
+  public static class MapperTestConfig {
+    @Bean
+    public IEntityMapper<Computer, ComputerDTO> computerMapper() {
+      return new ComputerMapper();
+    }
+
+    @Bean
+    public IEntityMapper<Company, CompanyDTO> companyMapper() {
+      return new CompanyMapper();
+    }
+
+    @Bean
+    public MessageSource formatMessageSource() {
+      ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+      messageSource.setBasename("formatmessages");
+      messageSource.setDefaultEncoding("UTF-8");
+      LocaleContextHolder.setLocale(Locale.ENGLISH);
+      return messageSource;
+    }
+  }
+
+  @BeforeClass
+  public static void setUp() {
+    context = new AnnotationConfigApplicationContext(MapperTestConfig.class);
+    computerMapper = context.getBean(ComputerMapper.class);
+    companyMapper = context.getBean(CompanyMapper.class);
   }
 
   @Test

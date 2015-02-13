@@ -2,6 +2,10 @@ package com.tonymanou.computerdb.validator;
 
 import java.time.LocalDate;
 
+import javax.annotation.Resource;
+
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -27,6 +31,11 @@ public class ComputerDTOValidator implements Validator {
   private static final String ERROR_ID_COMPANY = "companyId";
   private static final String ERROR_MSG_COMPANY = "format.company-id";
 
+  private static final String MSG_DATE_FORMAT = "date.format";
+
+  @Resource(name = "formatMessageSource")
+  private MessageSource messageSource;
+
   @Override
   public boolean supports(Class<?> clazz) {
     return ComputerDTO.class.isAssignableFrom(clazz);
@@ -49,9 +58,12 @@ public class ComputerDTOValidator implements Validator {
       errors.rejectValue(ERROR_ID_NAME, ERROR_MSG_NAME);
     }
 
+    String datePattern = messageSource.getMessage(MSG_DATE_FORMAT, null,
+        LocaleContextHolder.getLocale());
+
     String introducedDate = entity.getIntroducedDate();
     if (!Util.isStringEmpty(introducedDate)) {
-      LocalDate introduced = Util.parseLocalDate(introducedDate);
+      LocalDate introduced = Util.parseLocalDate(introducedDate, datePattern);
       if (introduced == null) {
         errors.rejectValue(ERROR_ID_IDATE, ERROR_MSG_IDATE);
       }
@@ -59,7 +71,7 @@ public class ComputerDTOValidator implements Validator {
 
     String discontinuedDate = entity.getDiscontinuedDate();
     if (!Util.isStringEmpty(discontinuedDate)) {
-      LocalDate discontinued = Util.parseLocalDate(discontinuedDate);
+      LocalDate discontinued = Util.parseLocalDate(discontinuedDate, datePattern);
       if (discontinued == null) {
         errors.rejectValue(ERROR_ID_DDATE, ERROR_MSG_DDATE);
       }
