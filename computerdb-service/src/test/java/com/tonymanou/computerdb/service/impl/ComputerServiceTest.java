@@ -1,13 +1,14 @@
 package com.tonymanou.computerdb.service.impl;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.BeforeClass;
@@ -16,72 +17,122 @@ import org.junit.runner.RunWith;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 import com.tonymanou.computerdb.dao.IComputerDAO;
 import com.tonymanou.computerdb.domain.Computer;
 import com.tonymanou.computerdb.pagination.ComputerPage;
+import com.tonymanou.computerdb.service.IComputerService;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ComputerServiceTest {
 
-  private static final Long ID = 5136L;
+  private static final Long ID1 = 5196L;
   private static final Long ID2 = 26734L;
+  private static final Long ID3 = 902786354L;
 
-  private static ComputerService service;
+  private static AnnotationConfigApplicationContext context;
+  private static IComputerService service;
   private static IComputerDAO computerDAO;
   private static Computer computer1;
   private static Computer computer2;
-  private static ComputerPage page;
+  private static Computer computer3;
+  private static List<Computer> computerList;
+  private static ComputerPage.Builder page;
+
+  private static boolean createCalled;
+  private static boolean deleteCalled;
+
+  /**
+   * Spring context configuration class.
+   */
+  @Configuration
+  public static class ComputerServiceTestConfig {
+
+    @Bean
+    public IComputerDAO computerDAO() {
+      return mock(IComputerDAO.class);
+    }
+
+    @Bean
+    public IComputerService computerService() {
+      return new ComputerService();
+    }
+  }
 
   @BeforeClass
   public static void setUp() {
-    computerDAO = mock(IComputerDAO.class);
-    service = new ComputerService(computerDAO);
+    context = new AnnotationConfigApplicationContext(ComputerServiceTestConfig.class);
 
-    computer1 = Computer.getBuilder("Computer 1").setId(ID).build();
+    service = context.getBean(IComputerService.class);
+
+    computer1 = Computer.getBuilder("Computer 1").setId(ID1).build();
     computer2 = Computer.getBuilder("Computer 2").setId(ID2).build();
-    page = new ComputerPage();
+    computer3 = Computer.getBuilder("Computer 3").setId(ID3).build();
 
-    when(computerDAO.findAll(page)).thenReturn(Arrays.asList(computer1, computer2));
+    page = ComputerPage.getBuilder();
+
+    computerList = new ArrayList<>();
+    computerList.add(computer1);
+    computerList.add(computer2);
+
+    // Mock computer DAO
+    computerDAO = context.getBean(IComputerDAO.class);
+    when(computerDAO.findAll(page)).thenReturn(computerList);
     doAnswer(new Answer<Object>() {
       public Object answer(InvocationOnMock invocation) {
-        Object[] args = invocation.getArguments();
-        return args;
+        computerList.add(computer3);
+        return invocation.getArguments();
       }
-    }).when(computerDAO).create(computer1);
+    }).when(computerDAO).create(computer3);
     doAnswer(new Answer<Object>() {
       public Object answer(InvocationOnMock invocation) {
-        Object[] args = invocation.getArguments();
-        return args;
+        return invocation.getArguments();
       }
     }).when(computerDAO).update(computer1);
     doAnswer(new Answer<Object>() {
       public Object answer(InvocationOnMock invocation) {
-        Object[] args = invocation.getArguments();
-        return args;
+        computerList.remove(computer2);
+        return invocation.getArguments();
       }
-    }).when(computerDAO).delete(ID);
-    when(computerDAO.getFromId(ID)).thenReturn(computer1);
+    }).when(computerDAO).delete(ID2);
+    when(computerDAO.getFromId(ID2)).thenReturn(computer2);
+  }
+
+  private static int getListSize() {
+    int size = 2;
+    if (createCalled) {
+      size++;
+    }
+    if (deleteCalled) {
+      size--;
+    }
+    return size;
   }
 
   @Test
-  public void findAllTest() {
-    List<Computer> list = service.findAll();
+  public void findAll() {
+    List<Computer> list = service.findAll(page);
 
     assertNotNull(list);
-    assertEquals(2, list.size());
+    assertEquals(getListSize(), list.size());
 
-    Computer computer = Computer.getBuilder("Computer 2").setId(ID2).build();
-    assertEquals(computer, list.get(1));
+    Computer computer = Computer.getBuilder("Computer 1").setId(ID1).build();
+    assertEquals(computer, list.get(0));
 
     verify(computerDAO).findAll(page);
   }
 
   @Test
   public void create() {
-    service.create(computer1);
+    service.create(computer3);
+    createCalled = true;
 
-    verify(computerDAO).create(computer1);
+    assertEquals(getListSize(), computerList.size());
+
+    verify(computerDAO).create(computer3);
   }
 
   @Test
@@ -93,19 +144,23 @@ public class ComputerServiceTest {
 
   @Test
   public void delete() {
-    service.delete(ID);
+    service.delete(ID2);
+    deleteCalled = true;
 
-    verify(computerDAO).delete(ID);
+    assertFalse(computerList.contains(computer2));
+    assertEquals(getListSize(), computerList.size());
+
+    verify(computerDAO).delete(ID2);
   }
 
   @Test
-  public void getFromIdTest() {
-    Computer computer0 = service.getFromId(ID);
+  public void getFromId() {
+    Computer computer0 = service.getFromId(ID2);
     assertNotNull(computer0);
 
-    Computer computer = Computer.getBuilder("Computer 1").setId(ID).build();
+    Computer computer = Computer.getBuilder("Computer 2").setId(ID2).build();
     assertEquals(computer, computer0);
 
-    verify(computerDAO).getFromId(ID);
+    verify(computerDAO).getFromId(ID2);
   }
 }
