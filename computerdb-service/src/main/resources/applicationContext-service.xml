@@ -8,7 +8,6 @@
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.1.xsd">
 
 	<!-- Enable annotations -->
-	<context:annotation-config />
 	<tx:annotation-driven proxy-target-class="true"
 		transaction-manager="transactionManager" />
 
