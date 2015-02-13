@@ -7,35 +7,45 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.After;
-import org.junit.Before;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.Select;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.tonymanou.computerdb.domain.Company;
 import com.tonymanou.computerdb.domain.Computer;
-import com.tonymanou.computerdb.service.ServiceManager;
+import com.tonymanou.computerdb.service.ICompanyService;
+import com.tonymanou.computerdb.service.IComputerService;
 
 public class ComputerDashboardTest {
 
-  private static final String BASE_URL = "http://127.0.0.1:8080/computer-database";
-  private WebDriver driver;
+  private static final String BASE_URL = "http://127.0.0.1:8080/computerdb-webapp";
 
-  @Before
-  public void setUp() {
+  private static ClassPathXmlApplicationContext context;
+  private static ICompanyService companyService;
+  private static IComputerService computerService;
+  private static WebDriver driver;
+
+  @BeforeClass
+  public static void setUp() {
     driver = new FirefoxDriver();
     driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+
+    context = new ClassPathXmlApplicationContext("classpath:applicationContext-service.xml");
+    companyService = context.getBean(ICompanyService.class);
+    computerService = context.getBean(IComputerService.class);
   }
 
   @Test
   public void addANewComputer() {
     driver.get(BASE_URL + "/computer/add");
 
-    Company company = ServiceManager.INSTANCE.getCompanyService().getFromId(1L);
+    Company company = companyService.getFromId(1L);
     assertNotNull(company);
 
     WebElement element;
@@ -57,24 +67,23 @@ public class ComputerDashboardTest {
     element = driver.findElement(By.cssSelector("input.btn.btn-primary"));
     element.click();
 
-    /*
-     * The following code does not work in the case of an in-memory database. Indeed,
-     * ServiceManager.INSTANCE is not the same in test case and in the server.
-     */
-    if ("".equals("1")) {
-      Computer computer = Computer.getBuilder("HAL 9000")
-          .setIntroduced(LocalDate.of(1986, 9, 30))
-          .setDiscontinued(null)
-          .setCompany(company)
-          .build();
+    Computer computer = Computer.getBuilder("HAL 9000")
+        .setIntroduced(LocalDate.of(1986, 9, 30))
+        .setDiscontinued(null)
+        .setCompany(company)
+        .build();
 
-      List<Computer> list = ServiceManager.INSTANCE.getComputerService().findAll();
-      assertTrue(list.contains(computer));
-    }
+    List<Computer> list = computerService.findAll();
+    assertTrue(list.contains(computer));
   }
 
-  @After
-  public void tearDown() {
-    driver.quit();
+  @AfterClass
+  public static void tearDown() {
+    if (driver != null) {
+      driver.quit();
+    }
+    if (context != null) {
+      context.close();
+    }
   }
 }
