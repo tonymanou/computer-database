@@ -62,13 +62,11 @@ public class ComputerDashboardTest {
      * ServiceManager.INSTANCE is not the same in test case and in the server.
      */
     if ("".equals("1")) {
-      // @formatter:off
       Computer computer = Computer.getBuilder("HAL 9000")
           .setIntroduced(LocalDate.of(1986, 9, 30))
           .setDiscontinued(null)
           .setCompany(company)
           .build();
-      // @formatter:on
 
       List<Computer> list = ServiceManager.INSTANCE.getComputerService().findAll();
       assertTrue(list.contains(computer));

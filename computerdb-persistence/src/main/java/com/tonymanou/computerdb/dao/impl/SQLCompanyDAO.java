@@ -31,11 +31,9 @@ public class SQLCompanyDAO implements ICompanyDAO {
   @Override
   @SuppressWarnings("unchecked")
   public List<Company> findAll() {
-    // @formatter:off
     return (List<Company>) getSession()
         .createCriteria(Company.class)
         .list();
-    // @formatter:on
   }
 
   @Override
@@ -45,11 +43,9 @@ public class SQLCompanyDAO implements ICompanyDAO {
 
   @Override
   public void delete(Long id) {
-    // @formatter:off
     getSession()
         .createSQLQuery(DELETE_BY_ID_QUERY)
         .setLong(0, id)
         .executeUpdate();
-    // @formatter:on
   }
 }

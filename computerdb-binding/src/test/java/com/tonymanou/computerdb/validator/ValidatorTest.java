@@ -19,7 +19,6 @@ public class ValidatorTest {
 
   @Test
   public void checkValidComputerDTO1() {
-    // @formatter:off
     ComputerDTO target = ComputerDTO.getBuilder("Computer 1")
         .setId(10L)
         .setIntroduced("2012-12-31")
@@ -27,7 +26,6 @@ public class ValidatorTest {
         .setCompany("Company 1")
         .setCompanyId(2L)
         .build();
-    // @formatter:on
 
     Errors errorMap = new EmptyBindingResult("testObject");
     computerValidator.validate(target, errorMap);
@@ -37,7 +35,6 @@ public class ValidatorTest {
 
   @Test
   public void checkValidComputerDTO2() {
-    // @formatter:off
     ComputerDTO target = ComputerDTO.getBuilder("Computer 1")
         .setId(10L)
         .setIntroduced(null)
@@ -45,7 +42,6 @@ public class ValidatorTest {
         .setCompany(null)
         .setCompanyId(null)
         .build();
-    // @formatter:on
 
     Errors errorMap = new EmptyBindingResult("testObject");
     computerValidator.validate(target, errorMap);
@@ -55,7 +51,6 @@ public class ValidatorTest {
 
   @Test
   public void checkInvalidComputerDTOName() {
-    // @formatter:off
     ComputerDTO target = ComputerDTO.getBuilder(null)
         .setId(10L)
         .setIntroduced("2012-12-31")
@@ -63,7 +58,6 @@ public class ValidatorTest {
         .setCompany("Company 1")
         .setCompanyId(2L)
         .build();
-    // @formatter:on
 
     Errors errorMap = new EmptyBindingResult("testObject");
     computerValidator.validate(target, errorMap);
@@ -73,7 +67,6 @@ public class ValidatorTest {
 
   @Test
   public void checkInvalidComputerDTOCompanyId() {
-    // @formatter:off
     ComputerDTO target = ComputerDTO.getBuilder("Computer 1")
         .setId(10L)
         .setIntroduced("2012-12-31")
@@ -81,7 +74,6 @@ public class ValidatorTest {
         .setCompany("Company 1")
         .setCompanyId(-2L)
         .build();
-    // @formatter:on
 
     Errors errorMap = new EmptyBindingResult("testObject");
     computerValidator.validate(target, errorMap);

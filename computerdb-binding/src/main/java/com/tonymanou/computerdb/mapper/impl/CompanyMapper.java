@@ -15,11 +15,9 @@ public class CompanyMapper implements IEntityMapper<Company, CompanyDTO> {
       return null;
     }
 
-    // @formatter:off
     return CompanyDTO.getBuilder(company.getName())
         .setId(company.getId())
         .build();
-    // @formatter:on
   }
 
   @Override
@@ -28,10 +26,8 @@ public class CompanyMapper implements IEntityMapper<Company, CompanyDTO> {
       return null;
     }
 
-    // @formatter:off
     return Company.getBuilder(companyDTO.getName())
         .setId(companyDTO.getId())
         .build();
-    // @formatter:on
   }
 }

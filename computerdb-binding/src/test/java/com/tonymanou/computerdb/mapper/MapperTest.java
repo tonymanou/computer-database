@@ -25,7 +25,6 @@ public class MapperTest {
 
   @Test
   public void equalityBetweenComputersFromDTO() {
-    // @formatter:off
     ComputerDTO cd1 = ComputerDTO.getBuilder("Computer 1")
         .setId(10L)
         .setIntroduced("2012-12-31")
@@ -40,7 +39,6 @@ public class MapperTest {
         .setCompany("Company 1")
         .setCompanyId(2L)
         .build();
-    // @formatter:on
 
     assertEquals(cd1, cd2);
 
@@ -52,14 +50,12 @@ public class MapperTest {
 
   @Test
   public void equalityBetweenCompaniesFromDTO() {
-    // @formatter:off
     CompanyDTO cd1 = CompanyDTO.getBuilder("Company 1")
         .setId(2L)
         .build();
     CompanyDTO cd2 = CompanyDTO.getBuilder("Company 1")
         .setId(2L)
         .build();
-    // @formatter:on
 
     assertEquals(cd1, cd2);
 

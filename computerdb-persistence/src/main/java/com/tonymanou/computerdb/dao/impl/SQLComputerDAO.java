@@ -64,18 +64,16 @@ public class SQLComputerDAO implements IComputerDAO {
 
     /* ========== First query: element count ========== */
 
-    // @formatter:off
     Criteria computerCount = session.createCriteria(Computer.class, COMPUTER_ALIAS)
         .setProjection(Projections.rowCount());
-    // @formatter:on
 
     if (searching) {
-      // @formatter:off
-      computerCount.createCriteria("company", COMPANY_ALIAS, JoinType.LEFT_OUTER_JOIN)
+      computerCount
+          .createCriteria("company", COMPANY_ALIAS, JoinType.LEFT_OUTER_JOIN)
           .add(Restrictions.or(
               Restrictions.like(COMPUTER_NAME_FIELD, search),
-              Restrictions.like(COMPANY_NAME_FIELD, search)));
-      // @formatter:on
+              Restrictions.like(COMPANY_NAME_FIELD, search))
+          );
     }
 
     Long count = (Long) computerCount.uniqueResult();
@@ -118,20 +116,18 @@ public class SQLComputerDAO implements IComputerDAO {
     Criteria computerList = session.createCriteria(Computer.class, COMPUTER_ALIAS);
 
     if (searching) {
-      // @formatter:off
-      computerList.createCriteria("company", COMPANY_ALIAS, JoinType.LEFT_OUTER_JOIN)
+      computerList
+          .createCriteria("company", COMPANY_ALIAS, JoinType.LEFT_OUTER_JOIN)
           .add(Restrictions.or(
               Restrictions.like(COMPUTER_NAME_FIELD, search),
-              Restrictions.like(COMPANY_NAME_FIELD, search)));
-      // @formatter:on
+              Restrictions.like(COMPANY_NAME_FIELD, search))
+          );
     }
 
-    // @formatter:off
     return computerList.addOrder(orderType)
         .setFirstResult(page.getElementsOffset())
         .setMaxResults(page.getNumElementsPerPage())
         .list();
-    // @formatter:on
   }
 
   @Override
@@ -146,22 +142,18 @@ public class SQLComputerDAO implements IComputerDAO {
 
   @Override
   public void delete(Long id) {
-    // @formatter:off
     getSession()
         .createSQLQuery(DELETE_BY_ID_QUERY)
         .setLong(0, id)
         .executeUpdate();
-    // @formatter:on
   }
 
   @Override
   public void deleteAllWithCompanyId(Long companyId) {
-    // @formatter:off
     getSession()
         .createSQLQuery(DELETE_BY_COMPANY_QUERY)
         .setLong(0, companyId)
         .executeUpdate();
-    // @formatter:on
   }
 
   @Override
