@@ -44,14 +44,10 @@ public class SQLComputerDAO implements IComputerDAO {
   @Resource(name = "sessionFactory")
   private SessionFactory sessionFactory;
 
-  protected Session getSession() {
-    return sessionFactory.getCurrentSession();
-  }
-
   @SuppressWarnings("unchecked")
   @Override
   public List<Computer> findAll(ComputerPage.Builder pageBuilder) {
-    Session session = getSession();
+    Session session = sessionFactory.getCurrentSession();
 
     String searchString = pageBuilder.getSearchQuery();
     boolean searching = !Util.isStringEmpty(searchString);
@@ -132,17 +128,19 @@ public class SQLComputerDAO implements IComputerDAO {
 
   @Override
   public void create(Computer computer) {
-    getSession().save(computer);
+    sessionFactory.getCurrentSession()
+        .save(computer);
   }
 
   @Override
   public void update(Computer computer) {
-    getSession().update(computer);
+    sessionFactory.getCurrentSession()
+        .update(computer);
   }
 
   @Override
   public void delete(Long id) {
-    getSession()
+    sessionFactory.getCurrentSession()
         .createSQLQuery(DELETE_BY_ID_QUERY)
         .setLong(0, id)
         .executeUpdate();
@@ -150,7 +148,7 @@ public class SQLComputerDAO implements IComputerDAO {
 
   @Override
   public void deleteAllWithCompanyId(Long companyId) {
-    getSession()
+    sessionFactory.getCurrentSession()
         .createSQLQuery(DELETE_BY_COMPANY_QUERY)
         .setLong(0, companyId)
         .executeUpdate();
@@ -158,6 +156,7 @@ public class SQLComputerDAO implements IComputerDAO {
 
   @Override
   public Computer getFromId(Long id) {
-    return (Computer) getSession().get(Computer.class, id);
+    return (Computer) sessionFactory.getCurrentSession()
+        .get(Computer.class, id);
   }
 }

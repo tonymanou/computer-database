@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
@@ -24,26 +23,23 @@ public class SQLCompanyDAO implements ICompanyDAO {
   @Resource(name = "sessionFactory")
   private SessionFactory sessionFactory;
 
-  protected Session getSession() {
-    return sessionFactory.getCurrentSession();
-  }
-
   @Override
   @SuppressWarnings("unchecked")
   public List<Company> findAll() {
-    return (List<Company>) getSession()
+    return (List<Company>) sessionFactory.getCurrentSession()
         .createCriteria(Company.class)
         .list();
   }
 
   @Override
   public Company getFromId(Long id) {
-    return (Company) getSession().get(Company.class, id);
+    return (Company) sessionFactory.getCurrentSession()
+        .get(Company.class, id);
   }
 
   @Override
   public void delete(Long id) {
-    getSession()
+    sessionFactory.getCurrentSession()
         .createSQLQuery(DELETE_BY_ID_QUERY)
         .setLong(0, id)
         .executeUpdate();
