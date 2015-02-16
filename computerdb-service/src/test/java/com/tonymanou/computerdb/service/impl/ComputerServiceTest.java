@@ -24,7 +24,6 @@ import org.springframework.context.annotation.Configuration;
 
 import com.tonymanou.computerdb.dao.IComputerDAO;
 import com.tonymanou.computerdb.domain.Computer;
-import com.tonymanou.computerdb.pagination.ComputerPage;
 import com.tonymanou.computerdb.service.IComputerService;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -41,7 +40,6 @@ public class ComputerServiceTest {
   private static Computer computer2;
   private static Computer computer3;
   private static List<Computer> computerList;
-  private static ComputerPage.Builder page;
 
   /**
    * Spring context configuration class.
@@ -70,13 +68,12 @@ public class ComputerServiceTest {
     computer2 = Computer.getBuilder("Computer 2").setId(ID2).build();
     computer3 = Computer.getBuilder("Computer 3").setId(ID3).build();
 
-    page = ComputerPage.getBuilder();
     computerList = new ArrayList<>();
 
     // Mock computer DAO
     computerDAO = context.getBean(IComputerDAO.class);
 
-    when(computerDAO.findAll(page)).thenReturn(computerList);
+    when(computerDAO.findAll()).thenReturn(computerList);
 
     doAnswer(new Answer<Object>() {
       public Object answer(InvocationOnMock invocation) {
@@ -110,7 +107,7 @@ public class ComputerServiceTest {
 
   @Test
   public void findAll() {
-    List<Computer> list = service.findAll(page);
+    List<Computer> list = service.findAll();
 
     assertNotNull(list);
     assertEquals(2, list.size());
@@ -118,7 +115,12 @@ public class ComputerServiceTest {
     Computer computer = Computer.getBuilder("Computer 1").setId(ID1).build();
     assertEquals(computer, list.get(0));
 
-    verify(computerDAO).findAll(page);
+    verify(computerDAO).findAll();
+  }
+
+  @Test
+  public void findPage() {
+    throw new UnsupportedOperationException("Not implemented yet.");
   }
 
   @Test

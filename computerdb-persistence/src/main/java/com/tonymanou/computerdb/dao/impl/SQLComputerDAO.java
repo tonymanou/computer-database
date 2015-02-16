@@ -41,7 +41,15 @@ public class SQLComputerDAO implements IComputerDAO {
 
   @SuppressWarnings("unchecked")
   @Override
-  public List<Computer> findAll(ComputerPage.Builder pageBuilder) {
+  public List<Computer> findAll() {
+    return sessionFactory.getCurrentSession()
+        .createCriteria(Computer.class)
+        .list();
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public List<Computer> findPage(ComputerPage.Builder pageBuilder) {
     Session session = sessionFactory.getCurrentSession();
 
     String searchString = pageBuilder.getSearchQuery();

@@ -13,13 +13,20 @@ import com.tonymanou.computerdb.pagination.ComputerPage;
 public interface IComputerDAO {
 
   /**
-   * Retrieve a list of computers from the database.
+   * Retrieve all the computers from the database.
+   *
+   * @return A list containing the computers.
+   */
+  List<Computer> findAll();
+
+  /**
+   * Retrieve a page of computers from the database.
    *
    * @param page
    *          Description of the pagination to use.
    * @return A list containing the computers.
    */
-  List<Computer> findAll(ComputerPage.Builder page);
+  List<Computer> findPage(ComputerPage.Builder page);
 
   /**
    * Create a new computer in the database.

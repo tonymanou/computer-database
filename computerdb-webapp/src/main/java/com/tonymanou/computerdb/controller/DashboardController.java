@@ -49,7 +49,7 @@ public class DashboardController {
       page.setCurrentPage(number);
     }
 
-    List<ComputerDTO> computers = computerMapper.toDTOList(computerService.findAll(page));
+    List<ComputerDTO> computers = computerMapper.toDTOList(computerService.findPage(page));
     req.setAttribute("computers", computers);
     req.setAttribute("page", page.build());
 

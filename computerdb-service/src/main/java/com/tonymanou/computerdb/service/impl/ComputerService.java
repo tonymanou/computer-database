@@ -25,14 +25,13 @@ public class ComputerService implements IComputerService {
   @Transactional(readOnly = true)
   @Override
   public List<Computer> findAll() {
-    return findAll(ComputerPage.getBuilder());
+    return computerDAO.findAll();
   }
 
   @Transactional(readOnly = true)
   @Override
-  public List<Computer> findAll(ComputerPage.Builder page) {
-    List<Computer> result = computerDAO.findAll(page);
-    return result;
+  public List<Computer> findPage(ComputerPage.Builder page) {
+    return computerDAO.findPage(page);
   }
 
   @Transactional
@@ -56,7 +55,6 @@ public class ComputerService implements IComputerService {
   @Transactional(readOnly = true)
   @Override
   public Computer getFromId(Long id) {
-    Computer result = computerDAO.getFromId(id);
-    return result;
+    return computerDAO.getFromId(id);
   }
 }
