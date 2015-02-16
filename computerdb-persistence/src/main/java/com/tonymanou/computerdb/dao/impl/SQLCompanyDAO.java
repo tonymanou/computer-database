@@ -2,9 +2,9 @@ package com.tonymanou.computerdb.dao.impl;
 
 import java.util.List;
 
-import javax.annotation.Resource;
-
 import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import com.tonymanou.computerdb.dao.ICompanyDAO;
@@ -20,7 +20,8 @@ public class SQLCompanyDAO implements ICompanyDAO {
 
   private static final String DELETE_BY_ID_QUERY = "DELETE FROM company WHERE id=?;";
 
-  @Resource(name = "sessionFactory")
+  @Autowired
+  @Qualifier("sessionFactory")
   private SessionFactory sessionFactory;
 
   @Override

@@ -2,8 +2,6 @@ package com.tonymanou.computerdb.dao.impl;
 
 import java.util.List;
 
-import javax.annotation.Resource;
-
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -11,6 +9,8 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.sql.JoinType;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import com.tonymanou.computerdb.dao.IComputerDAO;
@@ -36,7 +36,8 @@ public class SQLComputerDAO implements IComputerDAO {
   private static final String DELETE_BY_ID_QUERY = "DELETE FROM computer WHERE id=?;";
   private static final String DELETE_BY_COMPANY_QUERY = "DELETE FROM computer WHERE company_id=?;";
 
-  @Resource(name = "sessionFactory")
+  @Autowired
+  @Qualifier("sessionFactory")
   private SessionFactory sessionFactory;
 
   @SuppressWarnings("unchecked")
