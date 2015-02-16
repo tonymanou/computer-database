@@ -11,6 +11,7 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,9 +43,6 @@ public class ComputerServiceTest {
   private static List<Computer> computerList;
   private static ComputerPage.Builder page;
 
-  private static boolean createCalled;
-  private static boolean deleteCalled;
-
   /**
    * Spring context configuration class.
    */
@@ -73,43 +71,41 @@ public class ComputerServiceTest {
     computer3 = Computer.getBuilder("Computer 3").setId(ID3).build();
 
     page = ComputerPage.getBuilder();
-
     computerList = new ArrayList<>();
-    computerList.add(computer1);
-    computerList.add(computer2);
 
     // Mock computer DAO
     computerDAO = context.getBean(IComputerDAO.class);
+
     when(computerDAO.findAll(page)).thenReturn(computerList);
+
     doAnswer(new Answer<Object>() {
       public Object answer(InvocationOnMock invocation) {
         computerList.add(computer3);
         return invocation.getArguments();
       }
     }).when(computerDAO).create(computer3);
+
     doAnswer(new Answer<Object>() {
       public Object answer(InvocationOnMock invocation) {
         return invocation.getArguments();
       }
     }).when(computerDAO).update(computer1);
+
     doAnswer(new Answer<Object>() {
       public Object answer(InvocationOnMock invocation) {
         computerList.remove(computer2);
         return invocation.getArguments();
       }
     }).when(computerDAO).delete(ID2);
+
     when(computerDAO.getFromId(ID2)).thenReturn(computer2);
   }
 
-  private static int getListSize() {
-    int size = 2;
-    if (createCalled) {
-      size++;
-    }
-    if (deleteCalled) {
-      size--;
-    }
-    return size;
+  @Before
+  public void resetComputerList() {
+    computerList.clear();
+    computerList.add(computer1);
+    computerList.add(computer2);
   }
 
   @Test
@@ -117,7 +113,7 @@ public class ComputerServiceTest {
     List<Computer> list = service.findAll(page);
 
     assertNotNull(list);
-    assertEquals(getListSize(), list.size());
+    assertEquals(2, list.size());
 
     Computer computer = Computer.getBuilder("Computer 1").setId(ID1).build();
     assertEquals(computer, list.get(0));
@@ -128,9 +124,8 @@ public class ComputerServiceTest {
   @Test
   public void create() {
     service.create(computer3);
-    createCalled = true;
 
-    assertEquals(getListSize(), computerList.size());
+    assertEquals(3, computerList.size());
 
     verify(computerDAO).create(computer3);
   }
@@ -145,10 +140,9 @@ public class ComputerServiceTest {
   @Test
   public void delete() {
     service.delete(ID2);
-    deleteCalled = true;
 
     assertFalse(computerList.contains(computer2));
-    assertEquals(getListSize(), computerList.size());
+    assertEquals(1, computerList.size());
 
     verify(computerDAO).delete(ID2);
   }

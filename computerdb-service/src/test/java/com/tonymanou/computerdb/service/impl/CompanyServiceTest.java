@@ -11,6 +11,7 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,6 +39,7 @@ public class CompanyServiceTest {
   private static IComputerDAO computerDAO;
   private static Company company1;
   private static Company company2;
+  private static List<Company> companyList;
 
   /**
    * Spring context configuration class.
@@ -67,14 +69,15 @@ public class CompanyServiceTest {
 
     company1 = Company.getBuilder("Company 1").setId(ID1).build();
     company2 = Company.getBuilder("Company 2").setId(ID2).build();
-    List<Company> companyList = new ArrayList<>(2);
-    companyList.add(company1);
-    companyList.add(company2);
+    companyList = new ArrayList<>(2);
 
     // Mock company DAO
     companyDAO = context.getBean(ICompanyDAO.class);
+
     when(companyDAO.findAll()).thenReturn(companyList);
+
     when(companyDAO.getFromId(ID1)).thenReturn(company1);
+
     doAnswer(new Answer<Object>() {
       public Object answer(InvocationOnMock invocation) {
         companyList.remove(company2);
@@ -84,11 +87,19 @@ public class CompanyServiceTest {
 
     // Mock computer DAO
     computerDAO = context.getBean(IComputerDAO.class);
+
     doAnswer(new Answer<Object>() {
       public Object answer(InvocationOnMock invocation) {
         return invocation.getArguments();
       }
     }).when(computerDAO).deleteAllWithCompanyId(ID2);
+  }
+
+  @Before
+  public void resetCompanyList() {
+    companyList.clear();
+    companyList.add(company1);
+    companyList.add(company2);
   }
 
   @Test
