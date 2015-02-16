@@ -13,9 +13,8 @@
 	</beans:bean>
 	<beans:bean id="digestEntryPoint"
 		class="org.springframework.security.web.authentication.www.DigestAuthenticationEntryPoint">
-		<beans:property name="realmName"
-			value="Contacts Realm via Digest Authentication" />
-		<beans:property name="key" value="acegi" />
+		<beans:property name="realmName" value="Computer database" />
+		<beans:property name="key" value="p0go7" />
 	</beans:bean>
 
 	<!-- Security namespace configuration -->
@@ -25,19 +24,14 @@
 		<intercept-url pattern="/error" access="permitAll" />
 		<intercept-url pattern="/css/**" access="permitAll" />
 		<intercept-url pattern="/fonts/**" access="permitAll" />
-		<intercept-url pattern="/imgs/**" access="permitAll" />
+		<intercept-url pattern="/images/**" access="permitAll" />
 		<intercept-url pattern="/js/**" access="permitAll" />
 		<intercept-url pattern="/**" access="isAuthenticated()" />
 
-		<http-basic />
 		<custom-filter ref="digestFilter" after="BASIC_AUTH_FILTER" />
 	</http>
 
 	<authentication-manager>
-		<authentication-provider>
-			<user-service id="userService">
-				<user name="user" password="user" authorities="ROLE_USER" />
-			</user-service>
-		</authentication-provider>
+		<authentication-provider user-service-ref="userService" />
 	</authentication-manager>
 </beans:beans>
