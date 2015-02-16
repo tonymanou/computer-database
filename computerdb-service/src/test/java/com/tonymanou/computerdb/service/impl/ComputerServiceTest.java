@@ -23,7 +23,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.tonymanou.computerdb.dao.IComputerDAO;
-import com.tonymanou.computerdb.domain.Computer;
+import com.tonymanou.computerdb.model.Computer;
 import com.tonymanou.computerdb.service.IComputerService;
 
 @RunWith(MockitoJUnitRunner.class)

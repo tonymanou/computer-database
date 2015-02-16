@@ -24,7 +24,7 @@ import org.springframework.context.annotation.Configuration;
 
 import com.tonymanou.computerdb.dao.ICompanyDAO;
 import com.tonymanou.computerdb.dao.IComputerDAO;
-import com.tonymanou.computerdb.domain.Company;
+import com.tonymanou.computerdb.model.Company;
 import com.tonymanou.computerdb.service.ICompanyService;
 
 @RunWith(MockitoJUnitRunner.class)

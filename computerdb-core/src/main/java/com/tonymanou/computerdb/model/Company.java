@@ -1,4 +1,4 @@
-package com.tonymanou.computerdb.domain;
+package com.tonymanou.computerdb.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

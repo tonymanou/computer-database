@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.tonymanou.computerdb.dao.ICompanyDAO;
 import com.tonymanou.computerdb.dao.IComputerDAO;
-import com.tonymanou.computerdb.domain.Company;
+import com.tonymanou.computerdb.model.Company;
 import com.tonymanou.computerdb.service.ICompanyService;
 
 /**
@@ -27,15 +27,13 @@ public class CompanyService implements ICompanyService {
   @Transactional(readOnly = true)
   @Override
   public List<Company> findAll() {
-    List<Company> result = companyDAO.findAll();
-    return result;
+    return companyDAO.findAll();
   }
 
   @Transactional(readOnly = true)
   @Override
   public Company getFromId(Long id) {
-    Company result = companyDAO.getFromId(id);
-    return result;
+    return companyDAO.getFromId(id);
   }
 
   @Transactional(rollbackFor = { Exception.class })

@@ -2,7 +2,7 @@ package com.tonymanou.computerdb.dao;
 
 import java.util.List;
 
-import com.tonymanou.computerdb.domain.Company;
+import com.tonymanou.computerdb.model.Company;
 
 /**
  * Interface implemented by DAOs to manage companies.

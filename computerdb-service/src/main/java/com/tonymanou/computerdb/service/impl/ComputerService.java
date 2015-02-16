@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.tonymanou.computerdb.dao.IComputerDAO;
-import com.tonymanou.computerdb.domain.Computer;
+import com.tonymanou.computerdb.model.Computer;
 import com.tonymanou.computerdb.pagination.ComputerPage;
 import com.tonymanou.computerdb.service.IComputerService;
 

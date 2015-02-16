@@ -8,7 +8,7 @@ import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
 import com.tonymanou.computerdb.dao.ICompanyDAO;
-import com.tonymanou.computerdb.domain.Company;
+import com.tonymanou.computerdb.model.Company;
 
 /**
  * DAO implementation to manage companies in a SQL database.

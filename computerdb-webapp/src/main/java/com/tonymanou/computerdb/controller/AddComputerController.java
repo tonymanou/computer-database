@@ -16,11 +16,11 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.tonymanou.computerdb.domain.Company;
-import com.tonymanou.computerdb.domain.Computer;
 import com.tonymanou.computerdb.dto.CompanyDTO;
 import com.tonymanou.computerdb.dto.ComputerDTO;
 import com.tonymanou.computerdb.mapper.IEntityMapper;
+import com.tonymanou.computerdb.model.Company;
+import com.tonymanou.computerdb.model.Computer;
 import com.tonymanou.computerdb.service.ICompanyService;
 import com.tonymanou.computerdb.service.IComputerService;
 

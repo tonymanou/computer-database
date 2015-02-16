@@ -2,7 +2,7 @@ package com.tonymanou.computerdb.service;
 
 import java.util.List;
 
-import com.tonymanou.computerdb.domain.Computer;
+import com.tonymanou.computerdb.model.Computer;
 import com.tonymanou.computerdb.pagination.ComputerPage;
 
 /**

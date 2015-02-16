@@ -14,7 +14,7 @@ import org.hibernate.sql.JoinType;
 import org.springframework.stereotype.Repository;
 
 import com.tonymanou.computerdb.dao.IComputerDAO;
-import com.tonymanou.computerdb.domain.Computer;
+import com.tonymanou.computerdb.model.Computer;
 import com.tonymanou.computerdb.pagination.ComputerPage;
 import com.tonymanou.computerdb.util.Util;
 

@@ -2,7 +2,7 @@ package com.tonymanou.computerdb.service;
 
 import java.util.List;
 
-import com.tonymanou.computerdb.domain.Company;
+import com.tonymanou.computerdb.model.Company;
 
 /**
  * Interface implemented by services to manage companies.

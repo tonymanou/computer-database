@@ -9,10 +9,10 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Component;
 
-import com.tonymanou.computerdb.domain.Company;
-import com.tonymanou.computerdb.domain.Computer;
 import com.tonymanou.computerdb.dto.ComputerDTO;
 import com.tonymanou.computerdb.mapper.IEntityMapper;
+import com.tonymanou.computerdb.model.Company;
+import com.tonymanou.computerdb.model.Computer;
 import com.tonymanou.computerdb.util.Util;
 
 @Component

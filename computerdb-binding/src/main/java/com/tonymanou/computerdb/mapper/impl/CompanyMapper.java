@@ -2,9 +2,9 @@ package com.tonymanou.computerdb.mapper.impl;
 
 import org.springframework.stereotype.Component;
 
-import com.tonymanou.computerdb.domain.Company;
 import com.tonymanou.computerdb.dto.CompanyDTO;
 import com.tonymanou.computerdb.mapper.IEntityMapper;
+import com.tonymanou.computerdb.model.Company;
 
 @Component
 public class CompanyMapper implements IEntityMapper<Company, CompanyDTO> {

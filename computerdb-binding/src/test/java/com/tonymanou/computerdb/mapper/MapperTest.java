@@ -13,12 +13,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.context.support.ResourceBundleMessageSource;
 
-import com.tonymanou.computerdb.domain.Company;
-import com.tonymanou.computerdb.domain.Computer;
 import com.tonymanou.computerdb.dto.CompanyDTO;
 import com.tonymanou.computerdb.dto.ComputerDTO;
 import com.tonymanou.computerdb.mapper.impl.CompanyMapper;
 import com.tonymanou.computerdb.mapper.impl.ComputerMapper;
+import com.tonymanou.computerdb.model.Company;
+import com.tonymanou.computerdb.model.Computer;
 
 public class MapperTest {
 

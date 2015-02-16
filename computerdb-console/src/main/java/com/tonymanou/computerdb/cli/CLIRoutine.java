@@ -6,8 +6,8 @@ import java.util.Scanner;
 
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.tonymanou.computerdb.domain.Company;
-import com.tonymanou.computerdb.domain.Computer;
+import com.tonymanou.computerdb.model.Company;
+import com.tonymanou.computerdb.model.Computer;
 import com.tonymanou.computerdb.service.ICompanyService;
 import com.tonymanou.computerdb.service.IComputerService;
 import com.tonymanou.computerdb.util.Util;

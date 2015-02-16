@@ -11,9 +11,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.tonymanou.computerdb.domain.Computer;
 import com.tonymanou.computerdb.dto.ComputerDTO;
 import com.tonymanou.computerdb.mapper.IEntityMapper;
+import com.tonymanou.computerdb.model.Computer;
 import com.tonymanou.computerdb.pagination.ComputerPage;
 import com.tonymanou.computerdb.service.IComputerService;
 import com.tonymanou.computerdb.util.Util;
