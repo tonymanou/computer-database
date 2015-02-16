@@ -11,13 +11,10 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.sql.JoinType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import com.tonymanou.computerdb.dao.IComputerDAO;
 import com.tonymanou.computerdb.domain.Computer;
-import com.tonymanou.computerdb.exception.PersistenceException;
 import com.tonymanou.computerdb.pagination.ComputerPage;
 import com.tonymanou.computerdb.util.Util;
 
@@ -38,8 +35,6 @@ public class SQLComputerDAO implements IComputerDAO {
 
   private static final String DELETE_BY_ID_QUERY = "DELETE FROM computer WHERE id=?;";
   private static final String DELETE_BY_COMPANY_QUERY = "DELETE FROM computer WHERE company_id=?;";
-
-  private static final Logger LOGGER = LoggerFactory.getLogger(SQLComputerDAO.class);
 
   @Resource(name = "sessionFactory")
   private SessionFactory sessionFactory;
@@ -74,12 +69,9 @@ public class SQLComputerDAO implements IComputerDAO {
 
     Long count = (Long) computerCount.uniqueResult();
     if (count == null) {
-      RuntimeException e = new PersistenceException("Computer count is null");
-      LOGGER.error("Error while getting the number of computers matching the search query", e);
-      throw e;
-    } else {
-      pageBuilder.setNumElements(count);
+      count = 0L;
     }
+    pageBuilder.setNumElements(count);
 
     /* ========== Second query: computer list ========== */
 
