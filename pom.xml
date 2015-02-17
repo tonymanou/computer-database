@@ -35,6 +35,8 @@
 		<module>computerdb-service</module>
 		<module>computerdb-binding</module>
 		<module>computerdb-webapp</module>
+		<module>computerdb-webservice</module>
+		<module>computerdb-webclient</module>
 		<module>computerdb-console</module>
 	</modules>
 
