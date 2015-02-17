@@ -214,7 +214,7 @@ public class CLIRoutine {
         computer.setIntroducedDate(introduced);
 
         String oldDiscontinued = computer.getDiscontinuedDate();
-        System.out.println(here + "Current introduced date is " + oldDiscontinued + ".");
+        System.out.println(here + "Current discontinued date is " + oldDiscontinued + ".");
         String discontinued = sc.getDateInput(here + "Enter the new date.", EmptyType.KEEP,
             oldDiscontinued);
         computer.setDiscontinuedDate(discontinued);

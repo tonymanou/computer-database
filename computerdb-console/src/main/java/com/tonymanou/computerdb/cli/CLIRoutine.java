@@ -234,7 +234,7 @@ public class CLIRoutine {
         computer.setIntroduced(introduced);
 
         LocalDate oldDiscontinued = computer.getDiscontinued();
-        System.out.println("[Update computer] Current introduced date is " + oldDiscontinued + ".");
+        System.out.println("[Update computer] Current discontinued date is " + oldDiscontinued + ".");
         LocalDate discontinued = getDateInput("[Update computer] Enter the new date.",
             EmptyType.KEEP, oldDiscontinued);
         computer.setDiscontinued(discontinued);
@@ -435,15 +435,11 @@ public class CLIRoutine {
         System.out.println();
         running = false;
       } else {
-        boolean bad = true;
-
         date = Util.parseLocalDate(string, "yyyy-MM-dd");
         if (date == null) {
-          bad = false;
-          System.out.println();
-        }
-        if (bad) {
           System.out.println("Please enter a valid date.");
+        } else {
+          System.out.println();
         }
       }
     } while (date == null && running);

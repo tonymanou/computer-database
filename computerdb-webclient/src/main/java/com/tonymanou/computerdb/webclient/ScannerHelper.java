@@ -91,6 +91,7 @@ public class ScannerHelper {
         }
         break;
       }
+      System.out.println();
     } else if (emptyType == EmptyType.KEEP && "0".equals(words[0])) {
       System.out.println("Value set to null.");
     } else {
@@ -185,18 +186,13 @@ public class ScannerHelper {
         System.out.println();
         running = false;
       } else {
-        boolean bad = true;
-
         LocalDate dateIn = Util.parseLocalDate(string, datePattern);
         if (dateIn == null) {
           date = null;
-          bad = false;
-          System.out.println();
+          System.out.println("Please enter a valid date."); 
         } else {
           date = string;
-        }
-        if (bad) {
-          System.out.println("Please enter a valid date.");
+          System.out.println();
         }
       }
     } while (date == null && running);
