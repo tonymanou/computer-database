@@ -138,25 +138,23 @@ public class CLIRoutine {
    * Let the CLI user add a new computer.
    */
   private void doAddComputer() {
-    String name = sc.getStringInput("[Add computer] Enter the name of the computer.",
-        EmptyType.CANCEL);
+    String here = "[Add computer] ";
+    String name = sc.getStringInput(here + "Enter the name of the computer.", EmptyType.CANCEL);
     if (name == null) {
       return;
     }
     ComputerDTO.Builder builder = ComputerDTO.getBuilder(name);
 
-    builder
-        .setIntroduced(sc
-            .getDateInput("[Add computer] Enter its introduced date.", EmptyType.EMPTY));
-    builder.setDiscontinued(sc.getDateInput("[Add computer] Enter its discontinued date.",
+    builder.setIntroduced(sc.getDateInput(here + "Enter its introduced date.", EmptyType.EMPTY));
+    builder.setDiscontinued(sc.getDateInput(here + "Enter its discontinued date.",
         EmptyType.EMPTY));
 
-    if (sc.isYesAnswer("[Add computer] Do you want to list all the companies first?")) {
+    if (sc.isYesAnswer(here + "Do you want to list all the companies first?")) {
       doListCompanies();
       System.out.println();
     }
 
-    Long companyId = sc.getLongInput("[Add computer] Enter its company ID.", EmptyType.EMPTY);
+    Long companyId = sc.getLongInput(here + "Enter its company ID.", EmptyType.EMPTY);
     if (companyId != null) {
       CompanyDTO company = companyService.getFromId(companyId);
       builder.setCompany(company.getName());
@@ -170,12 +168,13 @@ public class CLIRoutine {
    * Let the CLI user remove a computer.
    */
   private void doRemoveComputer() {
-    if (sc.isYesAnswer("[Remove computer] Do you want to list all the computers first?")) {
+    String here = "[Remove computer] ";
+    if (sc.isYesAnswer(here + "Do you want to list all the computers first?")) {
       doListComputers();
       System.out.println();
     }
 
-    Long id = sc.getLongInput("[Remove computer] Enter the id of the computer you want to delete.",
+    Long id = sc.getLongInput(here + "Enter the id of the computer you want to delete.",
         EmptyType.CANCEL);
 
     if (id != null) {
@@ -188,12 +187,13 @@ public class CLIRoutine {
    * Let the CLI user update a computer.
    */
   private void doUpdateComputer() {
-    if (sc.isYesAnswer("[Update computer] Do you want to list all the computers first?")) {
+    String here = "[Update computer] ";
+    if (sc.isYesAnswer(here + "Do you want to list all the computers first?")) {
       doListComputers();
       System.out.println();
     }
 
-    Long id = sc.getLongInput("[Update computer] Enter the id of the computer you want to update.",
+    Long id = sc.getLongInput(here + "Enter the id of the computer you want to update.",
         EmptyType.CANCEL);
 
     if (id != null) {
@@ -203,32 +203,30 @@ public class CLIRoutine {
         System.out.println("Computer [id=" + id + "] not found!");
       } else {
         String oldName = computer.getName();
-        System.out.println("[Update computer] Current name is '" + oldName + "'.");
-        String name = sc.getStringInput("[Update computer] Enter the new name.", EmptyType.KEEP,
-            oldName);
+        System.out.println(here + "Current name is '" + oldName + "'.");
+        String name = sc.getStringInput(here + "Enter the new name.", EmptyType.KEEP, oldName);
         computer.setName(name);
 
         String oldIntroduced = computer.getIntroducedDate();
-        System.out.println("[Update computer] Current introduced date is " + oldIntroduced + ".");
-        String introduced = sc.getDateInput("[Update computer] Enter the new date.",
-            EmptyType.KEEP, oldIntroduced);
+        System.out.println(here + "Current introduced date is " + oldIntroduced + ".");
+        String introduced = sc.getDateInput(here + "Enter the new date.", EmptyType.KEEP,
+            oldIntroduced);
         computer.setIntroducedDate(introduced);
 
         String oldDiscontinued = computer.getDiscontinuedDate();
-        System.out.println("[Update computer] Current introduced date is " + oldDiscontinued + ".");
-        String discontinued = sc.getDateInput("[Update computer] Enter the new date.",
-            EmptyType.KEEP, oldDiscontinued);
+        System.out.println(here + "Current introduced date is " + oldDiscontinued + ".");
+        String discontinued = sc.getDateInput(here + "Enter the new date.", EmptyType.KEEP,
+            oldDiscontinued);
         computer.setDiscontinuedDate(discontinued);
 
-        System.out.println("[Update computer] Current company is " + computer.getCompanyName()
-            + ".");
-        if (sc.isYesAnswer("[Update computer] Do you want to list all the companies first?")) {
+        System.out.println(here + "Current company is " + computer.getCompanyName() + ".");
+        if (sc.isYesAnswer(here + "Do you want to list all the companies first?")) {
           doListCompanies();
           System.out.println();
         }
 
         Long oldCompanyId = computer.getCompanyId();
-        Long companyId = sc.getLongInput("[Update computer] Enter the new company company ID.",
+        Long companyId = sc.getLongInput(here + "Enter the new company company ID.",
             EmptyType.KEEP, oldCompanyId);
         CompanyDTO company = null;
         if (companyId != null) {
@@ -264,12 +262,13 @@ public class CLIRoutine {
   }
 
   private void doRemoveCompany() {
-    if (sc.isYesAnswer("[Remove company] Do you want to list all the company first?")) {
+    String here = "[Remove company] ";
+    if (sc.isYesAnswer(here + "Do you want to list all the company first?")) {
       doListCompanies();
       System.out.println();
     }
 
-    Long id = sc.getLongInput("[Remove company] Enter the id of the company you want to delete.",
+    Long id = sc.getLongInput(here + "Enter the id of the company you want to delete.",
         EmptyType.CANCEL);
 
     if (id != null) {
