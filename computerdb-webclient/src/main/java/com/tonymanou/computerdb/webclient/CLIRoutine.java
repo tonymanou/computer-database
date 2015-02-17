@@ -4,8 +4,14 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Scanner;
 
-import com.tonymanou.computerdb.model.Company;
-import com.tonymanou.computerdb.model.Computer;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.stereotype.Component;
+
+import com.tonymanou.computerdb.dto.CompanyDTO;
+import com.tonymanou.computerdb.dto.ComputerDTO;
 import com.tonymanou.computerdb.util.Util;
 import com.tonymanou.computerdb.webservice.ICompanyWS;
 import com.tonymanou.computerdb.webservice.IComputerWS;
@@ -15,13 +21,20 @@ import com.tonymanou.computerdb.webservice.IComputerWS;
  *
  * @author tonymanou
  */
+@Component
 public class CLIRoutine {
 
   private static final String UNRECOGNIZED = "Unrecognized action.";
   private static final String CANCELED = "Input canceled...";
+  private static final String MSG_DATE_FORMAT = "date.format";
+
   private Scanner scanner;
   private IComputerWS computerService;
   private ICompanyWS companyService;
+
+  @Autowired
+  @Qualifier("formatMessageSource")
+  private MessageSource messageSource;
 
   /**
    * Enumeration describing the default action to do when the user enters an empty value.
@@ -41,9 +54,11 @@ public class CLIRoutine {
     KEEP
   }
 
-  public CLIRoutine(IComputerWS computerWS, ICompanyWS companyWS) {
+  public CLIRoutine() {
     scanner = new Scanner(System.in);
+  }
 
+  public void init(IComputerWS computerWS, ICompanyWS companyWS) {
     computerService = computerWS;
     companyService = companyWS;
   }
@@ -141,12 +156,12 @@ public class CLIRoutine {
    * List all the computers from the database.
    */
   private void doListComputers() {
-    List<Computer> listComputer = computerService.findAll().getList();
+    List<ComputerDTO> listComputer = computerService.findAll().getList();
 
     if (listComputer.size() == 0) {
       System.out.println("There is no computer is the database.");
     } else {
-      for (Computer c : listComputer) {
+      for (ComputerDTO c : listComputer) {
         System.out.println(c);
       }
     }
@@ -160,7 +175,7 @@ public class CLIRoutine {
     if (name == null) {
       return;
     }
-    Computer.Builder builder = Computer.getBuilder(name);
+    ComputerDTO.Builder builder = ComputerDTO.getBuilder(name);
 
     builder
         .setIntroduced(getDateInput("[Add computer] Enter its introduced date.", EmptyType.EMPTY));
@@ -174,7 +189,9 @@ public class CLIRoutine {
 
     Long companyId = getLongInput("[Add computer] Enter its company ID.", EmptyType.EMPTY);
     if (companyId != null) {
-      builder.setCompany(companyService.getFromId(companyId));
+      CompanyDTO company = companyService.getFromId(companyId);
+      builder.setCompany(company.getName());
+      builder.setCompanyId(company.getId());
     }
 
     computerService.create(builder.build());
@@ -211,7 +228,7 @@ public class CLIRoutine {
         EmptyType.CANCEL);
 
     if (id != null) {
-      Computer computer = computerService.getFromId(id);
+      ComputerDTO computer = computerService.getFromId(id);
 
       if (computer == null) {
         System.out.println("Computer [id=" + id + "] not found!");
@@ -222,34 +239,34 @@ public class CLIRoutine {
             oldName);
         computer.setName(name);
 
-        LocalDate oldIntroduced = computer.getIntroduced();
+        String oldIntroduced = computer.getIntroducedDate();
         System.out.println("[Update computer] Current introduced date is " + oldIntroduced + ".");
-        LocalDate introduced = getDateInput("[Update computer] Enter the new date.",
+        String introduced = getDateInput("[Update computer] Enter the new date.",
             EmptyType.KEEP, oldIntroduced);
-        computer.setIntroduced(introduced);
+        computer.setIntroducedDate(introduced);
 
-        LocalDate oldDiscontinued = computer.getDiscontinued();
+        String oldDiscontinued = computer.getDiscontinuedDate();
         System.out.println("[Update computer] Current introduced date is " + oldDiscontinued + ".");
-        LocalDate discontinued = getDateInput("[Update computer] Enter the new date.",
+        String discontinued = getDateInput("[Update computer] Enter the new date.",
             EmptyType.KEEP, oldDiscontinued);
-        computer.setDiscontinued(discontinued);
+        computer.setDiscontinuedDate(discontinued);
 
-        System.out.println("[Update computer] Current company is " + computer.getCompany() + ".");
+        System.out.println("[Update computer] Current company is " + computer.getCompanyName() + ".");
         if (isYesAnswer("[Update computer] Do you want to list all the companies first?")) {
           doListCompanies();
           System.out.println();
         }
 
-        Company oldCompany = computer.getCompany();
-        Long oldCompanyId = oldCompany == null ? null : oldCompany.getId();
+        Long oldCompanyId = computer.getCompanyId();
         Long companyId = getLongInput("[Update computer] Enter the new company company ID.",
             EmptyType.KEEP, oldCompanyId);
-        Company company = null;
+        CompanyDTO company = null;
         if (companyId != null) {
           company = companyService.getFromId(companyId);
           // TODO check if this company id exists
         }
-        computer.setCompany(company);
+        computer.setCompanyId(company.getId());
+        computer.setCompanyName(company.getName());
 
         System.out.println(computer);
         computerService.update(computer);
@@ -265,12 +282,12 @@ public class CLIRoutine {
    * List all the companies in the database.
    */
   private void doListCompanies() {
-    List<Company> listCompany = companyService.findAll().getList();
+    List<CompanyDTO> listCompany = companyService.findAll().getList();
 
     if (listCompany.size() == 0) {
       System.out.println("There is no company is the database.");
     } else {
-      for (Company c : listCompany) {
+      for (CompanyDTO c : listCompany) {
         System.out.println(c);
       }
     }
@@ -382,12 +399,15 @@ public class CLIRoutine {
    *          Optional original value, only used when using emptyType KEEP.
    * @return the date, or null if the the user left the input empty.
    */
-  private LocalDate getDateInput(String message, EmptyType emptyType, LocalDate... original) {
+  private String getDateInput(String message, EmptyType emptyType, String... original) {
     boolean running = true;
-    LocalDate date = null;
+    String date = null;
     String string;
 
-    System.out.print(message + " (yyyy-MM-dd, enter nothing to ");
+    String datePattern = messageSource.getMessage(MSG_DATE_FORMAT, null,
+        LocaleContextHolder.getLocale());
+
+    System.out.print(message + " (" + datePattern + ", enter nothing to ");
     switch (emptyType) {
     case EMPTY:
       System.out.print("leave empty");
@@ -432,10 +452,13 @@ public class CLIRoutine {
       } else {
         boolean bad = true;
 
-        date = Util.parseLocalDate(string, "yyyy-MM-dd");
-        if (date == null) {
+        LocalDate dateIn = Util.parseLocalDate(string, datePattern);
+        if (dateIn == null) {
+          date = null;
           bad = false;
           System.out.println();
+        } else {
+          date = string;
         }
         if (bad) {
           System.out.println("Please enter a valid date.");

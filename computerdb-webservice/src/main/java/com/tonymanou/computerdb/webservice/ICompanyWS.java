@@ -5,7 +5,7 @@ import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 import javax.jws.soap.SOAPBinding.Style;
 
-import com.tonymanou.computerdb.model.Company;
+import com.tonymanou.computerdb.dto.CompanyDTO;
 import com.tonymanou.computerdb.webservice.wrapper.ListWrapper;
 
 /**
@@ -23,23 +23,21 @@ public interface ICompanyWS {
    * @return A list containing all the companies.
    */
   @WebMethod
-  ListWrapper<Company> findAll();
+  ListWrapper<CompanyDTO> findAll();
 
   /**
    * Retrieve a company from the database thanks to the given id.
    *
    * @param id
    *          The id of the company to retrieve.
-   * @return The {@link Company}, or null if no matching company was found.
+   * @return The {@link CompanyDTO}, or null if no matching company was found.
    */
   @WebMethod
-  Company getFromId(Long id);
+  CompanyDTO getFromId(Long id);
 
   /**
    * Remove a company, and its computers, from the database.
    * 
-   * @param connection
-   *          Active database connection.
    * @param id
    *          The id of the company.
    * @param connection

@@ -5,7 +5,7 @@ import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 import javax.jws.soap.SOAPBinding.Style;
 
-import com.tonymanou.computerdb.model.Computer;
+import com.tonymanou.computerdb.dto.ComputerDTO;
 import com.tonymanou.computerdb.pagination.ComputerPage;
 import com.tonymanou.computerdb.webservice.wrapper.ListWrapper;
 
@@ -24,7 +24,7 @@ public interface IComputerWS {
    * @return A list containing all the computers.
    */
   @WebMethod
-  ListWrapper<Computer> findAll();
+  ListWrapper<ComputerDTO> findAll();
 
   /**
    * Retrieve a page of computers from the database.
@@ -34,25 +34,25 @@ public interface IComputerWS {
    * @return A list containing the computers.
    */
   @WebMethod
-  ListWrapper<Computer> findPage(ComputerPage.Builder page);
+  ListWrapper<ComputerDTO> findPage(ComputerPage.Builder page);
 
   /**
    * Create a new computer in the database.
    *
-   * @param computer
+   * @param computerDTO
    *          The computer to create.
    */
   @WebMethod
-  void create(Computer computer);
+  void create(ComputerDTO computerDTO);
 
   /**
    * Update a computer in the database.
    *
-   * @param computer
+   * @param computerDTO
    *          The computer to update.
    */
   @WebMethod
-  void update(Computer computer);
+  void update(ComputerDTO computerDTO);
 
   /**
    * Delete a computer from the database.
@@ -68,8 +68,8 @@ public interface IComputerWS {
    *
    * @param id
    *          The id of the computer to retrieve.
-   * @return The {@link Computer}, or null if no matching company was found.
+   * @return The {@link ComputerDTO}, or null if no matching company was found.
    */
   @WebMethod
-  Computer getFromId(Long id);
+  ComputerDTO getFromId(Long id);
 }

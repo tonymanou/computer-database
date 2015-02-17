@@ -18,5 +18,10 @@
 			<artifactId>computerdb-service</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>computer-database</groupId>
+			<artifactId>computerdb-binding</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 	</dependencies>
 </project>
