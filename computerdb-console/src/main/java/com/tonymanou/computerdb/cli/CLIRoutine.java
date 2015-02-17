@@ -111,7 +111,7 @@ public class CLIRoutine {
       case "help":
         System.out.println("Usage:");
         System.out.println("\tcomputer [list|add|remove|update]");
-        System.out.println("\tcompany [list]");
+        System.out.println("\tcompany [list|remove]");
         System.out.println("\thelp");
         System.out.println("\texit");
         break;
