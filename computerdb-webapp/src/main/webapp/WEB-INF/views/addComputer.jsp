@@ -40,7 +40,7 @@
                         </fieldset>
                         <div class="actions pull-right">
                             <input type="submit" value="<fmt:message key="button.add" />" class="btn btn-primary" />
-                            or
+                            <fmt:message key="text.or" />
                             <a href="<c:url value="/dashboard" />" class="btn btn-default"><fmt:message key="button.cancel" /></a>
                         </div>
                     </form:form>
