@@ -179,10 +179,18 @@ public class CLIRoutine {
 
     Long companyId = getLongInput("[Add computer] Enter its company ID.", EmptyType.EMPTY);
     if (companyId != null) {
-      builder.setCompany(companyService.getFromId(companyId));
+      Company company = companyService.getFromId(companyId);
+      if (company == null) {
+        System.out.println("Company [id=" + companyId + "] not found, using none.\n");
+      }
+      builder.setCompany(company);
     }
 
-    computerService.create(builder.build());
+    Computer computer = builder.build();
+    System.out.println(computer);
+    computerService.create(computer);
+
+    System.out.println("Computer created!");
   }
 
   /**
@@ -252,7 +260,9 @@ public class CLIRoutine {
         Company company = null;
         if (companyId != null) {
           company = companyService.getFromId(companyId);
-          // TODO check if this company id exists
+          if (company == null) {
+            System.out.println("Company [id=" + companyId + "] not found, using none.\n");
+          }
         }
         computer.setCompany(company);
 

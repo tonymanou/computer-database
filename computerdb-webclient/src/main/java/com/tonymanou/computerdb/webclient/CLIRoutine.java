@@ -158,14 +158,18 @@ public class CLIRoutine {
     if (companyId != null) {
       CompanyDTO company = companyService.getFromId(companyId);
       if (company == null || company.getName() == null) {
-        System.out.println("Company [id=" + companyId + "] not found!");
-        return;
+        System.out.println("Company [id=" + companyId + "] not found, using none.\n");
+      } else {
+        builder.setCompany(company.getName());
+        builder.setCompanyId(company.getId());
       }
-      builder.setCompany(company.getName());
-      builder.setCompanyId(company.getId());
     }
 
-    computerService.create(builder.build());
+    ComputerDTO computer = builder.build();
+    System.out.println(computer);
+    computerService.create(computer);
+
+    System.out.println("Computer created!");
   }
 
   /**
@@ -232,16 +236,15 @@ public class CLIRoutine {
         Long oldCompanyId = computer.getCompanyId();
         Long companyId = sc.getLongInput(here + "Enter the new company company ID.",
             EmptyType.KEEP, oldCompanyId);
-        CompanyDTO company = null;
         if (companyId != null) {
-          company = companyService.getFromId(companyId);
+          CompanyDTO company = companyService.getFromId(companyId);
           if (company == null || company.getName() == null) {
-            System.out.println("Company [id=" + companyId + "] not found!");
-            return;
+            System.out.println("Company [id=" + companyId + "] not found, using none.\n");
+          } else {
+            computer.setCompanyId(company.getId());
+            computer.setCompanyName(company.getName());
           }
         }
-        computer.setCompanyId(company.getId());
-        computer.setCompanyName(company.getName());
 
         System.out.println(computer);
         computerService.update(computer);
