@@ -4,7 +4,6 @@ import javax.jws.WebMethod;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 import javax.jws.soap.SOAPBinding.Style;
-import javax.jws.soap.SOAPBinding.Use;
 
 import com.tonymanou.computerdb.dto.ComputerDTO;
 import com.tonymanou.computerdb.pagination.ComputerPage;
@@ -16,7 +15,7 @@ import com.tonymanou.computerdb.webservice.wrapper.ListWrapper;
  * @author tonymanou
  */
 @WebService
-@SOAPBinding(style = Style.DOCUMENT, use = Use.LITERAL)
+@SOAPBinding(style = Style.RPC)
 public interface IComputerWS {
 
   /**

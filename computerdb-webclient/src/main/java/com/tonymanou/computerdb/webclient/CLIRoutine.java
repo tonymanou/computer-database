@@ -157,6 +157,10 @@ public class CLIRoutine {
     Long companyId = sc.getLongInput(here + "Enter its company ID.", EmptyType.EMPTY);
     if (companyId != null) {
       CompanyDTO company = companyService.getFromId(companyId);
+      if (company == null || company.getName() == null) {
+        System.out.println("Company [id=" + companyId + "] not found!");
+        return;
+      }
       builder.setCompany(company.getName());
       builder.setCompanyId(company.getId());
     }
@@ -199,7 +203,7 @@ public class CLIRoutine {
     if (id != null) {
       ComputerDTO computer = computerService.getFromId(id);
 
-      if (computer == null) {
+      if (computer == null || computer.getName() == null) {
         System.out.println("Computer [id=" + id + "] not found!");
       } else {
         String oldName = computer.getName();
@@ -231,7 +235,10 @@ public class CLIRoutine {
         CompanyDTO company = null;
         if (companyId != null) {
           company = companyService.getFromId(companyId);
-          // TODO check if this company id exists
+          if (company == null || company.getName() == null) {
+            System.out.println("Company [id=" + companyId + "] not found!");
+            return;
+          }
         }
         computer.setCompanyId(company.getId());
         computer.setCompanyName(company.getName());

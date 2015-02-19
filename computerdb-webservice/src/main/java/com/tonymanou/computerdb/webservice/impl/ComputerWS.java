@@ -60,6 +60,10 @@ public class ComputerWS implements IComputerWS {
   @Override
   public ComputerDTO getFromId(Long id) {
     Computer computer = computerService.getFromId(id);
-    return computerMapper.toDTO(computer);
+    if (computer == null) {
+      return ComputerDTO.getBuilder(null).build();
+    } else {
+      return computerMapper.toDTO(computer);
+    }
   }
 }

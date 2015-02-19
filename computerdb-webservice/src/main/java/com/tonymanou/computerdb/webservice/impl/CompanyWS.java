@@ -34,7 +34,11 @@ public class CompanyWS implements ICompanyWS {
   @Override
   public CompanyDTO getFromId(Long id) {
     Company company = companyService.getFromId(id);
-    return companyMapper.toDTO(company);
+    if (company == null) {
+      return CompanyDTO.getBuilder(null).build();
+    } else {
+      return companyMapper.toDTO(company);
+    }
   }
 
   @Override
