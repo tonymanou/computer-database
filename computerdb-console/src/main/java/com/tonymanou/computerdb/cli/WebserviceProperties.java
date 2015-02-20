@@ -1,4 +1,4 @@
-package com.tonymanou.computerdb.webclient;
+package com.tonymanou.computerdb.cli;
 
 import javax.annotation.PostConstruct;
 

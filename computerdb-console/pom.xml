@@ -20,16 +20,14 @@
 		</dependency>
 		<dependency>
 			<groupId>computer-database</groupId>
-			<artifactId>computerdb-service</artifactId>
+			<artifactId>computerdb-binding</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-
-		<!-- Spring framework -->
-
 		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context</artifactId>
-			<version>${spring.version}</version>
+			<groupId>computer-database</groupId>
+			<artifactId>computerdb-webservice</artifactId>
+			<version>${project.version}</version>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 </project>
