@@ -24,8 +24,10 @@ function checkName(element) {
 	var node = $(element);
 	if (node.val().length > 0 && node.val().length < 256) {
 		markAsValid(node.parent());
+		return true;
 	} else {
 		markAsInvalid(node.parent());
+		return false;
 	}
 }
 
@@ -35,11 +37,14 @@ function checkDate(element) {
 		var reg = new RegExp($.computerdb_messages.dateRegex);
 		if (reg.test(node.val())) {
 			markAsValid(node.parent());
+			return true;
 		} else {
 			markAsInvalid(node.parent());
+			return false;
 		}
 	} else {
 		markNothing(node.parent());
+		return true;
 	}
 }
 
@@ -52,3 +57,13 @@ $("#introducedDate").on('keyup change', function() {
 $("#discontinuedDate").on('keyup change', function() {
 	checkDate("#discontinuedDate");
 });
+$("input[type=submit]").click(
+		function(e) {
+			// Prevents the form from being submitted
+			e.preventDefault();
+
+			if (checkName("#name") && checkDate("#introducedDate")
+					&& checkDate("#discontinuedDate")) {
+				$("form").submit();
+			}
+		});
